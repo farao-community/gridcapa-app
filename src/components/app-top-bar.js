@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAppsAndUrls } from '../utils/rest-api';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { ReactComponent as PowsyblLogo } from '../images/powsybl_logo.svg';
+import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
 
 const AppTopBar = ({ user, userManager }) => {
     const history = useHistory();
@@ -54,9 +54,9 @@ const AppTopBar = ({ user, userManager }) => {
                 appColor="grey"
                 appLogo={
                     theme === LIGHT_THEME ? (
-                        <PowsyblLogo /> //GridXXXLogoLight
+                        <FaraoLogo /> //GridCapaLogoLight
                     ) : (
-                        <PowsyblLogo /> //GridXXXLogoDark
+                        <FaraoLogo /> //GridCapaLogoDark
                     )
                 }
                 onParametersClick={() => setShowParameters(true)}
