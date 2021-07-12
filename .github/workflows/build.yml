@@ -3,14 +3,12 @@ name: CI
 on: [push]
 
 jobs:
-    build-and-deploy:
+    build:
         runs-on: ubuntu-latest
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
-              with:
-                  persist-credentials: false
+              uses: actions/checkout@v2
 
             - name: Install and Build
               run: |
@@ -23,13 +21,6 @@ jobs:
               if: github.ref == 'refs/heads/master'
               uses: elgohr/Publish-Docker-Github-Action@master
               with:
-                  name: gridsuite/gridXXX-app
-                  username: gridsuiteci
+                  name: farao/gridcapa-app
+                  username: farao
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-            - name: Broadcast update event
-              if: github.ref == 'refs/heads/master'
-              uses: gridsuite/broadcast-event@master
-              with:
-                  token: ${{ secrets.REPO_ACCESS_TOKEN }}
-                  event-type: gridXXX_app_updated
