@@ -5,9 +5,13 @@ import TableCore from "./table-core";
 
 const ProcessTimestampView = () => {
     return (
-        <Grid container>
-            <TableHeader />
-            <TableCore />
+        <Grid container direction="column">
+            <Grid item>
+                <TableHeader />
+            </Grid>
+            <Grid item>
+                <TableCore />
+            </Grid>
         </Grid>
     )
 }

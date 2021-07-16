@@ -16,9 +16,9 @@ export default function OverviewTable() {
                 <TableBody>
                     <TableRow>
                         <TableCell data-test="input-type">CGM</TableCell>
-                        <TableCell data-test="file-status" style={{backgroundColor:'grey', color: 'white'}}>Absent</TableCell>
-                        <TableCell data-test="filename"></TableCell>
-                        <TableCell data-test="message"></TableCell>
+                        <TableCell data-test="input-status" style={{backgroundColor:'grey', color: 'white'}}>Absent</TableCell>
+                        <TableCell data-test="input-filename"></TableCell>
+                        <TableCell data-test="input-latest-modification"></TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

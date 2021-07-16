@@ -7,12 +7,14 @@ import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
     container: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(3),
         display: 'flex',
-        flexWrap: 'wrap',
+        flexWrap: 'wrap'
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
         width: 200,
     },
 }));
@@ -21,19 +23,19 @@ export default function TableHeader() {
     const classes = useStyles();
 
     return (
-        <Grid container justifyContent="center">
-            <Grid item>
+        <Grid container className={classes.container}>
+            <Grid item xs={3}>
                 <Typography variant="body1">
                     CSE D2CC Capacity Calculation Supervisor
                 </Typography>
             </Grid>
-            <Grid item>
-                <form className={classes.container} noValidate>
+            <Grid item xs={3}>
+                <form noValidate>
                     <TextField
                         id="date"
                         label="Select timestamp date"
                         type="date"
-                        data-test="date-picker"
+                        data-test="timestamp-date-picker"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -41,14 +43,14 @@ export default function TableHeader() {
                     />
                 </form>
             </Grid>
-            <Grid item>
-                <form className={classes.container} noValidate>
+            <Grid item xs={3}>
+                <form noValidate>
                     <TextField
                         id="time"
                         label="Select timestamp hour"
                         type="time"
                         defaultValue="00:30"
-                        data-test="hour-picker"
+                        data-test="timestamp-time-picker"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -59,7 +61,7 @@ export default function TableHeader() {
                     />
                 </form>
             </Grid>
-            <Grid item>
+            <Grid item xs={3}>
                 <Chip data-test="timestamp-status" label="Not created" />
             </Grid>
         </Grid>
