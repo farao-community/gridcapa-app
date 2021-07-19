@@ -1,9 +1,9 @@
-import React from "react";
-import {Grid, Tab, Tabs} from "@material-ui/core";
-import {FormattedMessage} from "react-intl";
-import ProcessTimestampView from "./process-timestamp-view";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import React from 'react';
+import { Grid, Tab, Tabs } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+import ProcessTimestampView from './process-timestamp-view';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -39,12 +39,14 @@ const GridCapaMain = () => {
                     value={value}
                     onChange={handleChange}
                     orientation="vertical"
-                    >
-                    <Tab label={<FormattedMessage id="Timestamp view" />}
-                         data-test="timestamp-view"
+                >
+                    <Tab
+                        label={<FormattedMessage id="Timestamp view" />}
+                        data-test="timestamp-view"
                     />
-                    <Tab label={<FormattedMessage id="Business view" />}
-                         data-test="business-view"
+                    <Tab
+                        label={<FormattedMessage id="Business view" />}
+                        data-test="business-view"
                     />
                 </Tabs>
             </Grid>
@@ -55,6 +57,6 @@ const GridCapaMain = () => {
             </Grid>
         </Grid>
     );
-}
+};
 
 export default GridCapaMain;

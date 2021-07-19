@@ -50,7 +50,7 @@ import { getComputedLanguage } from '../utils/language';
 import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import AppTopBar from './app-top-bar';
-import GridCapaMain from "./gridcapa-main";
+import GridCapaMain from './gridcapa-main';
 
 const noUserManager = { instance: null, error: null };
 
