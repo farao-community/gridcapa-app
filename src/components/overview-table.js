@@ -6,8 +6,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
-} from "@material-ui/core";
+    TableRow,
+} from '@material-ui/core';
 
 export default function OverviewTable() {
     return (
@@ -26,7 +26,7 @@ export default function OverviewTable() {
                         <TableCell data-test="input-type">CGM</TableCell>
                         <TableCell
                             data-test="input-status"
-                            style={{backgroundColor:'grey', color: 'white'}}
+                            style={{ backgroundColor: 'grey', color: 'white' }}
                         >
                             Absent
                         </TableCell>
