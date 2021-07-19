@@ -1,10 +1,10 @@
-import React from "react";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import {AppBar} from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import OverviewTable from "./overview-table";
+import React from 'react';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { AppBar } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import OverviewTable from './overview-table';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -39,7 +39,7 @@ export default function TableCore() {
         setValue(newValue);
     };
 
-    return(
+    return (
         <div>
             <AppBar position="static" color="transparent">
                 <Tabs value={value} onChange={handleChange} variant="fullWidth">

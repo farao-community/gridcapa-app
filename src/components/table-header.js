@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 import Chip from '@material-ui/core/Chip';
-import Grid from "@material-ui/core/Grid";
-import {makeStyles} from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(3),
         display: 'flex',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     textField: {
         marginLeft: theme.spacing(3),
