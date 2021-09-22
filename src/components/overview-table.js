@@ -8,6 +8,7 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
 
 export default function OverviewTable() {
     return (
@@ -15,10 +16,10 @@ export default function OverviewTable() {
             <Table className="table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Inputs</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Filename</TableCell>
-                        <TableCell>Latest modification</TableCell>
+                        <TableCell><FormattedMessage id="inputs"/></TableCell>
+                        <TableCell><FormattedMessage id="status"/></TableCell>
+                        <TableCell><FormattedMessage id="filename"/></TableCell>
+                        <TableCell><FormattedMessage id="latestModification"/></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

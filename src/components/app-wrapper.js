@@ -19,8 +19,10 @@ import {
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider, useSelector } from 'react-redux';
-import messages_en from '../translations/en.json';
-import messages_fr from '../translations/fr.json';
+import labels_en from '../i18n/labels_en.json';
+import labels_fr from '../i18n/labels_fr.json';
+import messages_en from '../i18n/messages_en.json';
+import messages_fr from '../i18n/messages_fr.json';
 import { store } from '../redux/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { PARAM_THEME } from '../utils/config-params';
@@ -86,8 +88,8 @@ const getMuiTheme = (theme) => {
 };
 
 const messages = {
-    en: { ...messages_en, ...login_en, ...top_bar_en },
-    fr: { ...messages_fr, ...login_fr, ...top_bar_fr },
+    en: { ...messages_en, ...labels_en, ...login_en, ...top_bar_en },
+    fr: { ...messages_fr, ...labels_fr, ...login_fr, ...top_bar_fr },
 };
 
 const basename = new URL(document.querySelector('base').href).pathname;
