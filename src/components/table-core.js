@@ -44,9 +44,20 @@ export default function TableCore() {
         <div>
             <AppBar position="static" color="transparent">
                 <Tabs value={value} onChange={handleChange} variant="fullWidth">
-                    <Tab label={<FormattedMessage id="overview"/>} {...a11yProps(0)} />
-                    <Tab label={<FormattedMessage id="events"/>} {...a11yProps(1)} disabled />
-                    <Tab label={<FormattedMessage id="artifacts"/>} {...a11yProps(2)} disabled />
+                    <Tab
+                        label={<FormattedMessage id="overview" />}
+                        {...a11yProps(0)}
+                    />
+                    <Tab
+                        label={<FormattedMessage id="events" />}
+                        {...a11yProps(1)}
+                        disabled
+                    />
+                    <Tab
+                        label={<FormattedMessage id="artifacts" />}
+                        {...a11yProps(2)}
+                        disabled
+                    />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>

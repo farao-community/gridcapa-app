@@ -16,10 +16,18 @@ export default function OverviewTable() {
             <Table className="table">
                 <TableHead>
                     <TableRow>
-                        <TableCell><FormattedMessage id="inputs"/></TableCell>
-                        <TableCell><FormattedMessage id="status"/></TableCell>
-                        <TableCell><FormattedMessage id="filename"/></TableCell>
-                        <TableCell><FormattedMessage id="latestModification"/></TableCell>
+                        <TableCell>
+                            <FormattedMessage id="inputs" />
+                        </TableCell>
+                        <TableCell>
+                            <FormattedMessage id="status" />
+                        </TableCell>
+                        <TableCell>
+                            <FormattedMessage id="filename" />
+                        </TableCell>
+                        <TableCell>
+                            <FormattedMessage id="latestModification" />
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

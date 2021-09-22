@@ -34,7 +34,7 @@ export default function TableHeader() {
                 <form noValidate>
                     <TextField
                         id="date"
-                        label={<FormattedMessage id="selectTimestampDate"/>}
+                        label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
                         data-test="timestamp-date-picker"
                         className={classes.textField}
@@ -48,7 +48,7 @@ export default function TableHeader() {
                 <form noValidate>
                     <TextField
                         id="time"
-                        label={<FormattedMessage id="selectTimestampTime"/>}
+                        label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
                         defaultValue="00:30"
                         data-test="timestamp-time-picker"
