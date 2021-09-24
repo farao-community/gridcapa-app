@@ -1,0 +1,13 @@
+{
+  "timestampView": "Vue horaire",
+  "businessDateView": "Vue journalière",
+  "inputs": "Intrant",
+  "status": "Statut",
+  "filename": "Nom de fichier",
+  "latestModification": "Dernière modification",
+  "overview": "Aperçu",
+  "events": "Evénements",
+  "artifacts": "Artefacts",
+  "selectTimestampDate": "Date du processus",
+  "selectTimestampTime": "Heure du processus"
+}

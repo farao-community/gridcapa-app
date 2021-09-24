@@ -5,6 +5,7 @@ import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
+import { FormattedMessage } from 'react-intl';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -43,9 +44,20 @@ export default function TableCore() {
         <div>
             <AppBar position="static" color="transparent">
                 <Tabs value={value} onChange={handleChange} variant="fullWidth">
-                    <Tab label="Overview" {...a11yProps(0)} />
-                    <Tab label="Events" {...a11yProps(1)} disabled />
-                    <Tab label="I/O" {...a11yProps(2)} disabled />
+                    <Tab
+                        label={<FormattedMessage id="overview" />}
+                        {...a11yProps(0)}
+                    />
+                    <Tab
+                        label={<FormattedMessage id="events" />}
+                        {...a11yProps(1)}
+                        disabled
+                    />
+                    <Tab
+                        label={<FormattedMessage id="artifacts" />}
+                        {...a11yProps(2)}
+                        disabled
+                    />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>

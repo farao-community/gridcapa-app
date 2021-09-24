@@ -41,11 +41,11 @@ const GridCapaMain = () => {
                     orientation="vertical"
                 >
                     <Tab
-                        label={<FormattedMessage id="Timestamp view" />}
+                        label={<FormattedMessage id="timestampView" />}
                         data-test="timestamp-view"
                     />
                     <Tab
-                        label={<FormattedMessage id="Business view" />}
+                        label={<FormattedMessage id="businessDateView" />}
                         data-test="business-view"
                     />
                 </Tabs>

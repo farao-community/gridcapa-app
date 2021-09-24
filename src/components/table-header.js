@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -33,7 +34,7 @@ export default function TableHeader() {
                 <form noValidate>
                     <TextField
                         id="date"
-                        label="Select timestamp date"
+                        label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
                         data-test="timestamp-date-picker"
                         className={classes.textField}
@@ -47,7 +48,7 @@ export default function TableHeader() {
                 <form noValidate>
                     <TextField
                         id="time"
-                        label="Select timestamp hour"
+                        label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
                         defaultValue="00:30"
                         data-test="timestamp-time-picker"

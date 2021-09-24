@@ -1,0 +1,13 @@
+{
+  "timestampView": "Timestamp view",
+  "businessDateView": "Business date view",
+  "inputs": "Inputs",
+  "status": "Status",
+  "filename": "Filename",
+  "latestModification": "Latest modification",
+  "overview": "Overview",
+  "events": "Events",
+  "artifacts": "Artifacts",
+  "selectTimestampDate": "Timestamp date",
+  "selectTimestampTime": "Timestamp time"
+}
