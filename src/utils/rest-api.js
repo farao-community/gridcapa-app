@@ -12,6 +12,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/config-notification';
+const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/task';
+const PREFIX_TASK_NOTIFICATION_WS = process.env.REACT_APP_API_GATEWAY + '/task-notification';
 
 function getToken() {
     const state = store.getState();
@@ -42,6 +44,27 @@ export function connectNotificationsWsUpdateConfig() {
     return reconnectingWebSocket;
 }
 
+export function connectNotificationsWsUpdateTask() {
+    const webSocketBaseUrl = document.baseURI
+        .replace(/^http:\/\//, 'ws://')
+        .replace(/^https:\/\//, 'wss://');
+    //const webSocketUrl =
+    //    webSocketBaseUrl +
+    //    PREFIX_TASK_NOTIFICATION_WS +
+    //    '/websocket';
+    const webSocketUrl = 'ws://localhost/cse/d2cc/task-notification/websocket';
+
+    const reconnectingWebSocket = new ReconnectingWebSocket(
+        webSocketUrl
+    );
+    reconnectingWebSocket.onopen = function (event) {
+        console.info(
+            'Connected Websocket update task ui ' + webSocketUrl + ' ...'
+        );
+    };
+    return reconnectingWebSocket;
+}
+
 function backendFetch(url, init) {
     if (!(typeof init == 'undefined' || typeof init == 'object')) {
         throw new TypeError(
@@ -66,6 +89,16 @@ export function fetchAppsAndUrls() {
                 return response.json();
             });
         });
+}
+
+export function fetchTimestampData(timestamp) {
+    console.info("Fetching task data for timestamp " + timestamp);
+    const fetchParams = PREFIX_TASK_QUERIES + `/${timestamp}`;
+    return backendFetch(fetchParams).then((response) =>
+        response.ok
+            ? response.json()
+            : response.text().then((text) => Promise.reject(text))
+    );
 }
 
 export function fetchConfigParameters(appName) {

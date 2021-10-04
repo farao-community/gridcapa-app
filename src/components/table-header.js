@@ -20,8 +20,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TableHeader() {
+const TableHeader = ({ taskData, onSelectedTimestampChange }) => {
     const classes = useStyles();
+
+    let taskStatus = taskData === null ? 'Not created' : taskData.status;
+
+    const onSelectedDateChange = (event) => {
+        const timestamp = "new date";
+        onSelectedTimestampChange(timestamp);
+    }
+
+    const onSelectedTimeChange = (event) => {
+        const timestamp = "new time";
+        onSelectedTimestampChange(timestamp);
+    }
 
     return (
         <Grid container className={classes.container}>
@@ -41,6 +53,7 @@ export default function TableHeader() {
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        onChange={onSelectedDateChange}
                     />
                 </form>
             </Grid>
@@ -59,12 +72,15 @@ export default function TableHeader() {
                         inputProps={{
                             step: 3600,
                         }}
+                        onChange={onSelectedTimeChange}
                     />
                 </form>
             </Grid>
             <Grid item xs={3}>
-                <Chip data-test="timestamp-status" label="Not created" />
+                <Chip data-test="timestamp-status" label={taskStatus} />
             </Grid>
         </Grid>
     );
 }
+
+export default TableHeader;
