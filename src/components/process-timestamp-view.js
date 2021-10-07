@@ -11,13 +11,14 @@ const ProcessTimestampView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [taskData, setTaskData] = React.useState(null)
+    const defaultTimestamp = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 30);
 
     const connectNotificationsUpdateTask = useCallback(() => {
         const ws = connectNotificationsWsUpdateTask();
 
         ws.onmessage = function (event) {
             let data = JSON.parse(event.data);
-            console.log(data);
+            //todo filter taskData with timestamp
             setTaskData(data)
         };
         ws.onerror = function (event) {
@@ -30,13 +31,12 @@ const ProcessTimestampView = () => {
     ]);
 
     useEffect(() => {
+        const ws = connectNotificationsUpdateTask();
         if (taskData === null) {
-            updateSelectedTimestampData("today");
-            const ws = connectNotificationsUpdateTask();
-            return function () {
-                ws.close();
-            };
-        }
+            updateSelectedTimestampData(defaultTimestamp);
+        } return function () {
+            ws.close();
+        };
     }, [
         taskData,
         setTaskData,
@@ -44,7 +44,7 @@ const ProcessTimestampView = () => {
     ]);
 
     const updateSelectedTimestampData = (timestamp) => {
-        fetchTimestampData(timestamp)
+        fetchTimestampData(timestamp.toISOString().substr(0,19))
             .then((data) => setTaskData(data))
             .catch((errorMessage) =>
                 displayErrorMessageWithSnackbar({
