@@ -14,20 +14,20 @@ import { FormattedMessage } from 'react-intl';
 function inputDataRow(input) {
     return (
         <TableRow>
-            <TableCell data-test="input-type">{input.type}</TableCell>
+            <TableCell data-test="input-type">{input.fileType}</TableCell>
             <TableCell
                 data-test="input-status"
                 style={{ backgroundColor: 'grey', color: 'white' }}
             >
-                Absent
+                {input.processFileStatus}
             </TableCell>
-            <TableCell data-test="input-filename">{input.url}</TableCell>
-            <TableCell data-test="input-latest-modification"></TableCell>
+            <TableCell data-test="input-filename">{input.filename}</TableCell>
+            <TableCell data-test="input-latest-modification">{input.lastModificationDate}</TableCell>
         </TableRow>
     );
 }
 const OverviewTable = ({ taskData }) => {
-    let inputs = taskData === null ? [] : taskData.inputFiles;
+    let inputs = taskData === null ? [] : taskData.processFiles;
     return (
         <TableContainer component={Paper}>
             <Table className="table">

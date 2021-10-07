@@ -12,7 +12,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/config-notification';
-const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/task';
+const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/tasks';
 const PREFIX_TASK_NOTIFICATION_WS = process.env.REACT_APP_API_GATEWAY + '/task-notification';
 
 function getToken() {
@@ -94,6 +94,7 @@ export function fetchAppsAndUrls() {
 export function fetchTimestampData(timestamp) {
     console.info("Fetching task data for timestamp " + timestamp);
     const fetchParams = PREFIX_TASK_QUERIES + `/${timestamp}`;
+    console.log(fetchParams)
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
