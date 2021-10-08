@@ -10,8 +10,7 @@ import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
-const PREFIX_CONFIG_NOTIFICATION_WS =
-    process.env.REACT_APP_WS_GATEWAY + '/config-notification';
+const PREFIX_CONFIG_NOTIFICATION_WS = process.env.REACT_APP_WS_GATEWAY + '/config-notification';
 const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/tasks';
 const PREFIX_TASK_NOTIFICATION_WS = process.env.REACT_APP_API_GATEWAY + '/task-notification';
 
@@ -36,7 +35,7 @@ export function connectNotificationsWsUpdateConfig() {
     const reconnectingWebSocket = new ReconnectingWebSocket(
         webSocketUrlWithToken
     );
-    reconnectingWebSocket.onopen = function (event) {
+    reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update config ui ' + webSocketUrl + ' ...'
         );
@@ -57,7 +56,7 @@ export function connectNotificationsWsUpdateTask() {
     const reconnectingWebSocket = new ReconnectingWebSocket(
         webSocketUrl
     );
-    reconnectingWebSocket.onopen = function (event) {
+    reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'
         );
@@ -92,9 +91,9 @@ export function fetchAppsAndUrls() {
 }
 
 export function fetchTimestampData(timestamp) {
-    console.info("Fetching task data for timestamp " + timestamp);
+    console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = PREFIX_TASK_QUERIES + `/${timestamp}`;
-    console.log(fetchParams)
+    console.log(fetchParams);
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()

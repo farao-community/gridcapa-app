@@ -1,4 +1,3 @@
-import React, {useCallback} from 'react';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,11 +19,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TableHeader = ({ taskData, onSelectedTimestampChange}) => {
+const TableHeader = ({ taskData, onSelectedDateChange, onSelectedTimeChange}) => {
     const classes = useStyles();
     const defaultTimestamp = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 30);
-
-    const [timestamp, setTimestamp] = React.useState(defaultTimestamp);
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
@@ -38,27 +35,6 @@ const TableHeader = ({ taskData, onSelectedTimestampChange}) => {
     const defaultDate = defaultTimestamp.getFullYear() +
         '-' + pad( defaultTimestamp.getMonth() + 1 ) +
         '-' + pad( defaultTimestamp.getDate() );
-
-    const onSelectedDateChange = useCallback((event) => {
-        const date = event.target.value;
-        console.log("Modifying date to '" + date + "'");
-        timestamp.setDate(date.substr(8,2));
-        timestamp.setMonth(date.substr(5,2) - 1);
-        timestamp.setFullYear(date.substr(0,4));
-        onSelectedTimestampChange(timestamp);
-    },[timestamp,
-        setTimestamp
-    ]);
-
-    const onSelectedTimeChange = useCallback((event) => {
-        const time = event.target.value;
-        console.log("Modifying time to '" + time + "'");
-        timestamp.setHours(time.substr(0,2));
-        timestamp.setMinutes(time.substr(3,2));
-        onSelectedTimestampChange(timestamp);
-    },[timestamp,
-    setTimestamp
-]);
 
     return (
         <Grid container className={classes.container}>
@@ -89,7 +65,7 @@ const TableHeader = ({ taskData, onSelectedTimestampChange}) => {
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
-                        defaultValue={timestamp.toLocaleTimeString().substr(0,5)}
+                        defaultValue={defaultTimestamp.toLocaleTimeString().substr(0,5)}
                             data-test="timestamp-time-picker"
                         className={classes.textField}
                         InputLabelProps={{
