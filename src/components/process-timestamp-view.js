@@ -41,30 +41,23 @@ const ProcessTimestampView = () => {
         return ws;
     }, [setTaskData, timestamp]);
 
-    useEffect(() => {
-        const ws = connectNotificationsUpdateTask();
-        if (taskData === null) {
-            updateSelectedTimestampData(defaultTimestamp);
-        }
-        return function () {
-            ws.close();
-        };
-    }, [taskData, setTaskData, defaultTimestamp, connectNotificationsUpdateTask]);
-
-    const updateSelectedTimestampData = (timestamp) => {
-        fetchTimestampData(timestamp.toISOString().substr(0, 19))
-            .then((data) => setTaskData(data))
-            .catch((errorMessage) =>
-                displayErrorMessageWithSnackbar({
-                    errorMessage: errorMessage,
-                    enqueueSnackbar: enqueueSnackbar,
-                    headerMessage: {
-                        headerMessageId: 'taskRetrievingError',
-                        intlRef: intlRef,
-                    },
-                })
-            );
-    };
+    const updateSelectedTimestampData = useCallback(
+        (timestamp) => {
+            fetchTimestampData(timestamp.toISOString().substr(0, 19))
+                .then((data) => setTaskData(data))
+                .catch((errorMessage) =>
+                    displayErrorMessageWithSnackbar({
+                        errorMessage: errorMessage,
+                        enqueueSnackbar: enqueueSnackbar,
+                        headerMessage: {
+                            headerMessageId: 'taskRetrievingError',
+                            intlRef: intlRef,
+                        },
+                    })
+                );
+        },
+        [setTaskData, enqueueSnackbar, intlRef]
+    );
 
     const updateSelectedDateData = useCallback(
         (event) => {
@@ -88,6 +81,22 @@ const ProcessTimestampView = () => {
         },
         [timestamp, setTimestamp, updateSelectedTimestampData]
     );
+
+    useEffect(() => {
+        const ws = connectNotificationsUpdateTask();
+        if (taskData === null) {
+            updateSelectedTimestampData(timestamp);
+        }
+        return function () {
+            ws.close();
+        };
+    }, [
+        taskData,
+        setTaskData,
+        connectNotificationsUpdateTask,
+        updateSelectedTimestampData,
+        timestamp,
+    ]);
 
     return (
         <Grid container direction="column">
