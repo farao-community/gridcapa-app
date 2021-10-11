@@ -19,22 +19,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TableHeader = ({ taskData, onSelectedDateChange, onSelectedTimeChange}) => {
+const TableHeader = ({
+    taskData,
+    onSelectedDateChange,
+    onSelectedTimeChange,
+}) => {
     const classes = useStyles();
-    const defaultTimestamp = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 30);
+    const defaultTimestamp = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        0,
+        30
+    );
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
     function pad(number) {
-        if ( number < 10 ) {
+        if (number < 10) {
             return '0' + number;
         }
         return number;
     }
 
-    const defaultDate = defaultTimestamp.getFullYear() +
-        '-' + pad( defaultTimestamp.getMonth() + 1 ) +
-        '-' + pad( defaultTimestamp.getDate() );
+    const defaultDate =
+        defaultTimestamp.getFullYear() +
+        '-' +
+        pad(defaultTimestamp.getMonth() + 1) +
+        '-' +
+        pad(defaultTimestamp.getDate());
 
     return (
         <Grid container className={classes.container}>
@@ -65,8 +78,10 @@ const TableHeader = ({ taskData, onSelectedDateChange, onSelectedTimeChange}) =>
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
-                        defaultValue={defaultTimestamp.toLocaleTimeString().substr(0,5)}
-                            data-test="timestamp-time-picker"
+                        defaultValue={defaultTimestamp
+                            .toLocaleTimeString()
+                            .substr(0, 5)}
+                        data-test="timestamp-time-picker"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -83,6 +98,6 @@ const TableHeader = ({ taskData, onSelectedDateChange, onSelectedTimeChange}) =>
             </Grid>
         </Grid>
     );
-}
+};
 
 export default TableHeader;

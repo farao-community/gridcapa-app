@@ -10,9 +10,11 @@ import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
-const PREFIX_CONFIG_NOTIFICATION_WS = process.env.REACT_APP_WS_GATEWAY + '/config-notification';
+const PREFIX_CONFIG_NOTIFICATION_WS =
+    process.env.REACT_APP_WS_GATEWAY + '/config-notification';
 const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/tasks';
-const PREFIX_TASK_NOTIFICATION_WS = process.env.REACT_APP_API_GATEWAY + '/task-notification';
+const PREFIX_TASK_NOTIFICATION_WS =
+    process.env.REACT_APP_WS_GATEWAY + '/task-notification';
 
 function getToken() {
     const state = store.getState();
@@ -48,14 +50,10 @@ export function connectNotificationsWsUpdateTask() {
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
     //const webSocketUrl =
-    //    webSocketBaseUrl +
-    //    PREFIX_TASK_NOTIFICATION_WS +
-    //    '/websocket';
+    //    webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
     const webSocketUrl = 'ws://localhost/cse/d2cc/task-notification/websocket';
 
-    const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrl
-    );
+    const reconnectingWebSocket = new ReconnectingWebSocket(webSocketUrl);
     reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'

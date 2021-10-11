@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
-
 function inputDataRow(input) {
     return (
         <TableRow>
@@ -22,7 +21,9 @@ function inputDataRow(input) {
                 {input.processFileStatus}
             </TableCell>
             <TableCell data-test="input-filename">{input.filename}</TableCell>
-            <TableCell data-test="input-latest-modification">{input.lastModificationDate}</TableCell>
+            <TableCell data-test="input-latest-modification">
+                {input.lastModificationDate}
+            </TableCell>
         </TableRow>
     );
 }
@@ -53,6 +54,6 @@ const OverviewTable = ({ taskData }) => {
             </Table>
         </TableContainer>
     );
-}
+};
 
 export default OverviewTable;

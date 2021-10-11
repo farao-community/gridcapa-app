@@ -71,6 +71,6 @@ const TableCore = ({ taskData }) => {
             </TabPanel>
         </div>
     );
-}
+};
 
 export default TableCore;
