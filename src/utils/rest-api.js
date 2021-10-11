@@ -49,9 +49,8 @@ export function connectNotificationsWsUpdateTask() {
     const webSocketBaseUrl = document.baseURI
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
-    //const webSocketUrl =
-    //    webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
-    const webSocketUrl = 'ws://localhost/cse/d2cc/task-notification/websocket';
+    const webSocketUrl =
+        webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
 
     const reconnectingWebSocket = new ReconnectingWebSocket(webSocketUrl);
     reconnectingWebSocket.onopen = function () {
