@@ -14,6 +14,7 @@ const ProcessTimestampView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [taskData, setTaskData] = React.useState(null);
+    const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
         new Date().getMonth(),
@@ -84,19 +85,21 @@ const ProcessTimestampView = () => {
 
     useEffect(() => {
         const ws = connectNotificationsUpdateTask();
-        if (taskData === null) {
-            updateSelectedTimestampData(timestamp);
-        }
+        setWebsocketCreated(true);
         return function () {
             ws.close();
         };
     }, [
-        taskData,
-        setTaskData,
+        isWebsocketCreated,
+        setWebsocketCreated,
         connectNotificationsUpdateTask,
-        updateSelectedTimestampData,
-        timestamp,
     ]);
+
+    useEffect(() => {
+        if (taskData === null) {
+            updateSelectedTimestampData(timestamp);
+        }
+    }, [taskData, updateSelectedTimestampData, timestamp]);
 
     return (
         <Grid container direction="column">
