@@ -33,6 +33,9 @@ const TableHeader = ({
         0,
         30
     );
+    let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
+
+    let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
@@ -49,10 +52,7 @@ const TableHeader = ({
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
-                        defaultValue={dateFormat(
-                            defaultTimestamp,
-                            'yyyy-mm-dd'
-                        )}
+                        defaultValue={defaultDate}
                         data-test="timestamp-date-picker"
                         className={classes.textField}
                         InputLabelProps={{
@@ -68,9 +68,7 @@ const TableHeader = ({
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
-                        defaultValue={defaultTimestamp
-                            .toLocaleTimeString()
-                            .substr(0, 5)}
+                        defaultValue={defaultTime}
                         data-test="timestamp-time-picker"
                         className={classes.textField}
                         InputLabelProps={{

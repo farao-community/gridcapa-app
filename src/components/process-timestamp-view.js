@@ -63,11 +63,12 @@ const ProcessTimestampView = () => {
     const updateSelectedDateData = useCallback(
         (event) => {
             const date = event.target.value;
-            timestamp.setDate(date.substr(8, 2));
-            timestamp.setMonth(date.substr(5, 2) - 1);
-            timestamp.setFullYear(date.substr(0, 4));
-            setTimestamp(timestamp);
-            updateSelectedTimestampData(timestamp);
+            let newTimestamp = timestamp;
+            newTimestamp.setDate(date.substr(8, 2));
+            newTimestamp.setMonth(date.substr(5, 2) - 1);
+            newTimestamp.setFullYear(date.substr(0, 4));
+            setTimestamp(newTimestamp);
+            updateSelectedTimestampData(newTimestamp);
         },
         [timestamp, setTimestamp, updateSelectedTimestampData]
     );
@@ -75,10 +76,11 @@ const ProcessTimestampView = () => {
     const updateSelectedTimeData = useCallback(
         (event) => {
             const time = event.target.value;
-            timestamp.setHours(time.substr(0, 2));
-            timestamp.setMinutes(time.substr(3, 2));
-            setTimestamp(timestamp);
-            updateSelectedTimestampData(timestamp);
+            let newTimestamp = timestamp;
+            newTimestamp.setHours(time.substr(0, 2));
+            newTimestamp.setMinutes(time.substr(3, 2));
+            setTimestamp(newTimestamp);
+            updateSelectedTimestampData(newTimestamp);
         },
         [timestamp, setTimestamp, updateSelectedTimestampData]
     );

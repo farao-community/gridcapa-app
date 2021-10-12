@@ -207,6 +207,11 @@ const App = () => {
                         },
                     })
                 );
+
+            const ws = connectNotificationsUpdateConfig();
+            return function () {
+                ws.close();
+            };
         }
     }, [
         user,
