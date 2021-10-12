@@ -34,7 +34,10 @@
     "jest": {
         "moduleNameMapper": {
             "\\.svg": "<rootDir>/src/__mocks__/svgrMock.js"
-        }
+        },
+        "transformIgnorePatterns": [
+            "node_modules/(?!dateformat)"
+        ]
     },
     "eslintConfig": {
         "extends": [
