@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
+import dateFormat from 'dateformat';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -35,20 +36,6 @@ const TableHeader = ({
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
-    function pad(number) {
-        if (number < 10) {
-            return '0' + number;
-        }
-        return number;
-    }
-
-    const defaultDate =
-        defaultTimestamp.getFullYear() +
-        '-' +
-        pad(defaultTimestamp.getMonth() + 1) +
-        '-' +
-        pad(defaultTimestamp.getDate());
-
     return (
         <Grid container className={classes.container}>
             <Grid item xs={3}>
@@ -62,7 +49,10 @@ const TableHeader = ({
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
-                        defaultValue={defaultDate}
+                        defaultValue={dateFormat(
+                            defaultTimestamp,
+                            'yyyy-mm-dd'
+                        )}
                         data-test="timestamp-date-picker"
                         className={classes.textField}
                         InputLabelProps={{
