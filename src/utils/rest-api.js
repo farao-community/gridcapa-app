@@ -12,7 +12,8 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/config-notification';
-const PREFIX_TASK_QUERIES = process.env.REACT_APP_API_GATEWAY + '/task-manager/tasks';
+const PREFIX_TASK_QUERIES =
+    process.env.REACT_APP_API_GATEWAY + '/task-manager/tasks';
 const PREFIX_TASK_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/task-notification';
 
@@ -51,7 +52,6 @@ export function connectNotificationsWsUpdateTask() {
         .replace(/^https:\/\//, 'wss://');
     const webSocketUrl =
         webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
-    //const webSocketUrl = 'ws://task-notification-server/task-updated/websocket';
 
     const reconnectingWebSocket = new ReconnectingWebSocket(webSocketUrl);
     reconnectingWebSocket.onopen = function () {
@@ -90,7 +90,8 @@ export function fetchAppsAndUrls() {
 
 export function fetchTimestampData(timestamp) {
     console.info('Fetching task data for timestamp : ' + timestamp);
-    const fetchParams = document.baseURI + PREFIX_TASK_QUERIES + `/${timestamp}`;
+    const fetchParams =
+        document.baseURI + PREFIX_TASK_QUERIES + `/${timestamp}`;
     console.log(fetchParams);
     return backendFetch(fetchParams).then((response) =>
         response.ok
