@@ -10,6 +10,7 @@
         "@material-ui/lab": "^4.0.0-alpha.42",
         "@reduxjs/toolkit": "^1.2.3",
         "core-js": "^3.6.4",
+        "dateformat": "^5.0.1",
         "http-proxy-middleware": "^1.0.3",
         "notistack": "^1.0.1",
         "prop-types": "15.7.2",
@@ -33,7 +34,10 @@
     "jest": {
         "moduleNameMapper": {
             "\\.svg": "<rootDir>/src/__mocks__/svgrMock.js"
-        }
+        },
+        "transformIgnorePatterns": [
+            "node_modules/(?!dateformat)"
+        ]
     },
     "eslintConfig": {
         "extends": [

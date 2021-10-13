@@ -34,7 +34,7 @@ function a11yProps(index) {
     };
 }
 
-export default function TableCore() {
+const TableCore = ({ taskData }) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -61,7 +61,7 @@ export default function TableCore() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <OverviewTable />
+                <OverviewTable taskData={taskData} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 Item Two
@@ -71,4 +71,6 @@ export default function TableCore() {
             </TabPanel>
         </div>
     );
-}
+};
+
+export default TableCore;

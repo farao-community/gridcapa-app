@@ -1,10 +1,10 @@
-import React from 'react';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
+import dateFormat from 'dateformat';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -20,8 +20,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TableHeader() {
+const TableHeader = ({
+    taskData,
+    onSelectedDateChange,
+    onSelectedTimeChange,
+}) => {
     const classes = useStyles();
+    const defaultTimestamp = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate(),
+        0,
+        30
+    );
+    let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
+
+    let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
+
+    let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
     return (
         <Grid container className={classes.container}>
@@ -36,11 +52,13 @@ export default function TableHeader() {
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
+                        defaultValue={defaultDate}
                         data-test="timestamp-date-picker"
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        onChange={onSelectedDateChange}
                     />
                 </form>
             </Grid>
@@ -50,7 +68,7 @@ export default function TableHeader() {
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
-                        defaultValue="00:30"
+                        defaultValue={defaultTime}
                         data-test="timestamp-time-picker"
                         className={classes.textField}
                         InputLabelProps={{
@@ -59,12 +77,15 @@ export default function TableHeader() {
                         inputProps={{
                             step: 3600,
                         }}
+                        onChange={onSelectedTimeChange}
                     />
                 </form>
             </Grid>
             <Grid item xs={3}>
-                <Chip data-test="timestamp-status" label="Not created" />
+                <Chip data-test="timestamp-status" label={taskStatus} />
             </Grid>
         </Grid>
     );
-}
+};
+
+export default TableHeader;

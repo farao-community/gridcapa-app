@@ -12,6 +12,10 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/config-notification';
+const PREFIX_TASK_QUERIES =
+    process.env.REACT_APP_API_GATEWAY + '/task-manager/tasks';
+const PREFIX_TASK_NOTIFICATION_WS =
+    process.env.REACT_APP_WS_GATEWAY + '/task-notification';
 
 function getToken() {
     const state = store.getState();
@@ -34,9 +38,25 @@ export function connectNotificationsWsUpdateConfig() {
     const reconnectingWebSocket = new ReconnectingWebSocket(
         webSocketUrlWithToken
     );
-    reconnectingWebSocket.onopen = function (event) {
+    reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update config ui ' + webSocketUrl + ' ...'
+        );
+    };
+    return reconnectingWebSocket;
+}
+
+export function connectNotificationsWsUpdateTask() {
+    const webSocketBaseUrl = document.baseURI
+        .replace(/^http:\/\//, 'ws://')
+        .replace(/^https:\/\//, 'wss://');
+    const webSocketUrl =
+        webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
+
+    const reconnectingWebSocket = new ReconnectingWebSocket(webSocketUrl);
+    reconnectingWebSocket.onopen = function () {
+        console.info(
+            'Connected Websocket update task ui ' + webSocketUrl + ' ...'
         );
     };
     return reconnectingWebSocket;
@@ -66,6 +86,18 @@ export function fetchAppsAndUrls() {
                 return response.json();
             });
         });
+}
+
+export function fetchTimestampData(timestamp) {
+    console.info('Fetching task data for timestamp : ' + timestamp);
+    const fetchParams =
+        document.baseURI + PREFIX_TASK_QUERIES + `/${timestamp}`;
+    console.log(fetchParams);
+    return backendFetch(fetchParams).then((response) =>
+        response.ok
+            ? response.json()
+            : response.text().then((text) => Promise.reject(text))
+    );
 }
 
 export function fetchConfigParameters(appName) {

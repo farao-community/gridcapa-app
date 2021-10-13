@@ -10,7 +10,25 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
-export default function OverviewTable() {
+function inputDataRow(input) {
+    return (
+        <TableRow>
+            <TableCell data-test="input-type">{input.fileType}</TableCell>
+            <TableCell
+                data-test="input-status"
+                style={{ backgroundColor: 'grey', color: 'white' }}
+            >
+                {input.processFileStatus}
+            </TableCell>
+            <TableCell data-test="input-filename">{input.filename}</TableCell>
+            <TableCell data-test="input-latest-modification">
+                {input.lastModificationDate}
+            </TableCell>
+        </TableRow>
+    );
+}
+const OverviewTable = ({ taskData }) => {
+    let inputs = taskData === null ? [] : taskData.processFiles;
     return (
         <TableContainer component={Paper}>
             <Table className="table">
@@ -31,19 +49,11 @@ export default function OverviewTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow>
-                        <TableCell data-test="input-type">CGM</TableCell>
-                        <TableCell
-                            data-test="input-status"
-                            style={{ backgroundColor: 'grey', color: 'white' }}
-                        >
-                            Absent
-                        </TableCell>
-                        <TableCell data-test="input-filename"></TableCell>
-                        <TableCell data-test="input-latest-modification"></TableCell>
-                    </TableRow>
+                    {inputs.map((input) => inputDataRow(input))}
                 </TableBody>
             </Table>
         </TableContainer>
     );
-}
+};
+
+export default OverviewTable;
