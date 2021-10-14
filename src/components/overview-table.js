@@ -14,15 +14,21 @@ function inputDataRow(input) {
     let inputFileType = input.fileType;
     return (
         <TableRow>
-            <TableCell data-test={inputFileType + "-input-type"}>{inputFileType}</TableCell>
+            <TableCell data-test={inputFileType + '-input-type'}>
+                {inputFileType}
+            </TableCell>
             <TableCell
-                data-test={inputFileType + "-input-status"}
+                data-test={inputFileType + '-input-status'}
                 style={{ backgroundColor: 'grey', color: 'white' }}
             >
                 {input.processFileStatus}
             </TableCell>
-            <TableCell data-test={inputFileType + "-input-filename"}>{input.filename}</TableCell>
-            <TableCell data-test={inputFileType + "-input-latest-modification"}>{input.lastModificationDate}</TableCell>
+            <TableCell data-test={inputFileType + '-input-filename'}>
+                {input.filename}
+            </TableCell>
+            <TableCell data-test={inputFileType + '-input-latest-modification'}>
+                {input.lastModificationDate}
+            </TableCell>
         </TableRow>
     );
 }
