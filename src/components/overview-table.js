@@ -10,8 +10,20 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 
+const processFileStatusStyles = {
+    NOT_PRESENT: {
+        backgroundColor: 'grey',
+        color: 'white',
+    },
+    VALIDATED: {
+        backgroundColor: 'green',
+        color: 'white',
+    },
+};
+
 function inputDataRow(input) {
     let inputFileType = input.fileType;
+    let processFileStatus = input.processFileStatus;
     return (
         <TableRow>
             <TableCell data-test={inputFileType + '-input-type'}>
@@ -19,9 +31,9 @@ function inputDataRow(input) {
             </TableCell>
             <TableCell
                 data-test={inputFileType + '-input-status'}
-                style={{ backgroundColor: 'grey', color: 'white' }}
+                style={processFileStatusStyles[processFileStatus]}
             >
-                {input.processFileStatus}
+                {processFileStatus}
             </TableCell>
             <TableCell data-test={inputFileType + '-input-filename'}>
                 {input.filename}
