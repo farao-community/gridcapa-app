@@ -53,7 +53,7 @@ const TableHeader = ({
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
                         defaultValue={defaultDate}
-                        inputProps={{'data-test': 'timestamp-date-picker'}}
+                        inputProps={{ 'data-test': 'timestamp-date-picker' }}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
@@ -69,7 +69,10 @@ const TableHeader = ({
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
                         defaultValue={defaultTime}
-                        inputProps={{'data-test': 'timestamp-time-picker', step: 3600}}
+                        inputProps={{
+                            'data-test': 'timestamp-time-picker',
+                            step: 3600
+                        }}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
