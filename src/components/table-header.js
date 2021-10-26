@@ -71,7 +71,7 @@ const TableHeader = ({
                         defaultValue={defaultTime}
                         inputProps={{
                             'data-test': 'timestamp-time-picker',
-                            step: 3600
+                            step: 3600,
                         }}
                         className={classes.textField}
                         InputLabelProps={{
