@@ -40,15 +40,17 @@ const TableHeader = ({
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
+    let processName = (processMetadata === null
+        ? ''
+        : processMetadata.processName
+    )
+        .toString()
+        .concat(' ', 'Supervisor');
+
     return (
         <Grid container className={classes.container}>
             <Grid item xs={3}>
-                <Typography variant="body1">
-                    {processMetadata === null
-                        ? ''
-                        : processMetadata.processName}{' '}
-                    Supervisor
-                </Typography>
+                <Typography variant="body1">{processName}</Typography>
             </Grid>
             <Grid item xs={3}>
                 <form noValidate>
