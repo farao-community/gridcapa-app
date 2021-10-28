@@ -40,7 +40,7 @@ const TableHeader = ({
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
-    let processName =
+    let tableHeaderName =
         processMetadata === null
             ? ''
             : processMetadata.processName + ' Supervisor';
@@ -48,7 +48,7 @@ const TableHeader = ({
     return (
         <Grid container className={classes.container}>
             <Grid item xs={3}>
-                <Typography variant="body1">{processName}</Typography>
+                <Typography variant="body1">{tableHeaderName}</Typography>
             </Grid>
             <Grid item xs={3}>
                 <form noValidate>
