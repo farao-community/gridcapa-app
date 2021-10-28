@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TableHeader = ({
     taskData,
+    processMetadata,
     onSelectedDateChange,
     onSelectedTimeChange,
 }) => {
@@ -39,12 +40,15 @@ const TableHeader = ({
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
 
+    let tableHeaderName =
+        processMetadata === null
+            ? ''
+            : processMetadata.processName + ' Supervisor';
+
     return (
         <Grid container className={classes.container}>
             <Grid item xs={3}>
-                <Typography variant="body1">
-                    CSE D2CC Capacity Calculation Supervisor
-                </Typography>
+                <Typography variant="body1">{tableHeaderName}</Typography>
             </Grid>
             <Grid item xs={3}>
                 <form noValidate>

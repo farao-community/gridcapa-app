@@ -14,6 +14,7 @@ const ProcessTimestampView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [taskData, setTaskData] = React.useState(null);
+    const [processMetadata, setProcessMetadata] = React.useState(null);
     const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
@@ -103,11 +104,22 @@ const ProcessTimestampView = () => {
         }
     }, [taskData, updateSelectedTimestampData, timestamp]);
 
+    useEffect(() => {
+        if (processMetadata === null) {
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setProcessMetadata(res);
+                });
+        }
+    });
+
     return (
         <Grid container direction="column">
             <Grid item>
                 <TableHeader
                     taskData={taskData}
+                    processMetadata={processMetadata}
                     onSelectedDateChange={updateSelectedDateData}
                     onSelectedTimeChange={updateSelectedTimeData}
                 />
