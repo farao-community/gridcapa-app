@@ -1,32 +1,21 @@
 import React from 'react';
 
-const RunButton = ({ taskData, gridCapaJobLauncherUrl }) => {
+const RunButton = ({ taskData }) => {
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
     let taskTimestamp = taskData === null ? 'Not created' : taskData.timestamp;
+    let id = 5;
 
-    function launchTask() {
-        const request = new Request(gridCapaJobLauncherUrl + 'jobs/', {
+    const launchTask = () => fetchRunButtonPost();
+
+    function fetchRunButtonPost() {
+        console.log("Call run for id " + id);
+        const requestOptions = {
             method: 'POST',
-            body: JSON.stringify({
-                id: taskTimestamp,
-            }),
-        });
-        fetch(request)
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    console.log(response.status);
-                    throw new Error('Something went wrong on api server!');
-                }
-            })
-            .then((response) => {
-                console.debug(response);
-                // ...
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+            headers: { 'Content-Type': 'application/json' }
+        };
+        fetch('http://localhost/core/valid/job/jobs/' + id, requestOptions)
+            .then(response => response.json())
+            .then();
     }
 
     return (
