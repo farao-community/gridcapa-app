@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
 
 const RunButton = ({ taskData }) => {
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
@@ -18,9 +19,13 @@ const RunButton = ({ taskData }) => {
     }
 
     return (
-        <button disabled={taskStatus !== 'READY'} onClick={launchTask}>
+        <Button color="primary"
+                variant="contained"
+                size="large"
+                disabled={taskStatus !== 'READY'}
+                onClick={launchTask}>
             Run
-        </button>
+        </Button>
     );
 };
 
