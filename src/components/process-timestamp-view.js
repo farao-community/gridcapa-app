@@ -127,7 +127,6 @@ const ProcessTimestampView = () => {
             <Grid item>
                 <TableCore
                     taskData={taskData}
-                    gridCapaJobLauncherUrl={gridcapaJobLauncherUrl}
                 />
             </Grid>
         </Grid>
