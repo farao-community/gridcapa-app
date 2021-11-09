@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 
-const RunButton = ({ taskData }) => {
+const RunButton = ({ taskData, jobLauncherUrl }) => {
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
     let taskTimestamp = taskData === null ? 'Not created' : taskData.timestamp;
 
@@ -13,10 +13,7 @@ const RunButton = ({ taskData }) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         };
-        fetch(
-            'http://localhost/core/valid/job/start/' + taskTimestamp,
-            requestOptions
-        )
+        fetch(jobLauncherUrl + '/job/start/' + taskTimestamp, requestOptions)
             .then((response) => response.json())
             .then();
     }
