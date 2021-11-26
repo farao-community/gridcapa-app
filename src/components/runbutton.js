@@ -13,7 +13,10 @@ const RunButton = ({ taskData, jobLauncherUrl }) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         };
-        fetch(jobLauncherUrl + '/job/start/' + taskTimestamp, requestOptions)
+        fetch(
+            document.baseURI + 'gridcapa-job-launcher/start/' + taskTimestamp,
+            requestOptions
+        )
             .then((response) => response.json())
             .then();
     }
