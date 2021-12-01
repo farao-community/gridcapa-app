@@ -1,38 +1,26 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import { fetchJobLauncherPost } from '../utils/rest-api';
 
-const RunButton = ({ taskData, gridCapaJobLauncherUrl }) => {
+const RunButton = ({ taskData }) => {
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
     let taskTimestamp = taskData === null ? 'Not created' : taskData.timestamp;
 
-    function launchTask() {
-        const request = new Request(gridCapaJobLauncherUrl + 'jobs/', {
-            method: 'POST',
-            body: JSON.stringify({
-                id: taskTimestamp,
-            }),
-        });
-        fetch(request)
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json();
-                } else {
-                    console.log(response.status);
-                    throw new Error('Something went wrong on api server!');
-                }
-            })
-            .then((response) => {
-                console.debug(response);
-                // ...
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
+    const launchTask = () => fetchJobLauncherPost(taskTimestamp);
 
     return (
-        <button disabled={taskStatus !== 'READY'} onClick={launchTask}>
+        <Button
+            color="primary"
+            inputProps={{
+                'data-test': 'run-button',
+            }}
+            variant="contained"
+            size="large"
+            disabled={taskStatus !== 'READY'}
+            onClick={launchTask}
+        >
             Run
-        </button>
+        </Button>
     );
 };
 

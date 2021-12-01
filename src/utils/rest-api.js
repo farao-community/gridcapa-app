@@ -17,6 +17,9 @@ const PREFIX_TASK_QUERIES =
 const PREFIX_TASK_NOTIFICATION_WS =
     process.env.REACT_APP_WS_GATEWAY + '/task-notification';
 
+const PREFIX_JOB_LAUNCHER_QUERIES =
+    process.env.REACT_APP_API_GATEWAY + '/gridcapa-job-launcher/start/';
+
 function getToken() {
     const state = store.getState();
     return state.user.id_token;
@@ -145,4 +148,16 @@ export function updateConfigParameter(name, value) {
             ? response
             : response.text().then((text) => Promise.reject(text))
     );
+}
+
+export function fetchJobLauncherPost(taskTimestamp) {
+    console.log('Fetching job launcher for task:' + taskTimestamp);
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    };
+    fetch(
+        document.baseURI + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
+        requestOptions
+    ).then();
 }

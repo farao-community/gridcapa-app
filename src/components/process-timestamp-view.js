@@ -15,9 +15,6 @@ const ProcessTimestampView = () => {
 
     const [taskData, setTaskData] = React.useState(null);
     const [processMetadata, setProcessMetadata] = React.useState(null);
-    const [gridcapaJobLauncherUrl, setGridcapaJobLauncherUrl] = React.useState(
-        null
-    );
     const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
@@ -115,11 +112,6 @@ const ProcessTimestampView = () => {
                     setProcessMetadata(res);
                 });
         }
-        if (gridcapaJobLauncherUrl === null) {
-            fetch('env.json')
-                .then((res) => res.json())
-                .then((res) => setGridcapaJobLauncherUrl(res.jobLauncherUrl));
-        }
     });
 
     return (
@@ -133,10 +125,7 @@ const ProcessTimestampView = () => {
                 />
             </Grid>
             <Grid item>
-                <TableCore
-                    taskData={taskData}
-                    gridCapaJobLauncherUrl={gridcapaJobLauncherUrl}
-                />
+                <TableCore taskData={taskData} />
             </Grid>
         </Grid>
     );
