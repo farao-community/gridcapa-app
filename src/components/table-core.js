@@ -5,6 +5,7 @@ import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
+import RunButton from './runbutton';
 import { FormattedMessage } from 'react-intl';
 
 function TabPanel(props) {
@@ -69,6 +70,7 @@ const TableCore = ({ taskData }) => {
             <TabPanel value={value} index={2}>
                 Item Three
             </TabPanel>
+            <RunButton taskData={taskData} />
         </div>
     );
 };
