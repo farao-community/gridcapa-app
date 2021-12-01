@@ -15,7 +15,6 @@ const ProcessTimestampView = () => {
 
     const [taskData, setTaskData] = React.useState(null);
     const [processMetadata, setProcessMetadata] = React.useState(null);
-    const [jobLauncherUrl, setJobLauncherUrl] = React.useState(null);
     const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
@@ -113,11 +112,6 @@ const ProcessTimestampView = () => {
                     setProcessMetadata(res);
                 });
         }
-        if (jobLauncherUrl === null) {
-            fetch('env.json')
-                .then((res) => res.json())
-                .then((res) => setJobLauncherUrl(res.jobLauncherUrl));
-        }
     });
 
     return (
@@ -131,10 +125,7 @@ const ProcessTimestampView = () => {
                 />
             </Grid>
             <Grid item>
-                <TableCore
-                    taskData={taskData}
-                    jobLauncherUrl={jobLauncherUrl}
-                />
+                <TableCore taskData={taskData} />
             </Grid>
         </Grid>
     );

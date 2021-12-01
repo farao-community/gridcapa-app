@@ -1,25 +1,12 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import { fetchJobLauncherPost } from '../utils/rest-api';
 
-const RunButton = ({ taskData, jobLauncherUrl }) => {
+const RunButton = ({ taskData }) => {
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
     let taskTimestamp = taskData === null ? 'Not created' : taskData.timestamp;
 
-    const launchTask = () => fetchRunButtonPost();
-
-    function fetchRunButtonPost() {
-        console.log('Call run for task:' + taskTimestamp);
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        fetch(
-            document.baseURI + 'gridcapa-job-launcher/start/' + taskTimestamp,
-            requestOptions
-        )
-            .then((response) => response.json())
-            .then();
-    }
+    const launchTask = () => fetchJobLauncherPost(taskTimestamp);
 
     return (
         <Button

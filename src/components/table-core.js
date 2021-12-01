@@ -35,7 +35,7 @@ function a11yProps(index) {
     };
 }
 
-const TableCore = ({ taskData, jobLauncherUrl }) => {
+const TableCore = ({ taskData }) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -70,7 +70,7 @@ const TableCore = ({ taskData, jobLauncherUrl }) => {
             <TabPanel value={value} index={2}>
                 Item Three
             </TabPanel>
-            <RunButton taskData={taskData} jobLauncherUrl={jobLauncherUrl} />
+            <RunButton taskData={taskData} />
         </div>
     );
 };
