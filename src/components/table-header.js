@@ -20,6 +20,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const taskStatusStyles = {
+    SUCCESS: {
+        backgroundColor: 'green',
+        color: 'white',
+    },
+    ERROR: {
+        backgroundColor: 'red',
+        color: 'white',
+    },
+    NOT_CREATED: {
+        backgroundColor: 'grey',
+    },
+    READY: {
+        backgroundColor: 'white',
+        color: 'green'
+    },
+    CREATED: {
+        backgroundColor: 'grey',
+    }
+};
+
 const TableHeader = ({
     taskData,
     processMetadata,
@@ -39,6 +60,8 @@ const TableHeader = ({
     let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
+
+    let outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
 
     let tableHeaderName =
         processMetadata === null
@@ -86,7 +109,12 @@ const TableHeader = ({
                 </form>
             </Grid>
             <Grid item xs={3}>
-                <Chip data-test="timestamp-status" label={taskStatus} />
+                <Chip
+                    data-test="timestamp-status"
+                    label={taskStatus}
+                    variant={outlined}
+                    style={taskStatusStyles[taskStatus]}
+                />
             </Grid>
         </Grid>
     );
