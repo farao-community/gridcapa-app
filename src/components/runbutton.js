@@ -11,9 +11,7 @@ const RunButton = ({ taskData }) => {
     return (
         <Button
             color="primary"
-            inputProps={{
-                'data-test': 'run-button',
-            }}
+            data-test="run-button"
             variant="contained"
             size="large"
             disabled={taskStatus !== 'READY'}
