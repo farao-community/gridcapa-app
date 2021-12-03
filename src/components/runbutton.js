@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import { FormattedMessage } from 'react-intl';
 import { fetchJobLauncherPost } from '../utils/rest-api';
 
 const RunButton = ({ taskData }) => {
@@ -17,7 +18,7 @@ const RunButton = ({ taskData }) => {
             disabled={taskStatus !== 'READY'}
             onClick={launchTask}
         >
-            Run
+            <FormattedMessage id="runButtonLabel" />
         </Button>
     );
 };
