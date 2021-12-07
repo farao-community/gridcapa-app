@@ -9,16 +9,11 @@ import { APP_NAME, getAppName } from './config-params';
 import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-const PREFIX_CONFIG_QUERIES = process.env.REACT_APP_API_GATEWAY + '/config';
-const PREFIX_CONFIG_NOTIFICATION_WS =
-    process.env.REACT_APP_WS_GATEWAY + '/config-notification';
-const PREFIX_TASK_QUERIES =
-    process.env.REACT_APP_API_GATEWAY + '/task-manager/tasks';
-const PREFIX_TASK_NOTIFICATION_WS =
-    process.env.REACT_APP_WS_GATEWAY + '/task-notification';
-
-const PREFIX_JOB_LAUNCHER_QUERIES =
-    process.env.REACT_APP_API_GATEWAY + '/gridcapa-job-launcher/start/';
+const PREFIX_CONFIG_QUERIES = '/config';
+const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
+const PREFIX_TASK_QUERIES = '/task-manager/tasks';
+const PREFIX_TASK_NOTIFICATION_WS = '/task-notification';
+const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 
 function getToken() {
     const state = store.getState();
@@ -26,7 +21,7 @@ function getToken() {
 }
 
 export function connectNotificationsWsUpdateConfig() {
-    const webSocketBaseUrl = document.baseURI
+    const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
     const webSocketUrl =
@@ -50,7 +45,7 @@ export function connectNotificationsWsUpdateConfig() {
 }
 
 export function connectNotificationsWsUpdateTask() {
-    const webSocketBaseUrl = document.baseURI
+    const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
     const webSocketUrl =
@@ -93,8 +88,7 @@ export function fetchAppsAndUrls() {
 
 export function fetchTimestampData(timestamp) {
     console.info('Fetching task data for timestamp : ' + timestamp);
-    const fetchParams =
-        document.baseURI + PREFIX_TASK_QUERIES + `/${timestamp}`;
+    const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;
     console.log(fetchParams);
     return backendFetch(fetchParams).then((response) =>
         response.ok
@@ -106,7 +100,9 @@ export function fetchTimestampData(timestamp) {
 export function fetchConfigParameters(appName) {
     console.info('Fetching UI configuration params for app : ' + appName);
     const fetchParams =
-        PREFIX_CONFIG_QUERIES + `/v1/applications/${appName}/parameters`;
+        getBaseUrl() +
+        PREFIX_CONFIG_QUERIES +
+        `/v1/applications/${appName}/parameters`;
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
@@ -122,6 +118,7 @@ export function fetchConfigParameter(name) {
         appName
     );
     const fetchParams =
+        getBaseUrl() +
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters/${name}`;
     return backendFetch(fetchParams).then((response) =>
@@ -140,6 +137,7 @@ export function updateConfigParameter(name, value) {
         appName
     );
     const updateParams =
+        getBaseUrl() +
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters/${name}?value=` +
         encodeURIComponent(value);
@@ -157,7 +155,15 @@ export function fetchJobLauncherPost(taskTimestamp) {
         headers: { 'Content-Type': 'application/json' },
     };
     fetch(
-        document.baseURI + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
+        getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
         requestOptions
     ).then();
+}
+
+function getBaseUrl() {
+    let baseUrl = document.baseURI;
+    if (process.env.REACT_APP_PROFILE === 'development') {
+        baseUrl = process.env.REACT_APP_PUBLIC_URL;
+    }
+    return baseUrl;
 }
