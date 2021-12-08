@@ -9,5 +9,6 @@
   "events": "Events",
   "artifacts": "Artifacts",
   "selectTimestampDate": "Timestamp date",
-  "selectTimestampTime": "Timestamp time"
+  "selectTimestampTime": "Timestamp time",
+  "runButtonLabel": "Run"
 }

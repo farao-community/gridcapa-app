@@ -9,5 +9,6 @@
   "events": "Evénements",
   "artifacts": "Artefacts",
   "selectTimestampDate": "Date du processus",
-  "selectTimestampTime": "Heure du processus"
+  "selectTimestampTime": "Heure du processus",
+  "runButtonLabel": "Lancer un calcul"
 }
