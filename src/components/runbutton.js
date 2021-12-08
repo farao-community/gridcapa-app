@@ -15,7 +15,7 @@ const RunButton = ({ taskData }) => {
             data-test="run-button"
             variant="contained"
             size="large"
-            disabled={taskStatus !== 'READY'}
+            disabled={taskStatus !== 'READY' && taskStatus !== 'SUCCESS' && taskStatus !== 'ERROR'}
             onClick={launchTask}
         >
             <FormattedMessage id="runButtonLabel" />
