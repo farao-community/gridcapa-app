@@ -110,7 +110,10 @@ const TableHeader = ({
                     data-test="timestamp-status"
                     label={taskStatus}
                     variant={outlined}
-                    style={{ backgroundColor: getBackgroundColor(taskStatus), color: 'white' }}
+                    style={{
+                        backgroundColor: getBackgroundColor(taskStatus),
+                        color: 'white',
+                    }}
                 />
             </Grid>
         </Grid>
