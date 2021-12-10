@@ -1,6 +1,7 @@
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import { green, red, orange, blue, grey } from '@material-ui/core/colors';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
@@ -19,6 +20,23 @@ const useStyles = makeStyles((theme) => ({
         width: 200,
     },
 }));
+
+function getBackgroundColor(taskStatus) {
+    switch (taskStatus) {
+        case 'SUCCESS':
+            return green[500];
+        case 'ERROR':
+            return red[500];
+        case 'READY':
+            return green[300];
+        case 'RUNNING':
+            return blue[300];
+        case 'CREATED':
+            return orange[300];
+        default:
+            return grey[300];
+    }
+}
 
 const TableHeader = ({
     taskData,
@@ -39,6 +57,8 @@ const TableHeader = ({
     let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
 
     let taskStatus = taskData === null ? 'Not created' : taskData.status;
+
+    let outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
 
     let tableHeaderName =
         processMetadata === null
@@ -86,7 +106,15 @@ const TableHeader = ({
                 </form>
             </Grid>
             <Grid item xs={3}>
-                <Chip data-test="timestamp-status" label={taskStatus} />
+                <Chip
+                    data-test="timestamp-status"
+                    label={taskStatus}
+                    variant={outlined}
+                    style={{
+                        backgroundColor: getBackgroundColor(taskStatus),
+                        color: 'white',
+                    }}
+                />
             </Grid>
         </Grid>
     );
