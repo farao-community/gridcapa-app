@@ -5,6 +5,8 @@ import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
+import EventsTable from "./events-table";
+
 import RunButton from './runbutton';
 import { FormattedMessage } from 'react-intl';
 
@@ -52,7 +54,6 @@ const TableCore = ({ taskData }) => {
                     <Tab
                         label={<FormattedMessage id="events" />}
                         {...a11yProps(1)}
-                        disabled
                     />
                     <Tab
                         label={<FormattedMessage id="artifacts" />}
@@ -65,7 +66,7 @@ const TableCore = ({ taskData }) => {
                 <OverviewTable taskData={taskData} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                <EventsTable taskData={taskData} />
             </TabPanel>
             <TabPanel value={value} index={2}>
                 Item Three

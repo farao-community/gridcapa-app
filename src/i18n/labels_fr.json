@@ -10,5 +10,8 @@
   "artifacts": "Artefacts",
   "selectTimestampDate": "Date du processus",
   "selectTimestampTime": "Heure du processus",
-  "runButtonLabel": "Lancer un calcul"
+  "runButtonLabel": "Lancer un calcul",
+  "level": "Niveau",
+  "timestamp": "Horodatage",
+  "eventDescription": "Description de l'événement"
 }
