@@ -9,7 +9,7 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { formatTimeStamp } from './commons';
+import { formatTimeStamp, sha256 } from './commons';
 
 const processEventLevelStyles = {
     INFO: {
@@ -26,21 +26,27 @@ const processEventLevelStyles = {
 function inputDataRow(processEvent) {
     let level = processEvent.level;
     let timestamp = processEvent.timestamp;
+    let message = processEvent.message;
+    let encryptedMessage = sha256(message);
+
     let formattedTimestamp =
         timestamp === null ? null : formatTimeStamp(timestamp);
+
     return (
         <TableRow>
             <TableCell
-                data-test={timestamp + '-process-event-level'}
+                data-test={encryptedMessage + '-process-event-level'}
                 style={processEventLevelStyles[level]}
             >
                 {level}
             </TableCell>
-            <TableCell data-test={timestamp + '-process-event-timestamp'}>
+            <TableCell
+                data-test={encryptedMessage + '-process-event-timestamp'}
+            >
                 {formattedTimestamp}
             </TableCell>
-            <TableCell data-test={timestamp + '-process-event-message'}>
-                {processEvent.message}
+            <TableCell data-test={encryptedMessage + '-process-event-message'}>
+                {message}
             </TableCell>
         </TableRow>
     );
