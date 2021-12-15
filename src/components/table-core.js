@@ -5,7 +5,7 @@ import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
-import EventsTable from "./events-table";
+import EventsTable from './events-table';
 
 import RunButton from './runbutton';
 import { FormattedMessage } from 'react-intl';

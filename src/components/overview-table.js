@@ -8,8 +8,8 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import {FormattedMessage} from 'react-intl';
-import {formatTimeStamp} from './commons';
+import { FormattedMessage } from 'react-intl';
+import { formatTimeStamp } from './commons';
 
 const processFileStatusStyles = {
     NOT_PRESENT: {
@@ -26,7 +26,9 @@ function inputDataRow(input) {
     let inputFileType = input.fileType;
     let processFileStatus = input.processFileStatus;
     let lastModificationDate =
-        input.lastModificationDate === null ? null : formatTimeStamp(input.lastModificationDate);
+        input.lastModificationDate === null
+            ? null
+            : formatTimeStamp(input.lastModificationDate);
     return (
         <TableRow>
             <TableCell data-test={inputFileType + '-input-type'}>
@@ -48,7 +50,7 @@ function inputDataRow(input) {
     );
 }
 
-const OverviewTable = ({taskData}) => {
+const OverviewTable = ({ taskData }) => {
     let inputs = taskData === null ? [] : taskData.processFiles;
     return (
         <TableContainer component={Paper}>
@@ -56,16 +58,16 @@ const OverviewTable = ({taskData}) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <FormattedMessage id="inputs"/>
+                            <FormattedMessage id="inputs" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="status"/>
+                            <FormattedMessage id="status" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="filename"/>
+                            <FormattedMessage id="filename" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="latestModification"/>
+                            <FormattedMessage id="latestModification" />
                         </TableCell>
                     </TableRow>
                 </TableHead>

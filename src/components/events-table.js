@@ -8,8 +8,8 @@ import {
     TableHead,
     TableRow,
 } from '@material-ui/core';
-import {FormattedMessage} from 'react-intl';
-import {formatTimeStamp} from './commons';
+import { FormattedMessage } from 'react-intl';
+import { formatTimeStamp } from './commons';
 
 const processEventLevelStyles = {
     INFO: {
@@ -30,8 +30,9 @@ function inputDataRow(processEvent) {
         timestamp === null ? null : formatTimeStamp(timestamp);
     return (
         <TableRow>
-            <TableCell data-test={timestamp + '-process-event-level'}
-                       style={processEventLevelStyles[level]}
+            <TableCell
+                data-test={timestamp + '-process-event-level'}
+                style={processEventLevelStyles[level]}
             >
                 {level}
             </TableCell>
@@ -45,7 +46,7 @@ function inputDataRow(processEvent) {
     );
 }
 
-const EventsTable = ({taskData}) => {
+const EventsTable = ({ taskData }) => {
     let processEvents = taskData === null ? [] : taskData.processEvents;
     return (
         <TableContainer component={Paper}>
@@ -53,18 +54,20 @@ const EventsTable = ({taskData}) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <FormattedMessage id="level"/>
+                            <FormattedMessage id="level" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="timestamp"/>
+                            <FormattedMessage id="timestamp" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="eventDescription"/>
+                            <FormattedMessage id="eventDescription" />
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {processEvents.map((processEvent) => inputDataRow(processEvent))}
+                    {processEvents.map((processEvent) =>
+                        inputDataRow(processEvent)
+                    )}
                 </TableBody>
             </Table>
         </TableContainer>
