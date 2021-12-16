@@ -49,14 +49,17 @@ const TableCore = ({ taskData }) => {
                 <Tabs value={value} onChange={handleChange} variant="fullWidth">
                     <Tab
                         label={<FormattedMessage id="overview" />}
+                        data-test="overview"
                         {...a11yProps(0)}
                     />
                     <Tab
                         label={<FormattedMessage id="events" />}
+                        data-test="events"
                         {...a11yProps(1)}
                     />
                     <Tab
                         label={<FormattedMessage id="artifacts" />}
+                        data-test="artifacts"
                         {...a11yProps(2)}
                         disabled
                     />
