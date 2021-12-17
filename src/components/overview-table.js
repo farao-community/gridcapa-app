@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import React from 'react';
 import {
     Paper,
@@ -9,6 +16,7 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+import { formatTimeStamp } from './commons';
 
 const processFileStatusStyles = {
     NOT_PRESENT: {
@@ -24,6 +32,10 @@ const processFileStatusStyles = {
 function inputDataRow(input) {
     let inputFileType = input.fileType;
     let processFileStatus = input.processFileStatus;
+    let lastModificationDate =
+        input.lastModificationDate === null
+            ? null
+            : formatTimeStamp(input.lastModificationDate);
     return (
         <TableRow>
             <TableCell data-test={inputFileType + '-input-type'}>
@@ -39,11 +51,12 @@ function inputDataRow(input) {
                 {input.filename}
             </TableCell>
             <TableCell data-test={inputFileType + '-input-latest-modification'}>
-                {input.lastModificationDate}
+                {lastModificationDate}
             </TableCell>
         </TableRow>
     );
 }
+
 const OverviewTable = ({ taskData }) => {
     let inputs = taskData === null ? [] : taskData.processFiles;
     return (

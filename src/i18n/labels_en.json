@@ -10,5 +10,8 @@
   "artifacts": "Artifacts",
   "selectTimestampDate": "Timestamp date",
   "selectTimestampTime": "Timestamp time",
-  "runButtonLabel": "Run"
+  "runButtonLabel": "Run",
+  "level": "Level",
+  "timestamp": "Timestamp",
+  "eventDescription": "Description of the event"
 }
