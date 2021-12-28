@@ -37,10 +37,7 @@ const ProcessTimestampView = () => {
 
         ws.onmessage = function (event) {
             let data = JSON.parse(event.data);
-            if (
-                data !== null &&
-                data.timestamp === timestamp.toISOString().substr(0, 19)
-            ) {
+            if (data !== null && data.timestamp === timestamp.toISOString()) {
                 setTaskData(data);
             }
         };
@@ -52,7 +49,7 @@ const ProcessTimestampView = () => {
 
     const updateSelectedTimestampData = useCallback(
         (timestamp) => {
-            fetchTimestampData(timestamp.toISOString().substr(0, 19))
+            fetchTimestampData(timestamp.toISOString())
                 .then((data) => setTaskData(data))
                 .catch((errorMessage) =>
                     displayErrorMessageWithSnackbar({

@@ -12,18 +12,28 @@ export const sha256 = (x) =>
 
 export function formatTimeStamp(timestamp) {
     let date = new Date(timestamp);
-    let formattedDate =
-        date.getDay() +
+    const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    const month =
+        date.getMonth() + 1 < 10
+            ? '0' + (date.getMonth() + 1)
+            : date.getMonth() + 1; //January is 0!
+    const hours =
+        date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    const minutes =
+        date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    const seconds =
+        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return (
+        day +
         '/' +
-        date.getMonth() +
+        month +
         '/' +
         date.getFullYear() +
         '  ' +
-        date.getHours() +
+        hours +
         ':' +
-        date.getMinutes() +
+        minutes +
         ':' +
-        date.getSeconds();
-
-    return formattedDate;
+        seconds
+    );
 }
