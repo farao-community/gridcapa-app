@@ -37,7 +37,11 @@ const ProcessTimestampView = () => {
 
         ws.onmessage = function (event) {
             let data = JSON.parse(event.data);
-            if (data !== null && data.timestamp === timestamp.toISOString()) {
+            if (
+                data !== null &&
+                data.timestamp.substr(0, 19) ===
+                    timestamp.toISOString().substr(0, 19)
+            ) {
                 setTaskData(data);
             }
         };
