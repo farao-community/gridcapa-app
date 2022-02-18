@@ -4,19 +4,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback, useEffect} from 'react';
 
-import Grid from "@material-ui/core/Grid";
-import TableCoreBusinessView from "./table-core-business-view";
-import TableHeaderBusinessView from "./table-header-business-view";
-import {fetchBusinessDateData} from "../utils/rest-api";
-import {displayErrorMessageWithSnackbar, useIntlRef} from "../utils/messages";
-import {useSnackbar} from "notistack";
-import {getDay, getMonth} from "./commons";
+import Grid from '@material-ui/core/Grid';
+import TableCoreBusinessView from './table-core-business-view';
+import TableHeaderBusinessView from './table-header-business-view';
+import {fetchBusinessDateData} from '../utils/rest-api';
+import {displayErrorMessageWithSnackbar, useIntlRef} from '../utils/messages';
+import {useSnackbar} from 'notistack';
+import {getDay, getMonth} from './commons';
 
 const BusinessDateView = () => {
     const intlRef = useIntlRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [ListTasksData, setListTasksData] = React.useState([]);
     const [processMetadata, setProcessMetadata] = React.useState(null);
     const defaultBusinessDate = new Date(
@@ -37,11 +37,12 @@ const BusinessDateView = () => {
     });
 
     const updateSelectedBusinessDateData = useCallback(
-
         (businessDate) => {
             let date = businessDate.getFullYear() + '-' + getMonth(businessDate) + '-' + getDay(businessDate);
-                fetchBusinessDateData(date)
-                .then(data => { setListTasksData(data)})
+            fetchBusinessDateData(date)
+                .then(data => {
+                    setListTasksData(data)
+                })
                 .catch((errorMessage) =>
                     displayErrorMessageWithSnackbar({
                         errorMessage: errorMessage,

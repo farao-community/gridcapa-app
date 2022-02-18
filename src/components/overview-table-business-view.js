@@ -4,10 +4,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
-import {FormattedMessage} from "react-intl";
-import React from "react";
-import {formatTimestampWithoutSecond } from "./commons";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
+import React from 'react';
+import {formatTimestampWithoutSecond} from './commons';
 
 const processFileStatusStyles = {
     ERROR: {
@@ -34,7 +34,7 @@ function fillTimestampCell(rowValue) {
     return (
         <TableCell data-test={taskTimestamp + '-task-timestamp'}>
             {taskTimestamp}</TableCell>
-);
+    );
 }
 
 function fillStatusCell(rowValue) {
@@ -47,10 +47,10 @@ function fillStatusCell(rowValue) {
 
 function fillDataRow(task) {
     return (
-    <TableRow>
-        {fillTimestampCell(task)}
-        {fillStatusCell(task)}
-    </TableRow>
+        <TableRow>
+            {fillTimestampCell(task)}
+            {fillStatusCell(task)}
+        </TableRow>
     );
 }
 
