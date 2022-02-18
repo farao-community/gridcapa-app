@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import BusinessDateView from "./business-date-view";
+import BusinessDateView from './business-date-view';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -61,7 +61,7 @@ const GridCapaMain = () => {
             <Grid item xs={10}>
                 <TabPanel value={value} index={0}>
                     <ProcessTimestampView />
-                 </TabPanel>
+                </TabPanel>
                 <TabPanel value={value} index={1}>
                     <BusinessDateView />
                 </TabPanel>

@@ -4,12 +4,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {makeStyles} from "@material-ui/core/styles";
-import dateFormat from "dateformat";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import {FormattedMessage} from "react-intl";
+import { makeStyles } from '@material-ui/core/styles';
+import dateFormat from 'dateformat';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -25,17 +25,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TableHeaderBusinessView = (
-    {
-        processMetadata,
-        onSelectedDateChange,
-    }
-) => {
+const TableHeaderBusinessView = ({ processMetadata, onSelectedDateChange }) => {
     const classes = useStyles();
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
         new Date().getMonth(),
-        new Date().getDate(),
+        new Date().getDate()
     );
     let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
     let tableHeaderName =
@@ -52,10 +47,10 @@ const TableHeaderBusinessView = (
                 <form noValidate>
                     <TextField
                         id="date"
-                        label={<FormattedMessage id="selectTimestampDate"/>}
+                        label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
                         defaultValue={defaultDate}
-                        inputProps={{'data-test': 'timestamp-date-picker'}}
+                        inputProps={{ 'data-test': 'timestamp-date-picker' }}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,

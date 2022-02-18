@@ -4,25 +4,25 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import React, {useCallback, useEffect} from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import Grid from '@material-ui/core/Grid';
 import TableCoreBusinessView from './table-core-business-view';
 import TableHeaderBusinessView from './table-header-business-view';
-import {fetchBusinessDateData} from '../utils/rest-api';
-import {displayErrorMessageWithSnackbar, useIntlRef} from '../utils/messages';
-import {useSnackbar} from 'notistack';
-import {getDay, getMonth} from './commons';
+import { fetchBusinessDateData } from '../utils/rest-api';
+import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
+import { useSnackbar } from 'notistack';
+import { getDay, getMonth } from './commons';
 
 const BusinessDateView = () => {
     const intlRef = useIntlRef();
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [ListTasksData, setListTasksData] = React.useState([]);
     const [processMetadata, setProcessMetadata] = React.useState(null);
     const defaultBusinessDate = new Date(
         new Date().getFullYear(),
         new Date().getMonth(),
-        new Date().getDate(),
+        new Date().getDate()
     );
     const [businessDate, setBusinessDate] = React.useState(defaultBusinessDate);
 
@@ -38,10 +38,15 @@ const BusinessDateView = () => {
 
     const updateSelectedBusinessDateData = useCallback(
         (businessDate) => {
-            let date = businessDate.getFullYear() + '-' + getMonth(businessDate) + '-' + getDay(businessDate);
+            let date =
+                businessDate.getFullYear() +
+                '-' +
+                getMonth(businessDate) +
+                '-' +
+                getDay(businessDate);
             fetchBusinessDateData(date)
-                .then(data => {
-                    setListTasksData(data)
+                .then((data) => {
+                    setListTasksData(data);
                 })
                 .catch((errorMessage) =>
                     displayErrorMessageWithSnackbar({
@@ -54,7 +59,7 @@ const BusinessDateView = () => {
                     })
                 );
         },
-        [ListTasksData, enqueueSnackbar, intlRef]
+        [setListTasksData, enqueueSnackbar, intlRef]
     );
 
     useEffect(() => {
@@ -73,7 +78,7 @@ const BusinessDateView = () => {
             setBusinessDate(newBusinessDate);
             updateSelectedBusinessDateData(newBusinessDate);
         },
-        [businessDate, setBusinessDate]
+        [businessDate, updateSelectedBusinessDateData, setBusinessDate]
     );
 
     return (
@@ -85,11 +90,10 @@ const BusinessDateView = () => {
                 />
             </Grid>
             <Grid item>
-                <TableCoreBusinessView listTasksData={ListTasksData}/>
+                <TableCoreBusinessView listTasksData={ListTasksData} />
             </Grid>
         </Grid>
-    )
-
+    );
 };
 
 export default BusinessDateView;

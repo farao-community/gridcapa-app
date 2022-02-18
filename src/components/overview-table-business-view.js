@@ -4,10 +4,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
-import {FormattedMessage} from 'react-intl';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import {formatTimestampWithoutSecond} from './commons';
+import { formatTimestampWithoutSecond } from './commons';
 
 const processFileStatusStyles = {
     ERROR: {
@@ -26,22 +34,26 @@ const processFileStatusStyles = {
         backgroundColor: 'green',
         color: 'white',
     },
-
 };
 
 function fillTimestampCell(rowValue) {
-    let taskTimestamp = rowValue === null ? [] : formatTimestampWithoutSecond(rowValue.timestamp);
+    let taskTimestamp = rowValue === null ? [] : rowValue.timestamp;
     return (
         <TableCell data-test={taskTimestamp + '-task-timestamp'}>
-            {taskTimestamp}</TableCell>
+            {formatTimestampWithoutSecond(taskTimestamp)}
+        </TableCell>
     );
 }
 
 function fillStatusCell(rowValue) {
     let taskStatus = rowValue === null ? [] : rowValue.status;
     return (
-        <TableCell data-test={taskStatus + '-task-status'} style={processFileStatusStyles[taskStatus]}>
-            {taskStatus}</TableCell>
+        <TableCell
+            data-test={taskStatus + '-task-status'}
+            style={processFileStatusStyles[taskStatus]}
+        >
+            {taskStatus}
+        </TableCell>
     );
 }
 
@@ -54,17 +66,17 @@ function fillDataRow(task) {
     );
 }
 
-const OverviewTableBusinessView = ({listTasksData}) => {
+const OverviewTableBusinessView = ({ listTasksData }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <FormattedMessage id="Timesatmp"/>
+                            <FormattedMessage id="Timesatmp" />
                         </TableCell>
                         <TableCell>
-                            <FormattedMessage id="Status"/>
+                            <FormattedMessage id="Status" />
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -74,7 +86,6 @@ const OverviewTableBusinessView = ({listTasksData}) => {
             </Table>
         </TableContainer>
     );
-
-}
+};
 
 export default OverviewTableBusinessView;

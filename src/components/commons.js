@@ -30,7 +30,8 @@ function getMinutes(date) {
 
 export function formatTimeStamp(timestamp) {
     let date = new Date(timestamp);
-    const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    const seconds =
+        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return (
         date.getFullYear() +
         '-' +

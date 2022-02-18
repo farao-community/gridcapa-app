@@ -99,7 +99,11 @@ export function fetchTimestampData(timestamp) {
 
 export function fetchBusinessDateData(businessDate) {
     console.info('Fetching tasks for date : ' + businessDate);
-    const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + '/businessdate' + `/${businessDate}`;
+    const fetchParams =
+        getBaseUrl() +
+        PREFIX_TASK_QUERIES +
+        '/businessdate' +
+        `/${businessDate}`;
     console.log(fetchParams);
     return backendFetch(fetchParams).then((response) =>
         response.ok
