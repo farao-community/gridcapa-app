@@ -97,6 +97,17 @@ export function fetchTimestampData(timestamp) {
     );
 }
 
+export function fetchBusinessDateData(businessDate) {
+    console.info('Fetching tasks for date : ' + businessDate );
+        const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + '/businessdate' + `/${businessDate}`;
+        console.log(fetchParams);
+        return backendFetch(fetchParams).then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        );
+}
+
 export function fetchConfigParameters(appName) {
     console.info('Fetching UI configuration params for app : ' + appName);
     const fetchParams =

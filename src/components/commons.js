@@ -10,30 +10,53 @@ const crypto = require('crypto');
 export const sha256 = (x) =>
     crypto.createHash('sha256').update(x, 'utf8').digest('hex'); // UTF8 text hash
 
+export function getDay(date) {
+    return date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+}
+
+export function getMonth(date) {
+    return date.getMonth() + 1 < 10
+        ? '0' + (date.getMonth() + 1)
+        : date.getMonth() + 1; //January is 0!;
+}
+
+function getHours(date) {
+    return date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+}
+
+function getMinutes(date) {
+    return date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+}
+
 export function formatTimeStamp(timestamp) {
     let date = new Date(timestamp);
-    const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    const month =
-        date.getMonth() + 1 < 10
-            ? '0' + (date.getMonth() + 1)
-            : date.getMonth() + 1; //January is 0!
-    const hours =
-        date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-    const minutes =
-        date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    const seconds =
-        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return (
-        day +
-        '/' +
-        month +
-        '/' +
         date.getFullYear() +
+        '-' +
+        getMonth(date) +
+        '-' +
+        getDay(date) +
         '  ' +
-        hours +
+        getHours(date) +
         ':' +
-        minutes +
+        getMinutes(date) +
         ':' +
         seconds
+    );
+}
+
+export function formatTimestampWithoutSecond(timestamp) {
+    let date = new Date(timestamp);
+    return (
+        date.getFullYear() +
+        '-' +
+        getMonth(date) +
+        '-' +
+        getDay(date) +
+        '  ' +
+        getHours(date) +
+        ':' +
+        getMinutes(date)
     );
 }
