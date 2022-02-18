@@ -62,7 +62,6 @@ const BusinessDateView = () => {
         }
     }, [ListTasksData, updateSelectedBusinessDateData, businessDate]);
 
-
     const updateSelectedDate = useCallback(
         (event) => {
             const date = event.target.value;

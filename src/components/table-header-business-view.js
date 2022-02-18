@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
         width: 200,
     },
 }));
+
 const TableHeaderBusinessView = (
     {
         processMetadata,
