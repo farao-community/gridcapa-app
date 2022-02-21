@@ -17,7 +17,7 @@ import { getDay, getMonth } from './commons';
 const BusinessDateView = () => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
-    const [ListTasksData, setListTasksData] = React.useState([]);
+    const [listTasksData, setListTasksData] = React.useState([]);
     const [processMetadata, setProcessMetadata] = React.useState(null);
     const defaultBusinessDate = new Date(
         new Date().getFullYear(),
@@ -63,10 +63,10 @@ const BusinessDateView = () => {
     );
 
     useEffect(() => {
-        if (ListTasksData === null) {
+        if (listTasksData === null) {
             updateSelectedBusinessDateData(businessDate);
         }
-    }, [ListTasksData, updateSelectedBusinessDateData, businessDate]);
+    }, [listTasksData, updateSelectedBusinessDateData, businessDate]);
 
     const updateSelectedDate = useCallback(
         (event) => {
@@ -90,7 +90,7 @@ const BusinessDateView = () => {
                 />
             </Grid>
             <Grid item>
-                <TableCoreBusinessView listTasksData={ListTasksData} />
+                <TableCoreBusinessView listTasksData={listTasksData} />
             </Grid>
         </Grid>
     );
