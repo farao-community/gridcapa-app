@@ -4,15 +4,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
-import Chip from '@material-ui/core/Chip';
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
-import { getBackgroundColor } from './commons';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import { FormattedMessage } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -28,28 +25,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TableHeader = ({
-    taskData,
-    processMetadata,
-    onSelectedDateChange,
-    onSelectedTimeChange,
-}) => {
+const TableHeaderBusinessView = ({ processMetadata, onSelectedDateChange }) => {
     const classes = useStyles();
     const defaultTimestamp = new Date(
         new Date().getFullYear(),
         new Date().getMonth(),
-        new Date().getDate(),
-        0,
-        30
+        new Date().getDate()
     );
     let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
-
-    let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
-
-    let taskStatus = taskData === null ? 'Not created' : taskData.status;
-
-    let outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
-
     let tableHeaderName =
         processMetadata === null
             ? ''
@@ -76,38 +59,7 @@ const TableHeader = ({
                     />
                 </form>
             </Grid>
-            <Grid item xs={3}>
-                <form noValidate>
-                    <TextField
-                        id="time"
-                        label={<FormattedMessage id="selectTimestampTime" />}
-                        type="time"
-                        defaultValue={defaultTime}
-                        inputProps={{
-                            'data-test': 'timestamp-time-picker',
-                            step: 3600,
-                        }}
-                        className={classes.textField}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={onSelectedTimeChange}
-                    />
-                </form>
-            </Grid>
-            <Grid item xs={3}>
-                <Chip
-                    data-test="timestamp-status"
-                    label={taskStatus}
-                    variant={outlined}
-                    style={{
-                        backgroundColor: getBackgroundColor(taskStatus),
-                        color: 'white',
-                    }}
-                />
-            </Grid>
         </Grid>
     );
 };
-
-export default TableHeader;
+export default TableHeaderBusinessView;
