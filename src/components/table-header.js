@@ -8,11 +8,11 @@
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { green, red, orange, blue, grey } from '@material-ui/core/colors';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
+import { getBackgroundColor } from './commons';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -27,23 +27,6 @@ const useStyles = makeStyles((theme) => ({
         width: 200,
     },
 }));
-
-function getBackgroundColor(taskStatus) {
-    switch (taskStatus) {
-        case 'SUCCESS':
-            return green[500];
-        case 'ERROR':
-            return red[500];
-        case 'READY':
-            return green[300];
-        case 'RUNNING':
-            return blue[300];
-        case 'CREATED':
-            return orange[300];
-        default:
-            return grey[300];
-    }
-}
 
 const TableHeader = ({
     taskData,

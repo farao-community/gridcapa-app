@@ -1,3 +1,5 @@
+import { blue, green, grey, orange, red } from '@material-ui/core/colors';
+
 /**
  * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -60,4 +62,21 @@ export function formatTimestampWithoutSecond(timestamp) {
         ':' +
         getMinutes(date)
     );
+}
+
+export function getBackgroundColor(taskStatus) {
+    switch (taskStatus) {
+        case 'SUCCESS':
+            return green[500];
+        case 'ERROR':
+            return red[500];
+        case 'READY':
+            return green[300];
+        case 'RUNNING':
+            return blue[300];
+        case 'CREATED':
+            return orange[300];
+        default:
+            return grey[500];
+    }
 }

@@ -15,26 +15,7 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { formatTimestampWithoutSecond } from './commons';
-
-const processFileStatusStyles = {
-    ERROR: {
-        backgroundColor: 'red',
-        color: 'white',
-    },
-    READY: {
-        backgroundColor: 'limegreen',
-        color: 'white',
-    },
-    RUNNING: {
-        backgroundColor: 'blue',
-        color: 'white',
-    },
-    SUCCESS: {
-        backgroundColor: 'green',
-        color: 'white',
-    },
-};
+import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
 
 function fillTimestampCell(rowValue) {
     let taskTimestamp = rowValue === null ? [] : rowValue.timestamp;
@@ -50,7 +31,10 @@ function fillStatusCell(rowValue) {
     return (
         <TableCell
             data-test={taskStatus + '-task-status'}
-            style={processFileStatusStyles[taskStatus]}
+            style={{
+                backgroundColor: getBackgroundColor(taskStatus),
+                color: 'white',
+            }}
         >
             {taskStatus}
         </TableCell>
