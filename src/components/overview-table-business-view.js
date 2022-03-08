@@ -57,7 +57,7 @@ const OverviewTableBusinessView = ({ listTasksData }) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <FormattedMessage id="Timesatmp" />
+                            <FormattedMessage id="Timestamp" />
                         </TableCell>
                         <TableCell>
                             <FormattedMessage id="Status" />
