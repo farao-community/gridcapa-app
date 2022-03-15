@@ -20,6 +20,10 @@ function getToken() {
     return state.user.id_token;
 }
 
+function removeTrailingSlash(aString) {
+    return aString.replace(/\/$/, "");
+}
+
 export function connectNotificationsWsUpdateConfig() {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
@@ -79,7 +83,8 @@ export function fetchAppsAndUrls() {
         .then((res) => res.json())
         .then((res) => {
             return fetch(
-                res.appsMetadataServerUrl + '/apps-metadata.json'
+                removeTrailingSlash(res.appsMetadataServerUrl)
+                + '/apps-metadata.json'
             ).then((response) => {
                 return response.json();
             });
@@ -180,5 +185,5 @@ function getBaseUrl() {
     if (process.env.REACT_APP_PROFILE === 'development') {
         baseUrl = process.env.REACT_APP_PUBLIC_URL;
     }
-    return baseUrl;
+    return removeTrailingSlash(baseUrl);
 }
