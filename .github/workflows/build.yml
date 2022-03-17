@@ -10,20 +10,42 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - name: Install and Build
-              run: |
-                  npm install
-                  npm run-script test
-                  npm run-script build
-                  npm run-script test
+            - name: Install dependencies
+              run: npm install
 
-            - name: Build and publish Docker image
+            - name: Run pre build tests
+              run: npm run-script test
+
+            - name: Build without authentication
+              run: npm run-script build
+              env:
+                REACT_APP_USE_AUTHENTICATION: false
+
+            - name: Run post build tests
+              run: npm run-script test
+
+            - name: Build and publish Docker image without authentication
               if: github.ref == 'refs/heads/master'
               uses: elgohr/Publish-Docker-Github-Action@master
               with:
                   name: farao/gridcapa-app
                   username: farao
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  tags: "latest, latest-no-auth"
+
+            - name: Build with authentication
+              run: npm run-script build
+              env:
+                REACT_APP_USE_AUTHENTICATION: true
+
+            - name: Build and publish Docker image with authentication
+              if: github.ref == 'refs/heads/master'
+              uses: elgohr/Publish-Docker-Github-Action@master
+              with:
+                name: farao/gridcapa-app
+                username: farao
+                password: ${{ secrets.DOCKERHUB_TOKEN }}
+                tags: "latest-auth"
 
             - name: Broadcast update event
               if: github.ref == 'refs/heads/master'
