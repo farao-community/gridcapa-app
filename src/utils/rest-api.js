@@ -21,7 +21,7 @@ function getToken() {
 }
 
 function removeTrailingSlash(aString) {
-    return aString.replace(/\/$/, "");
+    return aString.replace(/\/$/, '');
 }
 
 export function connectNotificationsWsUpdateConfig() {
@@ -83,8 +83,8 @@ export function fetchAppsAndUrls() {
         .then((res) => res.json())
         .then((res) => {
             return fetch(
-                removeTrailingSlash(res.appsMetadataServerUrl)
-                + '/apps-metadata.json'
+                removeTrailingSlash(res.appsMetadataServerUrl) +
+                    '/apps-metadata.json'
             ).then((response) => {
                 return response.json();
             });
