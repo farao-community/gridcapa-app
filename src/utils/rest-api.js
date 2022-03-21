@@ -58,7 +58,9 @@ export function connectNotificationsWsUpdateTask() {
     let webSocketUrlWithToken;
     webSocketUrlWithToken = webSocketUrl + '&access_token=' + getToken();
 
-    const reconnectingWebSocket = new ReconnectingWebSocket(webSocketUrlWithToken);
+    const reconnectingWebSocket = new ReconnectingWebSocket(
+        webSocketUrlWithToken
+    );
     reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'
