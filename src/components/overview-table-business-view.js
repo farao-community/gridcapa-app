@@ -17,35 +17,23 @@ import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
 
-function fillTimestampCell(rowValue) {
+function fillDataRow(rowValue) {
     let taskTimestamp = rowValue === null ? [] : rowValue.timestamp;
-    return (
-        <TableCell data-test={taskTimestamp + '-task-timestamp'}>
-            {formatTimestampWithoutSecond(taskTimestamp)}
-        </TableCell>
-    );
-}
-
-function fillStatusCell(rowValue) {
     let taskStatus = rowValue === null ? [] : rowValue.status;
     return (
-        <TableCell
-            data-test={taskStatus + '-task-status'}
-            style={{
-                backgroundColor: getBackgroundColor(taskStatus),
-                color: 'white',
-            }}
-        >
-            {taskStatus}
-        </TableCell>
-    );
-}
-
-function fillDataRow(task) {
-    return (
         <TableRow>
-            {fillTimestampCell(task)}
-            {fillStatusCell(task)}
+            <TableCell data-test={taskTimestamp + '-task-timestamp'}>
+                {formatTimestampWithoutSecond(taskTimestamp)}
+            </TableCell>
+            <TableCell
+                data-test={taskTimestamp + '-task-status'}
+                style={{
+                    backgroundColor: getBackgroundColor(taskStatus),
+                    color: 'white',
+                }}
+            >
+                {taskStatus}
+            </TableCell>
         </TableRow>
     );
 }
