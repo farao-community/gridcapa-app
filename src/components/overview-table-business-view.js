@@ -18,12 +18,15 @@ import React from 'react';
 import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
 
 function fillDataRow(rowValue) {
-    let taskTimestamp = rowValue === null ? [] : rowValue.timestamp;
+    let taskTimestamp =
+        rowValue === null
+            ? []
+            : formatTimestampWithoutSecond(rowValue.timestamp);
     let taskStatus = rowValue === null ? [] : rowValue.status;
     return (
         <TableRow>
             <TableCell data-test={taskTimestamp + '-task-timestamp'}>
-                {formatTimestampWithoutSecond(taskTimestamp)}
+                {taskTimestamp}
             </TableCell>
             <TableCell
                 data-test={taskTimestamp + '-task-status'}
