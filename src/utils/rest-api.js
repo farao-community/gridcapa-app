@@ -85,7 +85,7 @@ export function fetchAppsAndUrls() {
     return fetch('env.json')
         .then((res) => res.json())
         .then((res) => {
-            return fetch(
+            return backendFetch(
                 removeTrailingSlash(res.appsMetadataServerUrl) +
                     '/apps-metadata.json'
             ).then((response) => {
