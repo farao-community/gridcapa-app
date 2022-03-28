@@ -177,7 +177,7 @@ export function fetchJobLauncherPost(taskTimestamp) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
     };
-    fetch(
+    backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
         requestOptions
     ).then();
