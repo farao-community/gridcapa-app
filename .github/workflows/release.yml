@@ -73,3 +73,10 @@ jobs:
         with:
           branch: release-v${{ github.event.inputs.releaseVersion }}
           commit_message: Prepare next dev version ${{ github.event.inputs.nextVersion }}
+
+      - name: Create release pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          base: master
+          branch: release-v${{ github.event.inputs.releaseVersion }}
+          delete-branch: true
