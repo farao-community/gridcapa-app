@@ -1,0 +1,78 @@
+name: Release job
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Release version'
+        required: true
+      nextVersion:
+        description: 'Next version'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Commit and tag release version
+        uses: stefanzweifel/git-auto-commit-action@master
+        with:
+          branch: release-v${{ github.event.inputs.releaseVersion }}
+          create_branch: true
+          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
+          tagging_message: v${{ github.event.inputs.releaseVersion }}
+
+      - name: Run pre build tests
+        run: npm run-script test
+
+      - name: Build without authentication
+        run: npm run-script build
+        env:
+          REACT_APP_USE_AUTHENTICATION: false
+
+      - name: Run post build tests
+        run: npm run-script test
+
+      - name: Build and publish Docker image without authentication
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: farao/gridcapa-app
+          username: farao
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          tags: "v${{ github.event.inputs.releaseVersion }}, v${{ github.event.inputs.releaseVersion }}-no-auth"
+
+      - name: Build with authentication
+        run: npm run-script build
+        env:
+          REACT_APP_USE_AUTHENTICATION: true
+
+      - name: Build and publish Docker image with authentication
+        if: github.ref == 'refs/heads/master'
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: farao/gridcapa-app
+          username: farao
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          tags: "v${{ github.event.inputs.releaseVersion }}-auth"
+
+      - name: Merge automatically into master
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: release-v${{ github.event.inputs.releaseVersion }}
+          target_branch: master
+          message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Delete merged branch
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: release-v${{ github.event.inputs.releaseVersion }}
