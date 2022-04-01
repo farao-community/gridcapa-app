@@ -46,7 +46,7 @@ jobs:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "v${{ github.event.inputs.releaseVersion }}, latest-no-auth-v${{ github.event.inputs.releaseVersion }}"
+          tags: "v${{ github.event.inputs.releaseVersion }}, v${{ github.event.inputs.releaseVersion }}-no-auth"
 
       - name: Build with authentication
         run: npm run-script build
@@ -60,13 +60,13 @@ jobs:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "latest-auth-v${{ github.event.inputs.releaseVersion }}"
+          tags: "v${{ github.event.inputs.releaseVersion }}-auth"
 
       - name: Merge automatically into master
         uses: devmasx/merge-branch@master
         with:
           type: now
-          from_branch: next-release-v${{ github.event.inputs.nextVersion }}
+          from_branch: release-v${{ github.event.inputs.releaseVersion }}
           target_branch: master
           message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
@@ -75,4 +75,4 @@ jobs:
         uses: dawidd6/action-delete-branch@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branches: next-release-v${{ github.event.inputs.nextVersion }}
+          branches: release-v${{ github.event.inputs.releaseVersion }}
