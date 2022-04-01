@@ -21,6 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Commit and tag release version
+        uses: stefanzweifel/git-auto-commit-action@master
+        with:
+          branch: release-v${{ github.event.inputs.releaseVersion }}
+          create_branch: true
+          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
+          tagging_message: v${{ github.event.inputs.releaseVersion }}
+
       - name: Run pre build tests
         run: npm run-script test
 
@@ -53,3 +61,18 @@ jobs:
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           tags: "latest-auth-v${{ github.event.inputs.releaseVersion }}"
+
+      - name: Merge automatically into master
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: next-release-v${{ github.event.inputs.nextVersion }}
+          target_branch: master
+          message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Delete merged branch
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: next-release-v${{ github.event.inputs.nextVersion }}
