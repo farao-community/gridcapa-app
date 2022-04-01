@@ -72,5 +72,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@master
         with:
           branch: release-v${{ github.event.inputs.releaseVersion }}
-          create_branch: true
           commit_message: Prepare next dev version ${{ github.event.inputs.nextVersion }}
