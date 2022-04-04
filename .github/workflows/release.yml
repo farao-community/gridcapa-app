@@ -21,17 +21,17 @@ jobs:
           branch: release-v${{ github.event.inputs.releaseVersion }}
 
       - name: Change version to release version
-        run: npm version --no-git-tag-version ${{ github.event.inputs.releaseVersion }}
+        run: npm version ${{ github.event.inputs.releaseVersion }}
+
+      - name: Create release pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          base: master
+          branch: release-v${{ github.event.inputs.releaseVersion }}
+          delete-branch: true
 
       - name: Install dependencies
         run: npm install
-
-      - name: Commit and tag release version
-        uses: stefanzweifel/git-auto-commit-action@master
-        with:
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
-          tagging_message: v${{ github.event.inputs.releaseVersion }}
 
       - name: Run pre build tests
         run: npm run-script test
@@ -58,17 +58,9 @@ jobs:
           REACT_APP_USE_AUTHENTICATION: true
 
       - name: Build and publish Docker image with authentication
-        if: github.ref == 'refs/heads/master'
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           tags: "v${{ github.event.inputs.releaseVersion }}-auth"
-
-      - name: Create release pull request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          base: master
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          delete-branch: true
