@@ -22,7 +22,10 @@ jobs:
         run: npm install
 
       - name: Change version to release version
-        run: npm version ${{ github.event.inputs.releaseVersion }}
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ github.event.inputs.releaseVersion }}
+          git-tag-version: 'true'
 
       - name: Commit and tag release version
         uses: stefanzweifel/git-auto-commit-action@master
