@@ -6,9 +6,6 @@ on:
       releaseVersion:
         description: 'Release version'
         required: true
-      nextVersion:
-        description: 'Next version'
-        required: true
 
 jobs:
   release:
@@ -18,19 +15,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: npm install
+      - name: Create release branch
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        with:
+          branch: release-v${{ github.event.inputs.releaseVersion }}
 
       - name: Change version to release version
         run: npm version ${{ github.event.inputs.releaseVersion }}
 
-      - name: Commit and tag release version
-        uses: stefanzweifel/git-auto-commit-action@master
+      - name: Create release pull request
+        uses: peter-evans/create-pull-request@v4
         with:
+          base: master
           branch: release-v${{ github.event.inputs.releaseVersion }}
-          create_branch: true
-          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
-          tagging_message: v${{ github.event.inputs.releaseVersion }}
+          delete-branch: true
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Run pre build tests
         run: npm run-script test
@@ -57,26 +58,9 @@ jobs:
           REACT_APP_USE_AUTHENTICATION: true
 
       - name: Build and publish Docker image with authentication
-        if: github.ref == 'refs/heads/master'
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           tags: "v${{ github.event.inputs.releaseVersion }}-auth"
-
-      - name: Change version to next version
-        run: npm version ${{ github.event.inputs.nextVersion }}-SNAPSHOT
-
-      - name: Commit next version
-        uses: stefanzweifel/git-auto-commit-action@master
-        with:
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          commit_message: Prepare next dev version ${{ github.event.inputs.nextVersion }}
-
-      - name: Create release pull request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          base: master
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          delete-branch: true
