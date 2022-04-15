@@ -29,28 +29,58 @@ const processFileStatusStyles = {
     },
 };
 
-function inputDataRow(input) {
-    let inputFileType = input.fileType;
-    let processFileStatus = input.processFileStatus;
+function processFileGroupTable(processFiles, fileGroup) {
+    return (
+        <Table className="table">
+            <TableHead>
+                <TableRow>
+                    <TableCell>
+                        <FormattedMessage id={fileGroup + 's'} />
+                    </TableCell>
+                    <TableCell>
+                        <FormattedMessage id="status" />
+                    </TableCell>
+                    <TableCell>
+                        <FormattedMessage id="filename" />
+                    </TableCell>
+                    <TableCell>
+                        <FormattedMessage id="latestModification" />
+                    </TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {processFiles.map((processFile) =>
+                    processFileDataRow(processFile, fileGroup)
+                )}
+            </TableBody>
+        </Table>
+    );
+}
+
+function processFileDataRow(processFile, fileGroup) {
+    let fileType = processFile.fileType;
+    let processFileStatus = processFile.processFileStatus;
     let lastModificationDate =
-        input.lastModificationDate === null
+        processFile.lastModificationDate === null
             ? null
-            : formatTimeStamp(input.lastModificationDate);
+            : formatTimeStamp(processFile.lastModificationDate);
     return (
         <TableRow>
-            <TableCell data-test={inputFileType + '-input-type'}>
-                {inputFileType}
+            <TableCell data-test={fileType + '-' + fileGroup + '-type'}>
+                {fileType}
             </TableCell>
             <TableCell
-                data-test={inputFileType + '-input-status'}
+                data-test={fileType + '-' + fileGroup + '-status'}
                 style={processFileStatusStyles[processFileStatus]}
             >
                 {processFileStatus}
             </TableCell>
-            <TableCell data-test={inputFileType + '-input-filename'}>
-                {input.filename}
+            <TableCell data-test={fileType + '-' + fileGroup + '-filename'}>
+                {processFile.filename}
             </TableCell>
-            <TableCell data-test={inputFileType + '-input-latest-modification'}>
+            <TableCell
+                data-test={fileType + '-' + fileGroup + '-latest-modification'}
+            >
                 {lastModificationDate}
             </TableCell>
         </TableRow>
@@ -58,30 +88,12 @@ function inputDataRow(input) {
 }
 
 const OverviewTable = ({ taskData }) => {
-    let inputs = taskData === null ? [] : taskData.processFiles;
+    let inputs = taskData === null ? [] : taskData.inputs;
+    let outputs = taskData === null ? [] : taskData.outputs;
     return (
         <TableContainer component={Paper}>
-            <Table className="table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <FormattedMessage id="inputs" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="status" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="filename" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="latestModification" />
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {inputs.map((input) => inputDataRow(input))}
-                </TableBody>
-            </Table>
+            {processFileGroupTable(inputs, 'input')}
+            {processFileGroupTable(outputs, 'output')}
         </TableContainer>
     );
 };
