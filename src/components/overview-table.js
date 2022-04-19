@@ -28,32 +28,34 @@ const processFileStatusStyles = {
         color: 'white',
     },
 };
-
-function processFileGroupTable(processFiles, fileGroup) {
+function processFileGroupTableHead(fileGroup) {
     return (
-        <Table className="table">
-            <TableHead>
-                <TableRow>
-                    <TableCell>
-                        <FormattedMessage id={fileGroup + 's'} />
-                    </TableCell>
-                    <TableCell>
-                        <FormattedMessage id="status" />
-                    </TableCell>
-                    <TableCell>
-                        <FormattedMessage id="filename" />
-                    </TableCell>
-                    <TableCell>
-                        <FormattedMessage id="latestModification" />
-                    </TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {processFiles.map((processFile) =>
-                    processFileDataRow(processFile, fileGroup)
-                )}
-            </TableBody>
-        </Table>
+        <TableHead>
+            <TableRow>
+                <TableCell>
+                    <FormattedMessage id={fileGroup} />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="status" />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="filename" />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="latestModification" />
+                </TableCell>
+            </TableRow>
+        </TableHead>
+    );
+}
+
+function processFileGroupTableRows(processFiles, fileGroup) {
+    return (
+        <TableBody>
+            {processFiles.map((processFile) =>
+                processFileDataRow(processFile, fileGroup)
+            )}
+        </TableBody>
     );
 }
 
@@ -88,12 +90,19 @@ function processFileDataRow(processFile, fileGroup) {
 }
 
 const OverviewTable = ({ taskData }) => {
+    let inputFileGroup = 'inputs';
     let inputs = taskData === null ? [] : taskData.inputs;
+
+    let outputFileGroup = 'outputs';
     let outputs = taskData === null ? [] : taskData.outputs;
     return (
         <TableContainer component={Paper}>
-            {processFileGroupTable(inputs, 'input')}
-            {processFileGroupTable(outputs, 'output')}
+            <Table className="table">
+                {processFileGroupTableHead(inputFileGroup)}
+                {processFileGroupTableRows(inputs, inputFileGroup)}
+                {processFileGroupTableHead(outputFileGroup)}
+                {processFileGroupTableRows(outputs, outputFileGroup)}
+            </Table>
         </TableContainer>
     );
 };
