@@ -5,16 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { FormattedMessage } from 'react-intl';
-import { fetchJobLauncherPost } from '../utils/rest-api';
+import { fetchJobLauncherGet } from '../utils/rest-api';
 
-const RunButton = ({ taskData }) => {
-    let taskStatus = taskData === null ? 'Not created' : taskData.status;
-    let taskTimestamp = taskData === null ? 'Not created' : taskData.timestamp;
+function isDisabled(taskStatus) {
+    return (
+        taskStatus !== 'READY' &&
+        taskStatus !== 'SUCCESS' &&
+        taskStatus !== 'ERROR'
+    );
+}
 
-    const launchTask = () => fetchJobLauncherPost(taskTimestamp);
+export function RunButton({ status, timestamp }) {
+    const [disabled, setDisabled] = useState(false);
+
+    const launchTask = async () => {
+        setDisabled(true);
+        await fetchJobLauncherGet(timestamp);
+        setDisabled(false);
+    };
 
     return (
         <Button
@@ -22,16 +33,10 @@ const RunButton = ({ taskData }) => {
             data-test="run-button"
             variant="contained"
             size="large"
-            disabled={
-                taskStatus !== 'READY' &&
-                taskStatus !== 'SUCCESS' &&
-                taskStatus !== 'ERROR'
-            }
+            disabled={disabled || isDisabled(status)}
             onClick={launchTask}
         >
             <FormattedMessage id="runButtonLabel" />
         </Button>
     );
-};
-
-export default RunButton;
+}

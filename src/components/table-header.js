@@ -5,14 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
-import { getBackgroundColor } from './commons';
+import { TaskStatusChip } from './task-status-chip';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -96,14 +95,10 @@ const TableHeader = ({
                 </form>
             </Grid>
             <Grid item xs={3}>
-                <Chip
+                <TaskStatusChip
                     data-test="timestamp-status"
-                    label={taskStatus}
+                    taskStatus={taskStatus}
                     variant={outlined}
-                    style={{
-                        backgroundColor: getBackgroundColor(taskStatus),
-                        color: 'white',
-                    }}
                 />
             </Grid>
         </Grid>

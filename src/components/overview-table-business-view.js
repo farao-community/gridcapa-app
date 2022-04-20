@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 import {
     Paper,
     Table,
@@ -15,7 +16,23 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
+import { formatTimestampWithoutSecond } from './commons';
+import { useSelector } from 'react-redux';
+import { PARAM_THEME } from '../utils/config-params';
+import { getTaskStatusStyle } from './task-status-style';
+
+function TaskStatusCell(props) {
+    const theme = useSelector((state) => state[PARAM_THEME]);
+
+    return (
+        <TableCell
+            {...props}
+            style={{ ...getTaskStatusStyle(props.taskStatus, theme) }}
+        >
+            {props.taskStatus}
+        </TableCell>
+    );
+}
 
 function fillDataRow(rowValue) {
     let taskTimestamp =
@@ -23,20 +40,16 @@ function fillDataRow(rowValue) {
             ? []
             : formatTimestampWithoutSecond(rowValue.timestamp);
     let taskStatus = rowValue === null ? [] : rowValue.status;
+
     return (
         <TableRow>
             <TableCell data-test={taskTimestamp + '-task-timestamp'}>
                 {taskTimestamp}
             </TableCell>
-            <TableCell
+            <TaskStatusCell
                 data-test={taskTimestamp + '-task-status'}
-                style={{
-                    backgroundColor: getBackgroundColor(taskStatus),
-                    color: 'white',
-                }}
-            >
-                {taskStatus}
-            </TableCell>
+                taskStatus={taskStatus}
+            />
         </TableRow>
     );
 }
