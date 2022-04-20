@@ -5,13 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {
-    blue,
-    green,
-    grey,
-    orange,
-    red,
-} from '@material-ui/core/colors';
+import { blue, green, grey, orange, red } from '@material-ui/core/colors';
 import { LIGHT_THEME } from '@gridsuite/commons-ui';
 
 const lightTaskStatusStyle = {
