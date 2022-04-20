@@ -8,7 +8,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { FormattedMessage } from 'react-intl';
-import { fetchJobLauncherGet } from '../utils/rest-api';
+import { fetchJobLauncherPost } from '../utils/rest-api';
 
 function isDisabled(taskStatus) {
     return (
@@ -23,7 +23,7 @@ export function RunButton({ status, timestamp }) {
 
     const launchTask = async () => {
         setDisabled(true);
-        await fetchJobLauncherGet(timestamp);
+        await fetchJobLauncherPost(timestamp);
         setDisabled(false);
     };
 
