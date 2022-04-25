@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Button from '@material-ui/core/Button';
 import { FormattedMessage } from 'react-intl';
 import { fetchJobLauncherPost } from '../utils/rest-api';
@@ -21,11 +21,11 @@ function isDisabled(taskStatus) {
 export function RunButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
 
-    const launchTask = async () => {
+    const launchTask = useCallback(async function () {
         setDisabled(true);
         await fetchJobLauncherPost(timestamp);
         setDisabled(false);
-    };
+    }, []);
 
     return (
         <Button
