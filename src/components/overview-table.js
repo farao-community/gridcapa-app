@@ -28,7 +28,8 @@ const processFileStatusStyles = {
         color: 'white',
     },
 };
-function processFileGroupTableHead(fileGroup) {
+
+function FileGroupTableHead({ fileGroup }) {
     return (
         <TableHead>
             <TableRow>
@@ -49,17 +50,26 @@ function processFileGroupTableHead(fileGroup) {
     );
 }
 
-function processFileGroupTableRows(processFiles, fileGroup) {
+function FileGroupTableRows({ fileGroup, processFiles }) {
     return (
         <TableBody>
-            {processFiles.map((processFile) =>
-                processFileDataRow(processFile, fileGroup)
-            )}
+            {processFiles.map((processFile) => (
+                <FileDataRow processFile={processFile} fileGroup={fileGroup} />
+            ))}
         </TableBody>
     );
 }
 
-function processFileDataRow(processFile, fileGroup) {
+function FileGroupTable({ fileGroup, processFiles }) {
+    return (
+        <>
+            <FileGroupTableHead fileGroup={fileGroup} />
+            <FileGroupTableRows processFiles={processFiles} fileGroup={fileGroup} />
+        </>
+    );
+}
+
+function FileDataRow({ processFile, fileGroup }) {
     let fileType = processFile.fileType;
     let processFileStatus = processFile.processFileStatus;
     let lastModificationDate =
@@ -89,19 +99,18 @@ function processFileDataRow(processFile, fileGroup) {
     );
 }
 
-const OverviewTable = ({ taskData }) => {
-    let inputFileGroup = 'inputs';
-    let inputs = taskData === null ? [] : taskData.inputs;
-
-    let outputFileGroup = 'outputs';
-    let outputs = taskData === null ? [] : taskData.outputs;
+const OverviewTable = ({ inputs, outputs }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
-                {processFileGroupTableHead(inputFileGroup)}
-                {processFileGroupTableRows(inputs, inputFileGroup)}
-                {processFileGroupTableHead(outputFileGroup)}
-                {processFileGroupTableRows(outputs, outputFileGroup)}
+                <FileGroupTable
+                    fileGroup="inputs"
+                    processFiles={inputs}
+                />
+                <FileGroupTable
+                    fileGroup="outputs"
+                    processFiles={outputs}
+                />
             </Table>
         </TableContainer>
     );
