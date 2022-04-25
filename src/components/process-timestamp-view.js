@@ -133,7 +133,7 @@ const ProcessTimestampView = () => {
                 />
             </Grid>
             <Grid item>
-                <TableCore taskData={taskData} />
+                {taskData ? <TableCore taskData={taskData} /> : null}
             </Grid>
         </Grid>
     );

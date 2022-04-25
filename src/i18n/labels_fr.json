@@ -2,6 +2,7 @@
   "timestampView": "Vue horaire",
   "businessDateView": "Vue journalière",
   "inputs": "Intrant",
+  "outputs": "Sortant",
   "status": "Statut",
   "filename": "Nom de fichier",
   "latestModification": "Dernière modification",
