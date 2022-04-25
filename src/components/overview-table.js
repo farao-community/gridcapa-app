@@ -64,7 +64,10 @@ function FileGroupTable({ fileGroup, processFiles }) {
     return (
         <>
             <FileGroupTableHead fileGroup={fileGroup} />
-            <FileGroupTableRows processFiles={processFiles} fileGroup={fileGroup} />
+            <FileGroupTableRows
+                processFiles={processFiles}
+                fileGroup={fileGroup}
+            />
         </>
     );
 }
@@ -103,14 +106,8 @@ const OverviewTable = ({ inputs, outputs }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
-                <FileGroupTable
-                    fileGroup="inputs"
-                    processFiles={inputs}
-                />
-                <FileGroupTable
-                    fileGroup="outputs"
-                    processFiles={outputs}
-                />
+                <FileGroupTable fileGroup="inputs" processFiles={inputs} />
+                <FileGroupTable fileGroup="outputs" processFiles={outputs} />
             </Table>
         </TableContainer>
     );
