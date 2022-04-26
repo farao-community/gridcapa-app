@@ -18,8 +18,8 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { formatTimeStamp } from './commons';
 
-const INPUT_FILE_GROUP = "input"
-const OUTPUT_FILE_GROUP = "output"
+const INPUT_FILE_GROUP = 'input';
+const OUTPUT_FILE_GROUP = 'output';
 
 const processFileStatusStyles = {
     NOT_PRESENT: {
@@ -109,8 +109,14 @@ const OverviewTable = ({ inputs, outputs }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
-                <FileGroupTable fileGroup={INPUT_FILE_GROUP} processFiles={inputs} />
-                <FileGroupTable fileGroup={OUTPUT_FILE_GROUP} processFiles={outputs} />
+                <FileGroupTable
+                    fileGroup={INPUT_FILE_GROUP}
+                    processFiles={inputs}
+                />
+                <FileGroupTable
+                    fileGroup={OUTPUT_FILE_GROUP}
+                    processFiles={outputs}
+                />
             </Table>
         </TableContainer>
     );
