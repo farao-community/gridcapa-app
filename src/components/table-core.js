@@ -67,8 +67,8 @@ const TableCore = ({ taskData }) => {
             </AppBar>
             <TabPanel value={value} index={0}>
                 <OverviewTable
-                    inputs={taskData.inputs}
-                    outputs={taskData.outputs}
+                    inputs={taskData.inputs || []}
+                    outputs={taskData.outputs || []}
                 />
             </TabPanel>
             <TabPanel value={value} index={1}>

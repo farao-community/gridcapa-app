@@ -5,13 +5,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Grid, Tab, Tabs } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import BusinessDateView from './business-date-view';
+import { useDispatch } from 'react-redux';
+import { createWebsocket } from '../redux/actions';
+import { connectNotificationsWsUpdateTask } from '../utils/rest-api';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -33,19 +36,51 @@ function TabPanel(props) {
     );
 }
 
-const GridCapaMain = () => {
-    const [value, setValue] = React.useState(-1);
+const TODAY_TIMESTAMP = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate(),
+    0,
+    30
+);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+const GridCapaMain = () => {
+    const [view, setView] = React.useState(0);
+    const [processName, setProcessName] = React.useState(null);
+    const [timestamp, setTimestamp] = React.useState(TODAY_TIMESTAMP);
+    const dispatch = useDispatch()
+
+    const createWs = useCallback(() => {
+        dispatch(createWebsocket(connectNotificationsWsUpdateTask()));
+    }, []);
+
+    const onTimestampChange = useCallback((newTimestamp) => {
+        setTimestamp(new Date(newTimestamp));
+    }, []);
+
+    const handleViewChange = useCallback((event, newValue) => {
+        setView(newValue);
+    }, []);
+
+    useEffect(() => createWs());
+
+    useEffect(() => {
+        if (processName === null) {
+            console.log('Fetching process metadata...')
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setProcessName(res.processName);
+                });
+        }
+    });
 
     return (
         <Grid container>
             <Grid item xs={2}>
                 <Tabs
-                    value={value}
-                    onChange={handleChange}
+                    value={view}
+                    onChange={handleViewChange}
                     orientation="vertical"
                 >
                     <Tab
@@ -59,11 +94,19 @@ const GridCapaMain = () => {
                 </Tabs>
             </Grid>
             <Grid item xs={10}>
-                <TabPanel value={value} index={0}>
-                    <ProcessTimestampView />
+                <TabPanel value={view} index={0}>
+                    <ProcessTimestampView
+                        processName={processName}
+                        timestamp={timestamp}
+                        onTimestampChange={onTimestampChange}
+                    />
                 </TabPanel>
-                <TabPanel value={value} index={1}>
-                    <BusinessDateView />
+                <TabPanel value={view} index={1}>
+                    <BusinessDateView
+                        processName={processName}
+                        timestamp={timestamp}
+                        onTimestampChange={onTimestampChange}
+                    />
                 </TabPanel>
             </Grid>
         </Grid>

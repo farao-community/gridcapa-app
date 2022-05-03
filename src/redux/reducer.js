@@ -14,7 +14,12 @@ import {
     saveLocalStorageTheme,
 } from './local-storage';
 
-import { SELECT_COMPUTED_LANGUAGE, SELECT_THEME } from './actions';
+import {
+    CREATE_WEBSOCKET,
+    SELECT_COMPUTED_LANGUAGE,
+    SELECT_THEME,
+    SELECT_WEBSOCKET_HANDLING_METHOD
+} from './actions';
 
 import { USER, SIGNIN_CALLBACK_ERROR } from '@gridsuite/commons-ui';
 import { PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
@@ -28,6 +33,7 @@ const initialState = {
     computedLanguage: getLocalStorageComputedLanguage(),
     user: null,
     signInCallbackError: null,
+    ws: null,
     ...paramsInitialState,
 };
 
@@ -47,5 +53,18 @@ export const reducer = createReducer(initialState, {
 
     [SELECT_COMPUTED_LANGUAGE]: (state, action) => {
         state.computedLanguage = action.computedLanguage;
+    },
+
+    [SELECT_WEBSOCKET_HANDLING_METHOD]: (state, action) => {
+        if (state.ws) {
+            console.log('Setting websocket handling method')
+            state.ws.onmessage = action.handlingMethod
+        }
+    },
+
+    [CREATE_WEBSOCKET]: (state, action) => {
+        if (!state.ws) {
+            state.ws = action.payload
+        }
     },
 });

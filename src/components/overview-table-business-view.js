@@ -14,15 +14,21 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import React from 'react';
-import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+    findTimestampData, gridcapaFormatDate,
+    getBackgroundColor
+} from './commons';
+import { fetchBusinessDateData } from '../utils/rest-api';
+import { useIntlRef } from '../utils/messages';
+import { useSnackbar } from 'notistack';
+import { useDispatch } from 'react-redux';
+import { selectWebSocketHandlingMethod } from '../redux/actions';
+import dateFormat from 'dateformat';
 
-function fillDataRow(rowValue) {
-    let taskTimestamp =
-        rowValue === null
-            ? []
-            : formatTimestampWithoutSecond(rowValue.timestamp);
-    let taskStatus = rowValue === null ? [] : rowValue.status;
+function FillDataRow({ rowValue }) {
+    const taskTimestamp = gridcapaFormatDate(rowValue.timestamp);
+    const taskStatus = rowValue.status;
     return (
         <TableRow>
             <TableCell data-test={taskTimestamp + '-task-timestamp'}>
@@ -41,7 +47,47 @@ function fillDataRow(rowValue) {
     );
 }
 
-const OverviewTableBusinessView = ({ listTasksData }) => {
+const OverviewTableBusinessView = ({ timestamp }) => {
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
+    const [businessDateData, setBusinessDateData] = useState([]);
+    const [fetchedData, setFetchedData] = useState(false);
+    const handleWebSocketListener = useDispatch();
+
+    const handleMessageBD = useCallback((event) => {
+        const data = JSON.parse(event.data);
+        if (data) {
+            const listTasksDataUpdated = [...businessDateData];
+            const timestampData = findTimestampData(listTasksDataUpdated, data.timestamp);
+            if (timestampData) {
+                timestampData.status = data.status;
+                setBusinessDateData(listTasksDataUpdated);
+            }
+        }
+    }, [fetchedData]);
+
+    useEffect(() => {
+        handleWebSocketListener(selectWebSocketHandlingMethod(handleMessageBD));
+    }, [handleMessageBD]);
+
+    useEffect(() => {
+        console.log('Fetching business date data...')
+        if (timestamp) {
+            const date = dateFormat(timestamp, 'yyyy-mm-dd');
+            fetchBusinessDateData(date, intlRef, enqueueSnackbar)
+                .then((data) => {
+                    // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                    if (data) {
+                        setBusinessDateData(data);
+                        setFetchedData(true);
+                    }
+                })
+        }
+        return function() {
+            setFetchedData(false);
+        }
+    }, [timestamp]);
+
     return (
         <TableContainer component={Paper}>
             <Table className="table">
@@ -56,7 +102,9 @@ const OverviewTableBusinessView = ({ listTasksData }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {listTasksData.map((input) => fillDataRow(input))}
+                    {businessDateData?.map((input) => (
+                        <FillDataRow rowValue={input} />
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer>

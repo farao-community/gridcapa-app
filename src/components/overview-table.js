@@ -16,7 +16,7 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { formatTimeStamp } from './commons';
+import { gridcapaFormatDate } from './commons';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
@@ -79,9 +79,7 @@ function FileDataRow({ processFile, fileGroup }) {
     let fileType = processFile.fileType;
     let processFileStatus = processFile.processFileStatus;
     let lastModificationDate =
-        processFile.lastModificationDate === null
-            ? null
-            : formatTimeStamp(processFile.lastModificationDate);
+        gridcapaFormatDate(processFile.lastModificationDate);
     return (
         <TableRow>
             <TableCell data-test={fileType + '-' + fileGroup + '-type'}>

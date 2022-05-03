@@ -8,6 +8,7 @@
 import { APP_NAME, getAppName } from './config-params';
 import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import { displayErrorMessageWithSnackbar } from './messages';
 
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
@@ -64,6 +65,9 @@ export function connectNotificationsWsUpdateTask() {
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'
         );
     };
+    reconnectingWebSocket.onerror = function (event) {
+        console.error('Unexpected Notification WebSocket error', event);
+    };
     return reconnectingWebSocket;
 }
 
@@ -94,7 +98,7 @@ export function fetchAppsAndUrls() {
         });
 }
 
-export function fetchTimestampData(timestamp) {
+export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
     console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;
     console.log(fetchParams);
@@ -102,10 +106,19 @@ export function fetchTimestampData(timestamp) {
         response.ok
             ? response.json()
             : response.text().then((text) => Promise.reject(text))
+    ).catch((errorMessage) =>
+        displayErrorMessageWithSnackbar({
+            errorMessage: errorMessage,
+            enqueueSnackbar: enqueueSnackbar,
+            headerMessage: {
+                headerMessageId: 'taskRetrievingError',
+                intlRef: intlRef,
+            },
+        })
     );
 }
 
-export function fetchBusinessDateData(businessDate) {
+export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
     console.info('Fetching tasks for date : ' + businessDate);
     const fetchParams =
         getBaseUrl() +
@@ -117,6 +130,15 @@ export function fetchBusinessDateData(businessDate) {
         response.ok
             ? response.json()
             : response.text().then((text) => Promise.reject(text))
+    ).catch((errorMessage) =>
+        displayErrorMessageWithSnackbar({
+            errorMessage: errorMessage,
+            enqueueSnackbar: enqueueSnackbar,
+            headerMessage: {
+                headerMessageId: 'taskRetrievingError',
+                intlRef: intlRef,
+            },
+        })
     );
 }
 
