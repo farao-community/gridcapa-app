@@ -11,9 +11,7 @@ import TableHeader from './table-header';
 import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import { fetchTimestampData } from '../utils/rest-api';
-import { selectWebSocketHandlingMethod } from '../redux/actions';
-import { useDispatch } from 'react-redux';
+import { connectNotificationsWsUpdateTask, fetchTimestampData } from '../utils/rest-api';
 
 function timestampEquals(t1, t2) {
     return t1.substr(0, 19) === t2.substr(0, 19);
@@ -26,10 +24,10 @@ const ProcessTimestampView = ({
 }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
-    const handleWebSocketListener = useDispatch();
     const [timestampData, setTimestampData] = useState(null);
+    const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
 
-    const handleMessage = useCallback(
+    const handleTimestampMessage = useCallback(
         (event) => {
             const data = JSON.parse(event.data);
             if (
@@ -42,9 +40,28 @@ const ProcessTimestampView = ({
         [timestamp]
     );
 
+    const connectNotificationsUpdateTask = useCallback(() => {
+        const ws = connectNotificationsWsUpdateTask();
+        ws.onmessage = function (event) {
+            handleTimestampMessage(event);
+        };
+        ws.onerror = function (event) {
+            console.error('Unexpected Notification WebSocket error', event);
+        };
+        return ws;
+    }, [setTimestampData, timestamp, handleTimestampMessage]);
+
     useEffect(() => {
-        handleWebSocketListener(selectWebSocketHandlingMethod(handleMessage));
-    }, [handleMessage, handleWebSocketListener]);
+        const ws = connectNotificationsUpdateTask();
+        setWebsocketCreated(true);
+        return function () {
+            ws.close();
+        };
+    }, [
+        isWebsocketCreated,
+        setWebsocketCreated,
+        connectNotificationsUpdateTask,
+    ]);
 
     useEffect(() => {
         console.log('Fetching timestamp data...');

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Grid, Tab, Tabs } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
@@ -48,11 +48,6 @@ const GridCapaMain = () => {
     const [view, setView] = React.useState(0);
     const [processName, setProcessName] = React.useState(null);
     const [timestamp, setTimestamp] = React.useState(TODAY_TIMESTAMP);
-    const dispatch = useDispatch();
-
-    const createWs = useCallback(() => {
-        dispatch(createWebsocket(connectNotificationsWsUpdateTask()));
-    }, [dispatch]);
 
     const onTimestampChange = useCallback((newTimestamp) => {
         setTimestamp(new Date(newTimestamp));
@@ -61,8 +56,6 @@ const GridCapaMain = () => {
     const handleViewChange = useCallback((event, newValue) => {
         setView(newValue);
     }, []);
-
-    useEffect(() => createWs());
 
     useEffect(() => {
         if (processName === null) {

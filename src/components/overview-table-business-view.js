@@ -20,7 +20,7 @@ import {
     gridcapaFormatDate,
     getBackgroundColor,
 } from './commons';
-import { fetchBusinessDateData } from '../utils/rest-api';
+import { connectNotificationsWsUpdateTask, fetchBusinessDateData } from '../utils/rest-api';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from 'react-redux';
@@ -52,9 +52,9 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [businessDateData, setBusinessDateData] = useState([]);
-    const handleWebSocketListener = useDispatch();
+    const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
 
-    const handleMessageBD = useCallback(
+    const handleBusinessDateMessage = useCallback(
         (event) => {
             const data = JSON.parse(event.data);
             if (data) {
@@ -72,9 +72,28 @@ const OverviewTableBusinessView = ({ timestamp }) => {
         [businessDateData]
     );
 
+    const connectNotificationsUpdateTask = useCallback(() => {
+        const ws = connectNotificationsWsUpdateTask();
+        ws.onmessage = function (event) {
+            handleBusinessDateMessage(event);
+        };
+        ws.onerror = function (event) {
+            console.error('Unexpected Notification WebSocket error', event);
+        };
+        return ws;
+    }, [timestamp, handleBusinessDateMessage]);
+
     useEffect(() => {
-        handleWebSocketListener(selectWebSocketHandlingMethod(handleMessageBD));
-    }, [handleMessageBD, handleWebSocketListener]);
+        const ws = connectNotificationsUpdateTask();
+        setWebsocketCreated(true);
+        return function () {
+            ws.close();
+        };
+    }, [
+        isWebsocketCreated,
+        setWebsocketCreated,
+        connectNotificationsUpdateTask,
+    ]);
 
     useEffect(() => {
         console.log('Fetching business date data...');
