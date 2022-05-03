@@ -33,7 +33,7 @@ export const SELECT_WEBSOCKET_HANDLING_METHOD = 'SELECT_WEBSOCKET_HANDLING_METHO
 export function selectWebSocketHandlingMethod(webSocketHandlingMethod) {
     return {
         type: SELECT_WEBSOCKET_HANDLING_METHOD,
-        handlingMethod: webSocketHandlingMethod,
+        payload: webSocketHandlingMethod,
     };
 }
 

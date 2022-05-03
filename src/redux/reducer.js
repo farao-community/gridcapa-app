@@ -57,8 +57,7 @@ export const reducer = createReducer(initialState, {
 
     [SELECT_WEBSOCKET_HANDLING_METHOD]: (state, action) => {
         if (state.ws) {
-            console.log('Setting websocket handling method')
-            state.ws.onmessage = action.handlingMethod
+            state.ws.onmessage = action.payload
         }
     },
 
