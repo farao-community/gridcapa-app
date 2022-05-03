@@ -48,11 +48,11 @@ const GridCapaMain = () => {
     const [view, setView] = React.useState(0);
     const [processName, setProcessName] = React.useState(null);
     const [timestamp, setTimestamp] = React.useState(TODAY_TIMESTAMP);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const createWs = useCallback(() => {
         dispatch(createWebsocket(connectNotificationsWsUpdateTask()));
-    }, []);
+    }, [dispatch]);
 
     const onTimestampChange = useCallback((newTimestamp) => {
         setTimestamp(new Date(newTimestamp));
@@ -66,7 +66,7 @@ const GridCapaMain = () => {
 
     useEffect(() => {
         if (processName === null) {
-            console.log('Fetching process metadata...')
+            console.log('Fetching process metadata...');
             fetch('process-metadata.json')
                 .then((res) => res.json())
                 .then((res) => {

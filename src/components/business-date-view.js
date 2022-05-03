@@ -20,7 +20,7 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
                 />
             </Grid>
             <Grid item>
-                <TableCoreBusinessView timestamp={timestamp}/>
+                <TableCoreBusinessView timestamp={timestamp} />
             </Grid>
         </Grid>
     );

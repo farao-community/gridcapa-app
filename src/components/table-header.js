@@ -41,22 +41,28 @@ const TableHeader = ({
     const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
     const tableHeaderName = (processName || '') + ' Supervisor';
 
-    const handleDateChange = useCallback((event) => {
-        const date = event.target.value;
-        let newTimestamp = timestamp;
-        newTimestamp.setDate(date.substr(8, 2));
-        newTimestamp.setMonth(date.substr(5, 2) - 1);
-        newTimestamp.setFullYear(date.substr(0, 4));
-        onTimestampChange(newTimestamp);
-    }, [onTimestampChange]);
+    const handleDateChange = useCallback(
+        (event) => {
+            const date = event.target.value;
+            let newTimestamp = timestamp;
+            newTimestamp.setDate(date.substr(8, 2));
+            newTimestamp.setMonth(date.substr(5, 2) - 1);
+            newTimestamp.setFullYear(date.substr(0, 4));
+            onTimestampChange(newTimestamp);
+        },
+        [timestamp, onTimestampChange]
+    );
 
-    const handleTimeChange = useCallback((event) => {
-        const time = event.target.value;
-        let newTimestamp = timestamp;
-        newTimestamp.setHours(time.substr(0, 2));
-        newTimestamp.setMinutes(time.substr(3, 2));
-        onTimestampChange(newTimestamp);
-    }, [onTimestampChange]);
+    const handleTimeChange = useCallback(
+        (event) => {
+            const time = event.target.value;
+            let newTimestamp = timestamp;
+            newTimestamp.setHours(time.substr(0, 2));
+            newTimestamp.setMinutes(time.substr(3, 2));
+            onTimestampChange(newTimestamp);
+        },
+        [timestamp, onTimestampChange]
+    );
 
     return (
         <Grid container className={classes.container}>

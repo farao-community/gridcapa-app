@@ -62,7 +62,7 @@ const TableCoreBusinessView = ({ timestamp }) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <OverviewTableBusinessView timestamp={timestamp}/>
+                <OverviewTableBusinessView timestamp={timestamp} />
             </TabPanel>
         </div>
     );

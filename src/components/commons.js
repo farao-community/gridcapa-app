@@ -28,7 +28,7 @@ export function getBackgroundColor(taskStatus) {
     }
 }
 
-const dateMask = "yyyy-mm-dd HH:MM:ss";
+const dateMask = 'yyyy-mm-dd HH:MM:ss';
 
 export function gridcapaFormatDate(date) {
     if (date) {
@@ -43,11 +43,9 @@ function dateEquality(date1, date2) {
 
 export function findTimestampData(businessDateData, timestamp) {
     if (businessDateData && businessDateData.length !== 0) {
-        const index = businessDateData.findIndex(
-            (task) => {
-                return dateEquality(task.timestamp, timestamp);
-            }
-        );
+        const index = businessDateData.findIndex((task) => {
+            return dateEquality(task.timestamp, timestamp);
+        });
         return businessDateData[index];
     } else {
         return null;

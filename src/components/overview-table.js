@@ -78,8 +78,9 @@ function FileGroupTable({ fileGroup, processFiles }) {
 function FileDataRow({ processFile, fileGroup }) {
     let fileType = processFile.fileType;
     let processFileStatus = processFile.processFileStatus;
-    let lastModificationDate =
-        gridcapaFormatDate(processFile.lastModificationDate);
+    let lastModificationDate = gridcapaFormatDate(
+        processFile.lastModificationDate
+    );
     return (
         <TableRow>
             <TableCell data-test={fileType + '-' + fileGroup + '-type'}>

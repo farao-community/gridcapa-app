@@ -16,44 +16,59 @@ import { selectWebSocketHandlingMethod } from '../redux/actions';
 import { useDispatch } from 'react-redux';
 
 function timestampEquals(t1, t2) {
-    return t1.substr(0, 19) === t2.substr(0, 19)
+    return t1.substr(0, 19) === t2.substr(0, 19);
 }
 
-const ProcessTimestampView = ({ processName, timestamp, onTimestampChange }) => {
+const ProcessTimestampView = ({
+    processName,
+    timestamp,
+    onTimestampChange,
+}) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const handleWebSocketListener = useDispatch();
     const [timestampData, setTimestampData] = useState(null);
 
-    const handleMessage = useCallback((event) => {
-        const data = JSON.parse(event.data);
-        if (data && timestampEquals(data.timestamp, timestamp.toISOString())) {
-            setTimestampData(data);
-        }
-    }, [timestamp]);
+    const handleMessage = useCallback(
+        (event) => {
+            const data = JSON.parse(event.data);
+            if (
+                data &&
+                timestampEquals(data.timestamp, timestamp.toISOString())
+            ) {
+                setTimestampData(data);
+            }
+        },
+        [timestamp]
+    );
 
     useEffect(() => {
         handleWebSocketListener(selectWebSocketHandlingMethod(handleMessage));
-    }, [handleMessage]);
+    }, [handleMessage, handleWebSocketListener]);
 
     useEffect(() => {
-        console.log('Fetching timestamp data...')
+        console.log('Fetching timestamp data...');
         if (timestamp) {
-            fetchTimestampData(timestamp.toISOString(), intlRef, enqueueSnackbar)
-                .then((data) => {
-                    // Avoid filling data with null when no data is retrieved. Wrong date for example.
-                    if (data) {
-                        setTimestampData(data);
-                    }
-                })
+            fetchTimestampData(
+                timestamp.toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((data) => {
+                // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                if (data) {
+                    setTimestampData(data);
+                }
+            });
         }
-    }, [timestamp]);
+    }, [timestamp, intlRef, enqueueSnackbar]);
 
     return (
         <Grid container direction="column">
             <Grid item>
                 <TableHeader
-                    taskStatus={timestampData ? timestampData.status : 'Not created'}
+                    taskStatus={
+                        timestampData ? timestampData.status : 'Not created'
+                    }
                     processName={processName}
                     timestamp={timestamp}
                     onTimestampChange={onTimestampChange}

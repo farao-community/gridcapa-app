@@ -16,8 +16,9 @@ import {
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-    findTimestampData, gridcapaFormatDate,
-    getBackgroundColor
+    findTimestampData,
+    gridcapaFormatDate,
+    getBackgroundColor,
 } from './commons';
 import { fetchBusinessDateData } from '../utils/rest-api';
 import { useIntlRef } from '../utils/messages';
@@ -51,42 +52,44 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [businessDateData, setBusinessDateData] = useState([]);
-    const [fetchedData, setFetchedData] = useState(false);
     const handleWebSocketListener = useDispatch();
 
-    const handleMessageBD = useCallback((event) => {
-        const data = JSON.parse(event.data);
-        if (data) {
-            const listTasksDataUpdated = [...businessDateData];
-            const timestampData = findTimestampData(listTasksDataUpdated, data.timestamp);
-            if (timestampData) {
-                timestampData.status = data.status;
-                setBusinessDateData(listTasksDataUpdated);
+    const handleMessageBD = useCallback(
+        (event) => {
+            const data = JSON.parse(event.data);
+            if (data) {
+                const listTasksDataUpdated = [...businessDateData];
+                const timestampData = findTimestampData(
+                    listTasksDataUpdated,
+                    data.timestamp
+                );
+                if (timestampData) {
+                    timestampData.status = data.status;
+                    setBusinessDateData(listTasksDataUpdated);
+                }
             }
-        }
-    }, [fetchedData]);
+        },
+        [businessDateData]
+    );
 
     useEffect(() => {
         handleWebSocketListener(selectWebSocketHandlingMethod(handleMessageBD));
-    }, [handleMessageBD]);
+    }, [handleMessageBD, handleWebSocketListener]);
 
     useEffect(() => {
-        console.log('Fetching business date data...')
+        console.log('Fetching business date data...');
         if (timestamp) {
             const date = dateFormat(timestamp, 'yyyy-mm-dd');
-            fetchBusinessDateData(date, intlRef, enqueueSnackbar)
-                .then((data) => {
+            fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
+                (data) => {
                     // Avoid filling data with null when no data is retrieved. Wrong date for example.
                     if (data) {
                         setBusinessDateData(data);
-                        setFetchedData(true);
                     }
-                })
+                }
+            );
         }
-        return function() {
-            setFetchedData(false);
-        }
-    }, [timestamp]);
+    }, [timestamp, intlRef, enqueueSnackbar]);
 
     return (
         <TableContainer component={Paper}>

@@ -102,20 +102,22 @@ export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
     console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;
     console.log(fetchParams);
-    return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(text))
-    ).catch((errorMessage) =>
-        displayErrorMessageWithSnackbar({
-            errorMessage: errorMessage,
-            enqueueSnackbar: enqueueSnackbar,
-            headerMessage: {
-                headerMessageId: 'taskRetrievingError',
-                intlRef: intlRef,
-            },
-        })
-    );
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
 }
 
 export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
@@ -126,20 +128,22 @@ export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
         '/businessdate' +
         `/${businessDate}`;
     console.log(fetchParams);
-    return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(text))
-    ).catch((errorMessage) =>
-        displayErrorMessageWithSnackbar({
-            errorMessage: errorMessage,
-            enqueueSnackbar: enqueueSnackbar,
-            headerMessage: {
-                headerMessageId: 'taskRetrievingError',
-                intlRef: intlRef,
-            },
-        })
-    );
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
 }
 
 export function fetchConfigParameters(appName) {

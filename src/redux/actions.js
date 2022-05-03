@@ -28,7 +28,8 @@ export function selectComputedLanguage(computedLanguage) {
     };
 }
 
-export const SELECT_WEBSOCKET_HANDLING_METHOD = 'SELECT_WEBSOCKET_HANDLING_METHOD';
+export const SELECT_WEBSOCKET_HANDLING_METHOD =
+    'SELECT_WEBSOCKET_HANDLING_METHOD';
 
 export function selectWebSocketHandlingMethod(webSocketHandlingMethod) {
     return {

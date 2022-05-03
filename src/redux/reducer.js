@@ -18,7 +18,7 @@ import {
     CREATE_WEBSOCKET,
     SELECT_COMPUTED_LANGUAGE,
     SELECT_THEME,
-    SELECT_WEBSOCKET_HANDLING_METHOD
+    SELECT_WEBSOCKET_HANDLING_METHOD,
 } from './actions';
 
 import { USER, SIGNIN_CALLBACK_ERROR } from '@gridsuite/commons-ui';
@@ -57,13 +57,13 @@ export const reducer = createReducer(initialState, {
 
     [SELECT_WEBSOCKET_HANDLING_METHOD]: (state, action) => {
         if (state.ws) {
-            state.ws.onmessage = action.payload
+            state.ws.onmessage = action.payload;
         }
     },
 
     [CREATE_WEBSOCKET]: (state, action) => {
         if (!state.ws) {
-            state.ws = action.payload
+            state.ws = action.payload;
         }
     },
 });
