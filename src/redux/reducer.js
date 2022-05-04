@@ -15,6 +15,7 @@ import {
 } from './local-storage';
 
 import { SELECT_COMPUTED_LANGUAGE, SELECT_THEME } from './actions';
+
 import { USER, SIGNIN_CALLBACK_ERROR } from '@gridsuite/commons-ui';
 import { PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
 
@@ -27,7 +28,6 @@ const initialState = {
     computedLanguage: getLocalStorageComputedLanguage(),
     user: null,
     signInCallbackError: null,
-    ws: null,
     ...paramsInitialState,
 };
 
