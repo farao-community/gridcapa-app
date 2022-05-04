@@ -27,22 +27,3 @@ export function selectComputedLanguage(computedLanguage) {
         computedLanguage: computedLanguage,
     };
 }
-
-export const SELECT_WEBSOCKET_HANDLING_METHOD =
-    'SELECT_WEBSOCKET_HANDLING_METHOD';
-
-export function selectWebSocketHandlingMethod(webSocketHandlingMethod) {
-    return {
-        type: SELECT_WEBSOCKET_HANDLING_METHOD,
-        payload: webSocketHandlingMethod,
-    };
-}
-
-export const CREATE_WEBSOCKET = 'CREATE_WEBSOCKET';
-
-export function createWebsocket(ws) {
-    return {
-        type: CREATE_WEBSOCKET,
-        payload: ws,
-    };
-}

@@ -14,13 +14,7 @@ import {
     saveLocalStorageTheme,
 } from './local-storage';
 
-import {
-    CREATE_WEBSOCKET,
-    SELECT_COMPUTED_LANGUAGE,
-    SELECT_THEME,
-    SELECT_WEBSOCKET_HANDLING_METHOD,
-} from './actions';
-
+import { SELECT_COMPUTED_LANGUAGE, SELECT_THEME } from './actions';
 import { USER, SIGNIN_CALLBACK_ERROR } from '@gridsuite/commons-ui';
 import { PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
 
@@ -53,17 +47,5 @@ export const reducer = createReducer(initialState, {
 
     [SELECT_COMPUTED_LANGUAGE]: (state, action) => {
         state.computedLanguage = action.computedLanguage;
-    },
-
-    [SELECT_WEBSOCKET_HANDLING_METHOD]: (state, action) => {
-        if (state.ws) {
-            state.ws.onmessage = action.payload;
-        }
-    },
-
-    [CREATE_WEBSOCKET]: (state, action) => {
-        if (!state.ws) {
-            state.ws = action.payload;
-        }
     },
 });
