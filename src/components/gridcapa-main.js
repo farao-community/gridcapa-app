@@ -5,16 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Grid, Tab, Tabs } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import BusinessDateView from './business-date-view';
-import { useDispatch } from 'react-redux';
-import { createWebsocket } from '../redux/actions';
-import { connectNotificationsWsUpdateTask } from '../utils/rest-api';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

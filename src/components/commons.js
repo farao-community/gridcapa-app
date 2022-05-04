@@ -36,18 +36,3 @@ export function gridcapaFormatDate(date) {
     }
     return null;
 }
-
-function dateEquality(date1, date2) {
-    return dateFormat(date1, dateMask) === dateFormat(date2, dateMask);
-}
-
-export function findTimestampData(businessDateData, timestamp) {
-    if (businessDateData && businessDateData.length !== 0) {
-        const index = businessDateData.findIndex((task) => {
-            return dateEquality(task.timestamp, timestamp);
-        });
-        return businessDateData[index];
-    } else {
-        return null;
-    }
-}

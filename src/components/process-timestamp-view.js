@@ -11,10 +11,14 @@ import TableHeader from './table-header';
 import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import { connectNotificationsWsUpdateTask, fetchTimestampData } from '../utils/rest-api';
+import {
+    connectNotificationsWsUpdateTask,
+    fetchTimestampData,
+} from '../utils/rest-api';
+import { gridcapaFormatDate } from './commons';
 
 function timestampEquals(t1, t2) {
-    return t1.substr(0, 19) === t2.substr(0, 19);
+    return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
 }
 
 const ProcessTimestampView = ({
@@ -25,14 +29,32 @@ const ProcessTimestampView = ({
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
-    const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
+
+    const updateTimestampData = useCallback(
+        () => {
+            console.log('Fetching timestamp data...');
+            if (timestamp) {
+                fetchTimestampData(
+                    timestamp.toISOString(),
+                    intlRef,
+                    enqueueSnackbar
+                ).then((data) => {
+                    // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                    if (data) {
+                        setTimestampData(data);
+                    }
+                });
+            }
+        },
+        [timestamp, intlRef, enqueueSnackbar]
+    );
 
     const handleTimestampMessage = useCallback(
         (event) => {
             const data = JSON.parse(event.data);
             if (
                 data &&
-                timestampEquals(data.timestamp, timestamp.toISOString())
+                timestampEquals(data.timestamp, timestamp)
             ) {
                 setTimestampData(data);
             }
@@ -42,42 +64,31 @@ const ProcessTimestampView = ({
 
     const connectNotificationsUpdateTask = useCallback(() => {
         const ws = connectNotificationsWsUpdateTask();
+        ws.onopen = function() {
+            updateTimestampData();
+        };
         ws.onmessage = function (event) {
             handleTimestampMessage(event);
         };
         ws.onerror = function (event) {
             console.error('Unexpected Notification WebSocket error', event);
         };
+        ws.reconnect()
         return ws;
-    }, [setTimestampData, timestamp, handleTimestampMessage]);
+    }, [updateTimestampData, handleTimestampMessage]);
 
     useEffect(() => {
         const ws = connectNotificationsUpdateTask();
-        setWebsocketCreated(true);
         return function () {
             ws.close();
         };
     }, [
-        isWebsocketCreated,
-        setWebsocketCreated,
         connectNotificationsUpdateTask,
     ]);
 
     useEffect(() => {
-        console.log('Fetching timestamp data...');
-        if (timestamp) {
-            fetchTimestampData(
-                timestamp.toISOString(),
-                intlRef,
-                enqueueSnackbar
-            ).then((data) => {
-                // Avoid filling data with null when no data is retrieved. Wrong date for example.
-                if (data) {
-                    setTimestampData(data);
-                }
-            });
-        }
-    }, [timestamp, intlRef, enqueueSnackbar]);
+        updateTimestampData();
+    }, [updateTimestampData]);
 
     return (
         <Grid container direction="column">

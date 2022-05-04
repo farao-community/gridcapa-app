@@ -16,19 +16,34 @@ import {
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-    findTimestampData,
     gridcapaFormatDate,
     getBackgroundColor,
 } from './commons';
-import { connectNotificationsWsUpdateTask, fetchBusinessDateData } from '../utils/rest-api';
+import {
+    connectNotificationsWsUpdateTask,
+    fetchBusinessDateData,
+} from '../utils/rest-api';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import { useDispatch } from 'react-redux';
-import { selectWebSocketHandlingMethod } from '../redux/actions';
 import dateFormat from 'dateformat';
 
+function dateEquality(date1, date2) {
+    return gridcapaFormatDate(date1) === gridcapaFormatDate(date2);
+}
+
+function findTimestampData(businessDateTimestamps, timestamp) {
+    if (businessDateTimestamps && businessDateTimestamps.length !== 0) {
+        for (let i = 0; i <businessDateTimestamps.length; i++) {
+            if (dateEquality(businessDateTimestamps[i], timestamp)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function FillDataRow({ rowValue }) {
-    const taskTimestamp = gridcapaFormatDate(rowValue.timestamp);
+    const taskTimestamp = dateFormat(rowValue.timestamp, 'yyyy-mm-dd HH:MM');
     const taskStatus = rowValue.status;
     return (
         <TableRow>
@@ -52,63 +67,80 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [businessDateData, setBusinessDateData] = useState([]);
-    const [isWebsocketCreated, setWebsocketCreated] = React.useState(false);
-
-    const handleBusinessDateMessage = useCallback(
-        (event) => {
-            const data = JSON.parse(event.data);
-            if (data) {
-                const listTasksDataUpdated = [...businessDateData];
-                const timestampData = findTimestampData(
-                    listTasksDataUpdated,
-                    data.timestamp
-                );
-                if (timestampData) {
-                    timestampData.status = data.status;
-                    setBusinessDateData(listTasksDataUpdated);
-                }
-            }
-        },
-        [businessDateData]
-    );
-
-    const connectNotificationsUpdateTask = useCallback(() => {
-        const ws = connectNotificationsWsUpdateTask();
-        ws.onmessage = function (event) {
-            handleBusinessDateMessage(event);
-        };
-        ws.onerror = function (event) {
-            console.error('Unexpected Notification WebSocket error', event);
-        };
-        return ws;
-    }, [timestamp, handleBusinessDateMessage]);
+    const [timestamps, setTimestamps] = useState([])
 
     useEffect(() => {
-        const ws = connectNotificationsUpdateTask();
-        setWebsocketCreated(true);
-        return function () {
-            ws.close();
-        };
-    }, [
-        isWebsocketCreated,
-        setWebsocketCreated,
-        connectNotificationsUpdateTask,
-    ]);
-
-    useEffect(() => {
-        console.log('Fetching business date data...');
         if (timestamp) {
             const date = dateFormat(timestamp, 'yyyy-mm-dd');
             fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
                 (data) => {
                     // Avoid filling data with null when no data is retrieved. Wrong date for example.
                     if (data) {
-                        setBusinessDateData(data);
+                        const newTimestamps = []
+                        data.map((timestampData) => newTimestamps.push(timestampData.timestamp));
+                        setTimestamps(newTimestamps);
                     }
                 }
             );
         }
-    }, [timestamp, intlRef, enqueueSnackbar]);
+    }, [timestamp])
+
+    const updateBusinessData = useCallback(
+        () => {
+            console.log('Fetching business date data...');
+            if (timestamp) {
+                const date = dateFormat(timestamp, 'yyyy-mm-dd');
+                fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
+                    (data) => {
+                        // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                        if (data) {
+                            setBusinessDateData(data);
+                        }
+                    }
+                );
+            }
+        },
+        [timestamp, intlRef, enqueueSnackbar]
+    )
+
+    const handleBusinessDateMessage = useCallback(
+        (event) => {
+            const data = JSON.parse(event.data);
+            if (data) {
+                if (findTimestampData(timestamps, data.timestamp)) {
+                    updateBusinessData();
+                }
+            }
+        }, [timestamps, updateBusinessData]
+    );
+
+    const connectNotificationsUpdateTask = useCallback(() => {
+        const ws = connectNotificationsWsUpdateTask();
+        ws.onopen = function() {
+            updateBusinessData();
+        };
+        ws.onmessage = function (event) {
+            handleBusinessDateMessage(event);
+        };
+        ws.onerror = function (event) {
+            console.error('Unexpected Notification WebSocket error', event);
+        };
+        ws.reconnect()
+        return ws;
+    }, [updateBusinessData, handleBusinessDateMessage]);
+
+    useEffect(() => {
+        const ws = connectNotificationsUpdateTask();
+        return function () {
+            ws.close();
+        };
+    }, [
+        connectNotificationsUpdateTask,
+    ]);
+
+    useEffect(() => {
+        updateBusinessData();
+    }, [updateBusinessData]);
 
     return (
         <TableContainer component={Paper}>

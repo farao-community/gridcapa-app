@@ -48,6 +48,12 @@ export function connectNotificationsWsUpdateConfig() {
     return reconnectingWebSocket;
 }
 
+const wsOptions = {
+    minReconnectionDelay: 1000,
+    connectionTimeout: 500,
+    maxRetries: 10,
+}
+
 export function connectNotificationsWsUpdateTask() {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
@@ -58,7 +64,9 @@ export function connectNotificationsWsUpdateTask() {
     let webSocketUrlWithToken = webSocketUrl + '?access_token=' + getToken();
 
     const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken
+        webSocketUrlWithToken,
+        null,
+        wsOptions
     );
     reconnectingWebSocket.onopen = function () {
         console.info(
