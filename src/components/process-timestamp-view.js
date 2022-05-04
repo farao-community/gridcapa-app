@@ -30,61 +30,41 @@ const ProcessTimestampView = ({
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
 
-    const updateTimestampData = useCallback(
-        () => {
-            console.log('Fetching timestamp data...');
-            if (timestamp) {
-                fetchTimestampData(
-                    timestamp.toISOString(),
-                    intlRef,
-                    enqueueSnackbar
-                ).then((data) => {
-                    // Avoid filling data with null when no data is retrieved. Wrong date for example.
-                    if (data) {
-                        setTimestampData(data);
-                    }
-                });
-            }
-        },
-        [timestamp, intlRef, enqueueSnackbar]
-    );
+    const updateTimestampData = useCallback(() => {
+        console.log('Fetching timestamp data...');
+        if (timestamp) {
+            fetchTimestampData(
+                timestamp.toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((data) => {
+                // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                if (data) {
+                    setTimestampData(data);
+                }
+            });
+        }
+    }, [timestamp, intlRef, enqueueSnackbar]);
 
     const handleTimestampMessage = useCallback(
         (event) => {
             const data = JSON.parse(event.data);
-            if (
-                data &&
-                timestampEquals(data.timestamp, timestamp)
-            ) {
+            if (data && timestampEquals(data.timestamp, timestamp)) {
                 setTimestampData(data);
             }
         },
         [timestamp]
     );
 
-    const connectNotificationsUpdateTask = useCallback(() => {
-        const ws = connectNotificationsWsUpdateTask();
-        ws.onopen = function() {
-            updateTimestampData();
-        };
-        ws.onmessage = function (event) {
-            handleTimestampMessage(event);
-        };
-        ws.onerror = function (event) {
-            console.error('Unexpected Notification WebSocket error', event);
-        };
-        ws.reconnect()
-        return ws;
-    }, [updateTimestampData, handleTimestampMessage]);
-
     useEffect(() => {
-        const ws = connectNotificationsUpdateTask();
+        const ws = connectNotificationsWsUpdateTask(
+            updateTimestampData,
+            handleTimestampMessage
+        );
         return function () {
             ws.close();
         };
-    }, [
-        connectNotificationsUpdateTask,
-    ]);
+    }, [updateTimestampData, handleTimestampMessage]);
 
     useEffect(() => {
         updateTimestampData();

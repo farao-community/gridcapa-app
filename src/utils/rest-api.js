@@ -25,6 +25,12 @@ function removeTrailingSlash(aString) {
     return aString.replace(/\/$/, '');
 }
 
+const wsOptions = {
+    minReconnectionDelay: 1000,
+    connectionTimeout: 500,
+    maxRetries: 10,
+};
+
 export function connectNotificationsWsUpdateConfig() {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
@@ -38,7 +44,9 @@ export function connectNotificationsWsUpdateConfig() {
     let webSocketUrlWithToken = webSocketUrl + '&access_token=' + getToken();
 
     const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken
+        webSocketUrlWithToken,
+        null,
+        wsOptions
     );
     reconnectingWebSocket.onopen = function () {
         console.info(
@@ -48,13 +56,10 @@ export function connectNotificationsWsUpdateConfig() {
     return reconnectingWebSocket;
 }
 
-const wsOptions = {
-    minReconnectionDelay: 1000,
-    connectionTimeout: 500,
-    maxRetries: 10,
-}
-
-export function connectNotificationsWsUpdateTask() {
+export function connectNotificationsWsUpdateTask(
+    onOpenHandler,
+    onMessageHandler
+) {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
@@ -72,10 +77,16 @@ export function connectNotificationsWsUpdateTask() {
         console.info(
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'
         );
+        onOpenHandler();
+    };
+    reconnectingWebSocket.onmessage = function (event) {
+        console.info('Handling incoming message on WS ...');
+        onMessageHandler(event);
     };
     reconnectingWebSocket.onerror = function (event) {
         console.error('Unexpected Notification WebSocket error', event);
     };
+    reconnectingWebSocket.reconnect();
     return reconnectingWebSocket;
 }
 

@@ -15,10 +15,7 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-    gridcapaFormatDate,
-    getBackgroundColor,
-} from './commons';
+import { gridcapaFormatDate, getBackgroundColor } from './commons';
 import {
     connectNotificationsWsUpdateTask,
     fetchBusinessDateData,
@@ -33,7 +30,7 @@ function dateEquality(date1, date2) {
 
 function findTimestampData(businessDateTimestamps, timestamp) {
     if (businessDateTimestamps && businessDateTimestamps.length !== 0) {
-        for (let i = 0; i <businessDateTimestamps.length; i++) {
+        for (let i = 0; i < businessDateTimestamps.length; i++) {
             if (dateEquality(businessDateTimestamps[i], timestamp)) {
                 return true;
             }
@@ -67,80 +64,64 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [businessDateData, setBusinessDateData] = useState([]);
-    const [timestamps, setTimestamps] = useState([])
+    const [timestamps, setTimestamps] = useState([]);
 
-    useEffect(() => {
+    const getBusinessData = useCallback(() => {
+        console.log('Fetching business date data...');
         if (timestamp) {
             const date = dateFormat(timestamp, 'yyyy-mm-dd');
             fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
                 (data) => {
                     // Avoid filling data with null when no data is retrieved. Wrong date for example.
                     if (data) {
-                        const newTimestamps = []
-                        data.map((timestampData) => newTimestamps.push(timestampData.timestamp));
-                        setTimestamps(newTimestamps);
+                        return data;
                     }
                 }
             );
         }
-    }, [timestamp])
-
-    const updateBusinessData = useCallback(
-        () => {
-            console.log('Fetching business date data...');
-            if (timestamp) {
-                const date = dateFormat(timestamp, 'yyyy-mm-dd');
-                fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
-                    (data) => {
-                        // Avoid filling data with null when no data is retrieved. Wrong date for example.
-                        if (data) {
-                            setBusinessDateData(data);
-                        }
-                    }
-                );
-            }
-        },
-        [timestamp, intlRef, enqueueSnackbar]
-    )
+        return null;
+    }, [timestamp, intlRef, enqueueSnackbar]);
 
     const handleBusinessDateMessage = useCallback(
         (event) => {
             const data = JSON.parse(event.data);
-            if (data) {
-                if (findTimestampData(timestamps, data.timestamp)) {
-                    updateBusinessData();
+            if (data && findTimestampData(timestamps, data.timestamp)) {
+                const businessData = getBusinessData();
+                if (businessData) {
+                    setBusinessDateData(businessData);
                 }
             }
-        }, [timestamps, updateBusinessData]
+        },
+        [timestamps, getBusinessData]
     );
 
-    const connectNotificationsUpdateTask = useCallback(() => {
-        const ws = connectNotificationsWsUpdateTask();
-        ws.onopen = function() {
-            updateBusinessData();
-        };
-        ws.onmessage = function (event) {
-            handleBusinessDateMessage(event);
-        };
-        ws.onerror = function (event) {
-            console.error('Unexpected Notification WebSocket error', event);
-        };
-        ws.reconnect()
-        return ws;
-    }, [updateBusinessData, handleBusinessDateMessage]);
+    useEffect(() => {
+        const data = getBusinessData();
+        if (data) {
+            const newTimestamps = [];
+            data.map((timestampData) =>
+                newTimestamps.push(timestampData.timestamp)
+            );
+            setTimestamps(newTimestamps);
+        }
+    }, [getBusinessData]);
 
     useEffect(() => {
-        const ws = connectNotificationsUpdateTask();
+        const ws = connectNotificationsWsUpdateTask(
+            getBusinessData,
+            handleBusinessDateMessage
+        );
         return function () {
             ws.close();
         };
-    }, [
-        connectNotificationsUpdateTask,
-    ]);
+    }, [getBusinessData, handleBusinessDateMessage]);
 
     useEffect(() => {
-        updateBusinessData();
-    }, [updateBusinessData]);
+        const data = getBusinessData();
+        if (data) {
+            setBusinessDateData(data);
+        }
+    }, [getBusinessData]);
 
     return (
         <TableContainer component={Paper}>
