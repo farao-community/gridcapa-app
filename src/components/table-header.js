@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import { getBackgroundColor } from './commons';
+import React, { useCallback } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -29,31 +30,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TableHeader = ({
-    taskData,
-    processMetadata,
-    onSelectedDateChange,
-    onSelectedTimeChange,
+    taskStatus,
+    processName,
+    timestamp,
+    onTimestampChange,
 }) => {
     const classes = useStyles();
-    const defaultTimestamp = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate(),
-        0,
-        30
+    const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
+    const currentTime = dateFormat(timestamp, 'HH:MM');
+    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
+    const tableHeaderName = (processName || '') + ' Supervisor';
+
+    const handleDateChange = useCallback(
+        (event) => {
+            const date = event.target.value;
+            let newTimestamp = timestamp;
+            newTimestamp.setDate(date.substr(8, 2));
+            newTimestamp.setMonth(date.substr(5, 2) - 1);
+            newTimestamp.setFullYear(date.substr(0, 4));
+            onTimestampChange(newTimestamp);
+        },
+        [timestamp, onTimestampChange]
     );
-    let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
 
-    let defaultTime = dateFormat(defaultTimestamp, 'HH:MM');
-
-    let taskStatus = taskData === null ? 'Not created' : taskData.status;
-
-    let outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
-
-    let tableHeaderName =
-        processMetadata === null
-            ? ''
-            : processMetadata.processName + ' Supervisor';
+    const handleTimeChange = useCallback(
+        (event) => {
+            const time = event.target.value;
+            let newTimestamp = timestamp;
+            newTimestamp.setHours(time.substr(0, 2));
+            newTimestamp.setMinutes(time.substr(3, 2));
+            onTimestampChange(newTimestamp);
+        },
+        [timestamp, onTimestampChange]
+    );
 
     return (
         <Grid container className={classes.container}>
@@ -66,13 +75,13 @@ const TableHeader = ({
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
-                        defaultValue={defaultDate}
+                        defaultValue={currentDate}
                         inputProps={{ 'data-test': 'timestamp-date-picker' }}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={onSelectedDateChange}
+                        onChange={handleDateChange}
                     />
                 </form>
             </Grid>
@@ -82,7 +91,7 @@ const TableHeader = ({
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"
-                        defaultValue={defaultTime}
+                        defaultValue={currentTime}
                         inputProps={{
                             'data-test': 'timestamp-time-picker',
                             step: 3600,
@@ -91,7 +100,7 @@ const TableHeader = ({
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={onSelectedTimeChange}
+                        onChange={handleTimeChange}
                     />
                 </form>
             </Grid>

@@ -40,7 +40,7 @@ function a11yProps(index) {
     };
 }
 
-const TableCoreBusinessView = ({ listTasksData }) => {
+const TableCoreBusinessView = ({ timestamp }) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -62,7 +62,7 @@ const TableCoreBusinessView = ({ listTasksData }) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <OverviewTableBusinessView listTasksData={listTasksData} />
+                <OverviewTableBusinessView timestamp={timestamp} />
             </TabPanel>
         </div>
     );

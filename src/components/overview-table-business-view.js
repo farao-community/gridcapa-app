@@ -14,15 +14,34 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import React from 'react';
-import { formatTimestampWithoutSecond, getBackgroundColor } from './commons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { gridcapaFormatDate, getBackgroundColor } from './commons';
+import {
+    connectNotificationsWsUpdateTask,
+    fetchBusinessDateData,
+} from '../utils/rest-api';
+import { useIntlRef } from '../utils/messages';
+import { useSnackbar } from 'notistack';
+import dateFormat from 'dateformat';
 
-function fillDataRow(rowValue) {
-    let taskTimestamp =
-        rowValue === null
-            ? []
-            : formatTimestampWithoutSecond(rowValue.timestamp);
-    let taskStatus = rowValue === null ? [] : rowValue.status;
+function dateEquality(date1, date2) {
+    return gridcapaFormatDate(date1) === gridcapaFormatDate(date2);
+}
+
+function findTimestampData(businessDateTimestamps, timestamp) {
+    if (businessDateTimestamps && businessDateTimestamps.length !== 0) {
+        for (let i = 0; i < businessDateTimestamps.length; i++) {
+            if (dateEquality(businessDateTimestamps[i], timestamp)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function FillDataRow({ rowValue }) {
+    const taskTimestamp = dateFormat(rowValue.timestamp, 'yyyy-mm-dd HH:MM');
+    const taskStatus = rowValue.status;
     return (
         <TableRow>
             <TableCell data-test={taskTimestamp + '-task-timestamp'}>
@@ -41,7 +60,69 @@ function fillDataRow(rowValue) {
     );
 }
 
-const OverviewTableBusinessView = ({ listTasksData }) => {
+const OverviewTableBusinessView = ({ timestamp }) => {
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
+    const [businessDateData, setBusinessDateData] = useState([]);
+    const [timestamps, setTimestamps] = useState([]);
+
+    const getBusinessData = useCallback(() => {
+        console.log('Fetching business date data...');
+        if (timestamp) {
+            const date = dateFormat(timestamp, 'yyyy-mm-dd');
+            fetchBusinessDateData(date, intlRef, enqueueSnackbar).then(
+                (data) => {
+                    // Avoid filling data with null when no data is retrieved. Wrong date for example.
+                    if (data) {
+                        return data;
+                    }
+                }
+            );
+        }
+        return null;
+    }, [timestamp, intlRef, enqueueSnackbar]);
+
+    const handleBusinessDateMessage = useCallback(
+        (event) => {
+            const data = JSON.parse(event.data);
+            if (data && findTimestampData(timestamps, data.timestamp)) {
+                const businessData = getBusinessData();
+                if (businessData) {
+                    setBusinessDateData(businessData);
+                }
+            }
+        },
+        [timestamps, getBusinessData]
+    );
+
+    useEffect(() => {
+        const data = getBusinessData();
+        if (data) {
+            const newTimestamps = [];
+            data.map((timestampData) =>
+                newTimestamps.push(timestampData.timestamp)
+            );
+            setTimestamps(newTimestamps);
+        }
+    }, [getBusinessData]);
+
+    useEffect(() => {
+        const ws = connectNotificationsWsUpdateTask(
+            getBusinessData,
+            handleBusinessDateMessage
+        );
+        return function () {
+            ws.close();
+        };
+    }, [getBusinessData, handleBusinessDateMessage]);
+
+    useEffect(() => {
+        const data = getBusinessData();
+        if (data) {
+            setBusinessDateData(data);
+        }
+    }, [getBusinessData]);
+
     return (
         <TableContainer component={Paper}>
             <Table className="table">
@@ -56,7 +137,9 @@ const OverviewTableBusinessView = ({ listTasksData }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {listTasksData.map((input) => fillDataRow(input))}
+                    {businessDateData?.map((input) => (
+                        <FillDataRow rowValue={input} />
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer>

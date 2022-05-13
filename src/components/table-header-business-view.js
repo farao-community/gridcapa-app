@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { FormattedMessage } from 'react-intl';
+import React, { useCallback } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -25,18 +26,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const TableHeaderBusinessView = ({ processMetadata, onSelectedDateChange }) => {
+const TableHeaderBusinessView = ({
+    processName,
+    timestamp,
+    onTimestampChange,
+}) => {
     const classes = useStyles();
-    const defaultTimestamp = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        new Date().getDate()
+    const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
+    const tableHeaderName = (processName || '') + ' Supervisor';
+
+    const handleDateChange = useCallback(
+        (event) => {
+            const date = event.target.value;
+            let newTimestamp = timestamp;
+            newTimestamp.setDate(date.substr(8, 2));
+            newTimestamp.setMonth(date.substr(5, 2) - 1);
+            newTimestamp.setFullYear(date.substr(0, 4));
+            onTimestampChange(newTimestamp);
+        },
+        [timestamp, onTimestampChange]
     );
-    let defaultDate = dateFormat(defaultTimestamp, 'yyyy-mm-dd');
-    let tableHeaderName =
-        processMetadata === null
-            ? ''
-            : processMetadata.processName + ' Supervisor';
 
     return (
         <Grid container className={classes.container}>
@@ -49,13 +58,13 @@ const TableHeaderBusinessView = ({ processMetadata, onSelectedDateChange }) => {
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
-                        defaultValue={defaultDate}
+                        defaultValue={currentDate}
                         inputProps={{ 'data-test': 'timestamp-date-picker' }}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        onChange={onSelectedDateChange}
+                        onChange={handleDateChange}
                     />
                 </form>
             </Grid>

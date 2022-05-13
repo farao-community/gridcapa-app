@@ -8,6 +8,7 @@
 import { APP_NAME, getAppName } from './config-params';
 import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import { displayErrorMessageWithSnackbar } from './messages';
 
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
@@ -24,6 +25,12 @@ function removeTrailingSlash(aString) {
     return aString.replace(/\/$/, '');
 }
 
+const wsOptions = {
+    minReconnectionDelay: 1000,
+    connectionTimeout: 500,
+    maxRetries: 10,
+};
+
 export function connectNotificationsWsUpdateConfig() {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
@@ -37,7 +44,9 @@ export function connectNotificationsWsUpdateConfig() {
     let webSocketUrlWithToken = webSocketUrl + '&access_token=' + getToken();
 
     const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken
+        webSocketUrlWithToken,
+        null,
+        wsOptions
     );
     reconnectingWebSocket.onopen = function () {
         console.info(
@@ -47,7 +56,10 @@ export function connectNotificationsWsUpdateConfig() {
     return reconnectingWebSocket;
 }
 
-export function connectNotificationsWsUpdateTask() {
+export function connectNotificationsWsUpdateTask(
+    onOpenHandler,
+    onMessageHandler
+) {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
@@ -57,13 +69,24 @@ export function connectNotificationsWsUpdateTask() {
     let webSocketUrlWithToken = webSocketUrl + '?access_token=' + getToken();
 
     const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken
+        webSocketUrlWithToken,
+        null,
+        wsOptions
     );
     reconnectingWebSocket.onopen = function () {
         console.info(
             'Connected Websocket update task ui ' + webSocketUrl + ' ...'
         );
+        onOpenHandler();
     };
+    reconnectingWebSocket.onmessage = function (event) {
+        console.info('Handling incoming message on WS ...');
+        onMessageHandler(event);
+    };
+    reconnectingWebSocket.onerror = function (event) {
+        console.error('Unexpected Notification WebSocket error', event);
+    };
+    reconnectingWebSocket.reconnect();
     return reconnectingWebSocket;
 }
 
@@ -94,18 +117,29 @@ export function fetchAppsAndUrls() {
         });
 }
 
-export function fetchTimestampData(timestamp) {
+export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
     console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;
     console.log(fetchParams);
-    return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(text))
-    );
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
 }
 
-export function fetchBusinessDateData(businessDate) {
+export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
     console.info('Fetching tasks for date : ' + businessDate);
     const fetchParams =
         getBaseUrl() +
@@ -113,11 +147,22 @@ export function fetchBusinessDateData(businessDate) {
         '/businessdate' +
         `/${businessDate}`;
     console.log(fetchParams);
-    return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(text))
-    );
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
 }
 
 export function fetchConfigParameters(appName) {
