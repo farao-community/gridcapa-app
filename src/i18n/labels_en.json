@@ -1,7 +1,8 @@
 {
   "timestampView": "Timestamp view",
   "businessDateView": "Business date view",
-  "inputs": "Inputs",
+  "input": "Input",
+  "output": "Output",
   "status": "Status",
   "filename": "Filename",
   "latestModification": "Latest modification",

@@ -4,60 +4,35 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-
+import { blue, green, grey, orange, red } from '@material-ui/core/colors';
+import dateFormat from 'dateformat';
 import crypto from 'crypto';
 
 export const sha256 = (x) =>
     crypto.createHash('sha256').update(x, 'utf8').digest('hex'); // UTF8 text hash
 
-export function getDay(date) {
-    return date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+export function getBackgroundColor(taskStatus) {
+    switch (taskStatus) {
+        case 'SUCCESS':
+            return green[500];
+        case 'ERROR':
+            return red[500];
+        case 'READY':
+            return green[300];
+        case 'RUNNING':
+            return blue[300];
+        case 'CREATED':
+            return orange[300];
+        default:
+            return grey[500];
+    }
 }
 
-export function getMonth(date) {
-    return date.getMonth() + 1 < 10
-        ? '0' + (date.getMonth() + 1)
-        : date.getMonth() + 1; //January is 0!;
-}
+const dateMask = 'yyyy-mm-dd HH:MM:ss';
 
-function getHours(date) {
-    return date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-}
-
-function getMinutes(date) {
-    return date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-}
-
-export function formatTimeStamp(timestamp) {
-    let date = new Date(timestamp);
-    const seconds =
-        date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-    return (
-        date.getFullYear() +
-        '-' +
-        getMonth(date) +
-        '-' +
-        getDay(date) +
-        '  ' +
-        getHours(date) +
-        ':' +
-        getMinutes(date) +
-        ':' +
-        seconds
-    );
-}
-
-export function formatTimestampWithoutSecond(timestamp) {
-    let date = new Date(timestamp);
-    return (
-        date.getFullYear() +
-        '-' +
-        getMonth(date) +
-        '-' +
-        getDay(date) +
-        '  ' +
-        getHours(date) +
-        ':' +
-        getMinutes(date)
-    );
+export function gridcapaFormatDate(date) {
+    if (date) {
+        return dateFormat(date, dateMask);
+    }
+    return null;
 }

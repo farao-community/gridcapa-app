@@ -16,7 +16,10 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { formatTimeStamp } from './commons';
+import { gridcapaFormatDate } from './commons';
+
+const INPUT_FILE_GROUP = 'input';
+const OUTPUT_FILE_GROUP = 'output';
 
 const processFileStatusStyles = {
     NOT_PRESENT: {
@@ -29,58 +32,90 @@ const processFileStatusStyles = {
     },
 };
 
-function inputDataRow(input) {
-    let inputFileType = input.fileType;
-    let processFileStatus = input.processFileStatus;
-    let lastModificationDate =
-        input.lastModificationDate === null
-            ? null
-            : formatTimeStamp(input.lastModificationDate);
+function FileGroupTableHead({ fileGroup }) {
+    return (
+        <TableHead>
+            <TableRow>
+                <TableCell>
+                    <FormattedMessage id={fileGroup} />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="status" />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="filename" />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="latestModification" />
+                </TableCell>
+            </TableRow>
+        </TableHead>
+    );
+}
+
+function FileGroupTableRows({ fileGroup, processFiles }) {
+    return (
+        <TableBody>
+            {processFiles.map((processFile) => (
+                <FileDataRow processFile={processFile} fileGroup={fileGroup} />
+            ))}
+        </TableBody>
+    );
+}
+
+function FileGroupTable({ fileGroup, processFiles }) {
+    return (
+        <>
+            <FileGroupTableHead fileGroup={fileGroup} />
+            <FileGroupTableRows
+                processFiles={processFiles}
+                fileGroup={fileGroup}
+            />
+        </>
+    );
+}
+
+function FileDataRow({ processFile, fileGroup }) {
+    let fileType = processFile.fileType;
+    let processFileStatus = processFile.processFileStatus;
+    let lastModificationDate = gridcapaFormatDate(
+        processFile.lastModificationDate
+    );
     return (
         <TableRow>
-            <TableCell data-test={inputFileType + '-input-type'}>
-                {inputFileType}
+            <TableCell data-test={fileType + '-' + fileGroup + '-type'}>
+                {fileType}
             </TableCell>
             <TableCell
-                data-test={inputFileType + '-input-status'}
+                data-test={fileType + '-' + fileGroup + '-status'}
                 style={processFileStatusStyles[processFileStatus]}
             >
                 {processFileStatus}
             </TableCell>
-            <TableCell data-test={inputFileType + '-input-filename'}>
-                {input.filename}
+            <TableCell data-test={fileType + '-' + fileGroup + '-filename'}>
+                {processFile.filename}
             </TableCell>
-            <TableCell data-test={inputFileType + '-input-latest-modification'}>
+            <TableCell
+                data-test={fileType + '-' + fileGroup + '-latest-modification'}
+            >
                 {lastModificationDate}
             </TableCell>
         </TableRow>
     );
 }
 
-const OverviewTable = ({ taskData }) => {
-    let inputs = taskData === null ? [] : taskData.processFiles;
+const OverviewTable = ({ inputs, outputs }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            <FormattedMessage id="inputs" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="status" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="filename" />
-                        </TableCell>
-                        <TableCell>
-                            <FormattedMessage id="latestModification" />
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {inputs.map((input) => inputDataRow(input))}
-                </TableBody>
+                <FileGroupTable
+                    fileGroup={INPUT_FILE_GROUP}
+                    processFiles={inputs}
+                />
+                <FileGroupTable
+                    fileGroup={OUTPUT_FILE_GROUP}
+                    processFiles={outputs}
+                />
             </Table>
         </TableContainer>
     );

@@ -16,7 +16,7 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { formatTimeStamp, sha256 } from './commons';
+import { gridcapaFormatDate, sha256 } from './commons';
 
 const processEventLevelStyles = {
     INFO: {
@@ -36,8 +36,7 @@ function inputDataRow(processEvent) {
     let message = processEvent.message;
     let encryptedMessage = sha256(message);
 
-    let formattedTimestamp =
-        timestamp === null ? null : formatTimeStamp(timestamp);
+    let formattedTimestamp = gridcapaFormatDate(timestamp);
 
     return (
         <TableRow>
@@ -78,7 +77,7 @@ const EventsTable = ({ taskData }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {processEvents.map((processEvent) =>
+                    {processEvents?.map((processEvent) =>
                         inputDataRow(processEvent)
                     )}
                 </TableBody>
