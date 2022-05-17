@@ -6,7 +6,7 @@
  */
 import { blue, green, grey, orange, red } from '@material-ui/core/colors';
 import dateFormat from 'dateformat';
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 export const sha256 = (x) =>
     crypto.createHash('sha256').update(x, 'utf8').digest('hex'); // UTF8 text hash

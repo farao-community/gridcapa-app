@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 import {
     Paper,
     Table,
@@ -15,14 +16,30 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback, useEffect, useState } from 'react';
-import { gridcapaFormatDate, getBackgroundColor } from './commons';
+import { useSelector } from 'react-redux';
+import { PARAM_THEME } from '../utils/config-params';
+import { getTaskStatusStyle } from './task-status-style';
 import {
     connectNotificationsWsUpdateTask,
     fetchBusinessDateData,
 } from '../utils/rest-api';
+import { gridcapaFormatDate } from './commons';
+import dateFormat from 'dateformat';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import dateFormat from 'dateformat';
+
+function TaskStatusCell(props) {
+    const theme = useSelector((state) => state[PARAM_THEME]);
+
+    return (
+        <TableCell
+            {...props}
+            style={{ ...getTaskStatusStyle(props.taskStatus, theme) }}
+        >
+            {props.taskStatus}
+        </TableCell>
+    );
+}
 
 function dateEquality(date1, date2) {
     return gridcapaFormatDate(date1) === gridcapaFormatDate(date2);
@@ -47,15 +64,10 @@ function FillDataRow({ rowValue }) {
             <TableCell data-test={taskTimestamp + '-task-timestamp'}>
                 {taskTimestamp}
             </TableCell>
-            <TableCell
+            <TaskStatusCell
                 data-test={taskTimestamp + '-task-status'}
-                style={{
-                    backgroundColor: getBackgroundColor(taskStatus),
-                    color: 'white',
-                }}
-            >
-                {taskStatus}
-            </TableCell>
+                taskStatus={taskStatus}
+            />
         </TableRow>
     );
 }

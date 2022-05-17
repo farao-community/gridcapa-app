@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import React from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 
-import RunButton from './runbutton';
+import { RunButton } from './run-button';
 import { FormattedMessage } from 'react-intl';
 
 function TabPanel(props) {
@@ -35,6 +42,12 @@ function a11yProps(index) {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
+}
+
+function displayRunButton(taskData) {
+    return taskData !== null ? (
+        <RunButton status={taskData.status} timestamp={taskData.timestamp} />
+    ) : null;
 }
 
 const TableCore = ({ taskData }) => {
@@ -77,7 +90,7 @@ const TableCore = ({ taskData }) => {
             <TabPanel value={value} index={2}>
                 Item Three
             </TabPanel>
-            <RunButton taskData={taskData} />
+            {displayRunButton(taskData)}
         </div>
     );
 };
