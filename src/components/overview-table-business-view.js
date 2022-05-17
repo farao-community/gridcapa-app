@@ -90,7 +90,6 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     const updateBusinessData = useCallback(() => {
         getBusinessData().then((data) => {
             // Avoid filling data with null when no data is retrieved. Wrong date for example.
-            console.log('effect data fetched: ', data);
             if (data) {
                 setBusinessDateData(data);
             }
