@@ -21,11 +21,14 @@ function isDisabled(taskStatus) {
 export function RunButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
 
-    const launchTask = useCallback(async function () {
-        setDisabled(true);
-        await fetchJobLauncherPost(timestamp);
-        setDisabled(false);
-    }, []);
+    const launchTask = useCallback(
+        async function () {
+            setDisabled(true);
+            await fetchJobLauncherPost(timestamp);
+            setDisabled(false);
+        },
+        [timestamp]
+    );
 
     return (
         <Button
