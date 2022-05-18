@@ -97,7 +97,7 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     }, [getBusinessData]);
 
     const handleBusinessDateMessage = useCallback(
-        (event) => {
+        async (event) => {
             const data = JSON.parse(event.data);
             if (data && findTimestampData(timestamps, data.timestamp)) {
                 updateBusinessData();
