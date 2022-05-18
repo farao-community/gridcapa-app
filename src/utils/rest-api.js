@@ -80,7 +80,6 @@ export function connectNotificationsWsUpdateTask(
         onOpenHandler();
     };
     reconnectingWebSocket.onmessage = function (event) {
-        console.info('Handling incoming message on WS ...');
         onMessageHandler(event);
     };
     reconnectingWebSocket.onerror = function (event) {

@@ -47,7 +47,7 @@ const ProcessTimestampView = ({
     }, [timestamp, intlRef, enqueueSnackbar]);
 
     const handleTimestampMessage = useCallback(
-        (event) => {
+        async (event) => {
             const data = JSON.parse(event.data);
             if (data && timestampEquals(data.timestamp, timestamp)) {
                 setTimestampData(data);
