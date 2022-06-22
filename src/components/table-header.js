@@ -37,7 +37,7 @@ const TableHeader = ({
     const classes = useStyles();
     const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
     const currentTime = dateFormat(timestamp, 'HH:MM');
-    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
+    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'default';
     const tableHeaderName = (processName || '') + ' Supervisor';
 
     const handleDateChange = useCallback(
@@ -106,7 +106,7 @@ const TableHeader = ({
             <Grid item xs={3}>
                 <TaskStatusChip
                     data-test="timestamp-status"
-                    taskStatus={taskStatus}
+                    taskstatus={taskStatus}
                     variant={outlined}
                 />
             </Grid>
