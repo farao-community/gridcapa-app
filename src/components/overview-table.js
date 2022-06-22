@@ -56,8 +56,12 @@ function FileGroupTableHead({ fileGroup }) {
 function FileGroupTableRows({ fileGroup, processFiles }) {
     return (
         <TableBody>
-            {processFiles.map((processFile) => (
-                <FileDataRow processFile={processFile} fileGroup={fileGroup} />
+            {processFiles.map((processFile, index) => (
+                <FileDataRow
+                    key={'file_' + index}
+                    processFile={processFile}
+                    fileGroup={fileGroup}
+                />
             ))}
         </TableBody>
     );
