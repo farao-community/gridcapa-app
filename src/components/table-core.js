@@ -10,7 +10,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 
@@ -28,11 +27,7 @@ function TabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
+            {value === index && <Box p={3}>{children}</Box>}
         </div>
     );
 }
@@ -52,7 +47,7 @@ function displayRunButton(taskData) {
 
 const TableCore = ({ taskData }) => {
     const [value, setValue] = React.useState(0);
-    const handleChange = (event, newValue) => {
+    const handleChange = (_event, newValue) => {
         setValue(newValue);
     };
 

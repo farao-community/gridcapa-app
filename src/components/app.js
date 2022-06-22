@@ -15,6 +15,7 @@ import {
     Switch,
     useHistory,
     useLocation,
+    useRouteMatch,
 } from 'react-router-dom';
 
 import {
@@ -30,9 +31,7 @@ import {
     initializeAuthenticationDev,
 } from '@gridsuite/commons-ui';
 
-import { useRouteMatch } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import {
@@ -228,14 +227,8 @@ const App = () => {
             {user !== null ? (
                 <Switch>
                     <Route exact path="/">
-                        <Box mt={20}>
-                            <Typography
-                                variant="h3"
-                                color="textPrimary"
-                                align="center"
-                            >
-                                <GridCapaMain />
-                            </Typography>
+                        <Box mt={1}>
+                            <GridCapaMain />
                         </Box>
                     </Route>
                     <Route exact path="/sign-in-callback">
