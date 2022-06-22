@@ -7,12 +7,12 @@
   "filename": "Filename",
   "latestModification": "Latest modification",
   "overview": "Overview",
-  "events": "Events",
+  "events": "Logs",
   "artifacts": "Artifacts",
   "selectTimestampDate": "Timestamp date",
   "selectTimestampTime": "Timestamp time",
   "runButtonLabel": "Run",
   "level": "Level",
   "timestamp": "Timestamp",
-  "eventDescription": "Description of the event"
+  "eventDescription": "Description of the log"
 }
