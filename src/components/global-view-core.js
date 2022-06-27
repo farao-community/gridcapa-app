@@ -275,7 +275,7 @@ const GlobalViewCore = ({
                     </TableCell>
                     <TableCell>
                         <TaskStatusChip
-                            data-test={"timestamp-status-" + step.timestamp }
+                            data-test={'timestamp-status-' + step.timestamp}
                             taskstatus={step.taskData.status}
                             variant={
                                 step.taskData.status === 'RUNNING'
