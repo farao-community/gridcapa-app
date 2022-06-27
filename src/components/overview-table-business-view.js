@@ -19,14 +19,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PARAM_THEME } from '../utils/config-params';
 import { getTaskStatusStyle } from './task-status-style';
-import {
-    connectNotificationsWsUpdateTask,
-    fetchBusinessDateData,
-} from '../utils/rest-api';
+import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
 import { gridcapaFormatDate } from './commons';
 import dateFormat from 'dateformat';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
+import useWebSocket from 'react-use-websocket';
 
 function TaskStatusCell(props) {
     const theme = useSelector((state) => state[PARAM_THEME]);
@@ -119,15 +117,11 @@ const OverviewTableBusinessView = ({ timestamp }) => {
         });
     }, [getBusinessData]);
 
-    useEffect(() => {
-        const ws = connectNotificationsWsUpdateTask(
-            updateBusinessData,
-            handleBusinessDateMessage
-        );
-        return function () {
-            ws.close();
-        };
-    }, [updateBusinessData, handleBusinessDateMessage]);
+    useWebSocket(getWebSocketUrl('task'), {
+        shouldReconnect: (closeEvent) => true,
+        onMessage: handleBusinessDateMessage,
+        onOpen: updateBusinessData,
+    });
 
     useEffect(() => {
         updateBusinessData();
