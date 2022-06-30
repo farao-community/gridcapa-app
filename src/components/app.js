@@ -34,11 +34,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import Box from '@material-ui/core/Box';
 
-import {
-    connectNotificationsWsUpdateConfig,
-    fetchConfigParameter,
-    fetchConfigParameters,
-} from '../utils/rest-api';
+import { fetchConfigParameter, fetchConfigParameters } from '../utils/rest-api';
 import {
     APP_NAME,
     COMMON_APP_NAME,
@@ -50,8 +46,11 @@ import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import AppTopBar from './app-top-bar';
 import GridCapaMain from './gridcapa-main';
+import { getWebSocketUrl } from '../utils/rest-api';
+import useWebSocket from 'react-use-websocket';
 
 const noUserManager = { instance: null, error: null };
+const resolver = { resolve: null };
 
 const App = () => {
     const intlRef = useIntlRef();
@@ -71,6 +70,12 @@ const App = () => {
     const dispatch = useDispatch();
 
     const location = useLocation();
+
+    const readyUrl = () => {
+        return new Promise((resolve) => {
+            resolver.resolve = resolve;
+        });
+    };
 
     const updateParams = useCallback(
         (params) => {
@@ -95,31 +100,23 @@ const App = () => {
         [dispatch]
     );
 
-    const connectNotificationsUpdateConfig = useCallback(() => {
-        const ws = connectNotificationsWsUpdateConfig();
-
-        ws.onmessage = function (event) {
-            let eventData = JSON.parse(event.data);
-            if (eventData.headers && eventData.headers['parameterName']) {
-                fetchConfigParameter(eventData.headers['parameterName'])
-                    .then((param) => updateParams([param]))
-                    .catch((errorMessage) =>
-                        displayErrorMessageWithSnackbar({
-                            errorMessage: errorMessage,
-                            enqueueSnackbar: enqueueSnackbar,
-                            headerMessage: {
-                                headerMessageId: 'paramsRetrievingError',
-                                intlRef: intlRef,
-                            },
-                        })
-                    );
-            }
-        };
-        ws.onerror = function (event) {
-            console.error('Unexpected Notification WebSocket error', event);
-        };
-        return ws;
-    }, [updateParams, enqueueSnackbar, intlRef]);
+    const onConfigEvent = (event) => {
+        let eventData = JSON.parse(event.data);
+        if (eventData.headers && eventData.headers['parameterName']) {
+            fetchConfigParameter(eventData.headers['parameterName'])
+                .then((param) => updateParams([param]))
+                .catch((errorMessage) =>
+                    displayErrorMessageWithSnackbar({
+                        errorMessage: errorMessage,
+                        enqueueSnackbar: enqueueSnackbar,
+                        headerMessage: {
+                            headerMessageId: 'paramsRetrievingError',
+                            intlRef: intlRef,
+                        },
+                    })
+                );
+        }
+    };
 
     // Can't use lazy initializer because useRouteMatch is a hook
     const [initialMatchSilentRenewCallbackUrl] = useState(
@@ -206,20 +203,17 @@ const App = () => {
                         },
                     })
                 );
-
-            const ws = connectNotificationsUpdateConfig();
-            return function () {
-                ws.close();
-            };
+            resolver.resolve(getWebSocketUrl('config'));
         }
-    }, [
-        user,
-        dispatch,
-        updateParams,
-        enqueueSnackbar,
-        intlRef,
-        connectNotificationsUpdateConfig,
-    ]);
+    }, [user, dispatch, updateParams, enqueueSnackbar, intlRef]);
+
+    useWebSocket(readyUrl, {
+        shouldReconnect: (closeEvent) => true,
+        onMessage: onConfigEvent,
+        onError: (event) => {
+            console.error('Unexpected Notification WebSocket error', event);
+        },
+    });
 
     return (
         <>

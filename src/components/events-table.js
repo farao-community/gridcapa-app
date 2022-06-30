@@ -7,10 +7,6 @@
 
 import React from 'react';
 import {
-    Button,
-    TextField,
-    Menu,
-    MenuItem,
     Paper,
     Table,
     TableBody,
@@ -20,8 +16,9 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { FilterList } from '@material-ui/icons';
+
 import { gridcapaFormatDate, sha256 } from './commons';
+import FilterMenu from './filter-menu';
 
 const processEventLevelStyles = {
     INFO: {
@@ -44,10 +41,10 @@ function inputDataRow(processEvent) {
     let formattedTimestamp = gridcapaFormatDate(timestamp);
 
     return (
-        <TableRow>
+        <TableRow key={timestamp + encryptedMessage}>
             <TableCell
                 data-test={encryptedMessage + '-process-event-level'}
-                style={processEventLevelStyles[level]}
+                style={{ ...processEventLevelStyles[level], width: '9vw' }}
             >
                 {level}
             </TableCell>
@@ -64,51 +61,32 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [anchorLevelEl, setAnchorLevelEl] = React.useState(null);
-    const [anchorLogEl, setAnchorLogEl] = React.useState(null);
-
     const [processEvents] = React.useState(taskData.processEvents);
-    const [filtredProcessEvents, setFiltredProcessEvents] = React.useState(
-        taskData.processEvents
-    );
-
     const [levelFilter, setLevelFilter] = React.useState('');
     const [logFilter, setLogFilter] = React.useState('');
-    const handleLevelMenuClick = (event) => {
-        setAnchorLevelEl(event.currentTarget);
-    };
 
     const handleLevelChange = (event) => {
         setLevelFilter(event.currentTarget.value.toUpperCase());
-        filterProcessEvent(event.currentTarget.value.toUpperCase(), logFilter);
     };
 
-    const handleLogMenuClick = (event) => {
-        setAnchorLogEl(event.currentTarget);
-    };
     const handleLogChange = (event) => {
         setLogFilter(event.currentTarget.value.toUpperCase());
-        filterProcessEvent(
-            levelFilter,
-            event.currentTarget.value.toUpperCase()
-        );
+        filterProcessEvent(levelFilter, event.currentTarget.value);
     };
 
-    const filterProcessEvent = (currentEventFIlter, currentLogFilter) => {
+    const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let filtered;
         filtered = processEvents.filter(
             (event) =>
-                event.level.includes(currentEventFIlter) &&
-                event.message.toUpperCase().includes(currentLogFilter)
+                event.level
+                    .toUpperCase()
+                    .includes(currentEventFilter.toUpperCase()) &&
+                event.message
+                    .toUpperCase()
+                    .includes(currentLogFilter.toUpperCase())
         );
-        setFiltredProcessEvents(filtered);
-    };
 
-    const handleCloseLevel = () => {
-        setAnchorLevelEl(null);
-    };
-    const handleCloseLog = () => {
-        setAnchorLogEl(null);
+        return filtered;
     };
 
     return (
@@ -118,93 +96,28 @@ const EventsTable = ({ taskData }) => {
                     <TableRow>
                         <TableCell>
                             <FormattedMessage id="level" />
-                            <span>
-                                <Button
-                                    aria-controls="simple-menu"
-                                    aria-haspopup="true"
-                                    onClick={handleLevelMenuClick}
-                                    style={{
-                                        color:
-                                            logFilter === ''
-                                                ? 'inherit'
-                                                : '#3F51b5',
-                                    }}
-                                >
-                                    <FilterList />
-                                </Button>
-                                <Menu
-                                    id="simple-menu"
-                                    anchorEl={anchorLevelEl}
-                                    keepMounted
-                                    open={Boolean(anchorLevelEl)}
-                                    onClose={handleCloseLevel}
-                                >
-                                    <MenuItem>
-                                        <TextField
-                                            id="levelTextField"
-                                            label={
-                                                <FormattedMessage id="filterOnLevel" />
-                                            }
-                                            type="text"
-                                            defaultValue={levelFilter}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            onChange={handleLevelChange}
-                                        />
-                                    </MenuItem>
-                                </Menu>
-                            </span>
+                            <FilterMenu
+                                filterHint="filterOnLevel"
+                                handleChange={handleLevelChange}
+                            />
                         </TableCell>
                         <TableCell>
                             <FormattedMessage id="timestamp" />
                         </TableCell>
                         <TableCell>
                             <FormattedMessage id="eventDescription" />
-                            <span>
-                                <Button
-                                    aria-controls="simple-menu"
-                                    aria-haspopup="true"
-                                    onClick={handleLogMenuClick}
-                                    style={{
-                                        color:
-                                            logFilter === ''
-                                                ? 'inherit'
-                                                : '#3F51b5',
-                                    }}
-                                >
-                                    <FilterList />
-                                </Button>
-                                <Menu
-                                    id="simple-menu"
-                                    anchorEl={anchorLogEl}
-                                    keepMounted
-                                    open={Boolean(anchorLogEl)}
-                                    onClose={handleCloseLog}
-                                >
-                                    <MenuItem>
-                                        <TextField
-                                            id="levelTextField"
-                                            label={
-                                                <FormattedMessage id="filterOnLog" />
-                                            }
-                                            type="text"
-                                            defaultValue={logFilter}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                            onChange={handleLogChange}
-                                        />
-                                    </MenuItem>
-                                </Menu>
-                            </span>
+                            <FilterMenu
+                                filterHint="filterOnLog"
+                                handleChange={handleLogChange}
+                            />
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {filtredProcessEvents?.map((processEvent) =>
-                        inputDataRow(processEvent)
-                    )}
+                    {filterProcessEvent(
+                        levelFilter,
+                        logFilter
+                    )?.map((processEvent) => inputDataRow(processEvent))}
                 </TableBody>
             </Table>
         </TableContainer>

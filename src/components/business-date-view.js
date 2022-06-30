@@ -6,10 +6,12 @@
  */
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import TableCoreBusinessView from './table-core-business-view';
 import TableHeaderBusinessView from './table-header-business-view';
+import GlobalViewCore from './global-view-core';
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
+    const refTimestamp = new Date(Date.parse(timestamp));
+    refTimestamp.setHours(0, 30, 0, 0);
     return (
         <Grid container direction="column">
             <Grid item>
@@ -20,7 +22,12 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
                 />
             </Grid>
             <Grid item>
-                <TableCoreBusinessView timestamp={timestamp} />
+                <GlobalViewCore
+                    timestampMin={refTimestamp.getTime()}
+                    timestampMax={refTimestamp.getTime() + 24 * 60 * 60 * 1000}
+                    timestampStep={'01:00'}
+                    processName={processName}
+                />
             </Grid>
         </Grid>
     );

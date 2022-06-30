@@ -1,10 +1,17 @@
+/**
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import React, { useEffect, useCallback } from 'react';
 import {
     Button,
     Modal,
+    Grid,
     Typography,
     Box,
-    TextField,
     Paper,
     Table,
     TableBody,
@@ -14,12 +21,10 @@ import {
     TableRow,
     TablePagination,
     LinearProgress,
-    Menu,
-    MenuItem,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate, sha256 } from './commons';
-import { ListAlt, Close, Visibility, FilterList } from '@material-ui/icons';
+import { ListAlt, Close, Visibility } from '@material-ui/icons';
 import EventsTable from './events-table';
 import { TaskStatusChip } from './task-status-chip';
 import OverviewTable from './overview-table';
@@ -28,6 +33,7 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
 import useWebSocket from 'react-use-websocket';
+import FilterMenu from './filter-menu';
 
 const modalStyle = {
     position: 'absolute',
@@ -76,7 +82,6 @@ const GlobalViewCore = ({
     const [isLoading, setIsLoading] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [anchorFilterStatus, setAnchorFilterStatus] = React.useState(null);
     const [statusFilter, setStatusFilter] = React.useState('');
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
@@ -102,6 +107,7 @@ const GlobalViewCore = ({
 
     useWebSocket(getWebSocketUrl('task'), {
         shouldReconnect: (closeEvent) => true,
+        share: true,
         onMessage: handleTimestampMessage,
     });
 
@@ -136,32 +142,15 @@ const GlobalViewCore = ({
         setModalFileOpen(false);
     };
 
-    const handleFilterStatusClick = (event) => {
-        setAnchorFilterStatus(event.currentTarget);
-    };
-
-    const handleCloseFilterStatus = () => {
-        setAnchorFilterStatus(null);
-    };
-
     const handleStatusFilterChange = (event) => {
         setStatusFilter(event.currentTarget.value.toUpperCase());
-        filterTaskData(event.currentTarget.value.toUpperCase());
         setPage(0);
     };
 
-    const filterTaskData = (desiredFilter) => {
-        if (desiredFilter !== '') {
-            let filtered = steps.filter((step) => {
-                return (
-                    step.taskData &&
-                    step.taskData.status.includes(desiredFilter)
-                );
-            });
-            setfilteredSteps(filtered);
-        } else {
-            setfilteredSteps(steps);
-        }
+    const filterSteps = () => {
+        return steps.filter((step) => {
+            return step.taskData && step.taskData.status.includes(statusFilter);
+        });
     };
 
     const getMissingData = useCallback(
@@ -244,7 +233,9 @@ const GlobalViewCore = ({
 
     const inputDataRow = (step, index) => {
         let timestamp = step.timestamp;
-        openEvent.push(false);
+        if (!openEvent[index + page * rowsPerPage]) {
+            openEvent[index + page * rowsPerPage] = false;
+        }
         let formattedTimestamp = gridcapaFormatDate(timestamp);
         let encryptedMessage = sha256(formattedTimestamp);
 
@@ -259,19 +250,40 @@ const GlobalViewCore = ({
                         {formattedTimestamp}
                     </TableCell>
                     <TableCell>
-                        <div>
-                            {step.taskData.inputs.filter(
-                                (i) => i.processFileStatus === 'VALIDATED'
-                            ).length +
-                                ' / ' +
-                                step.taskData.inputs.length}
-                            <Button
-                                id={'Files_' + index}
-                                onClick={handleFileOpen}
-                            >
-                                <Visibility />
-                            </Button>
-                        </div>
+                        <Grid container direction="row" spacing={2}>
+                            <Grid item>
+                                <Grid container direction="column">
+                                    <Grid item>
+                                        Input&nbsp;:&nbsp;&nbsp;&nbsp;
+                                        {step.taskData.inputs.filter(
+                                            (i) =>
+                                                i.processFileStatus ===
+                                                'VALIDATED'
+                                        ).length +
+                                            '\u00a0/\u00a0' +
+                                            step.taskData.inputs.length}
+                                    </Grid>
+                                    <Grid item>
+                                        Output&nbsp;:&nbsp;
+                                        {step.taskData.outputs.filter(
+                                            (i) =>
+                                                i.processFileStatus ===
+                                                'VALIDATED'
+                                        ).length +
+                                            '\u00a0/\u00a0' +
+                                            step.taskData.outputs.length}
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    id={'Files_' + (index + page * rowsPerPage)}
+                                    onClick={handleFileOpen}
+                                >
+                                    <Visibility />
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </TableCell>
                     <TableCell>
                         <TaskStatusChip
@@ -292,7 +304,7 @@ const GlobalViewCore = ({
                     </TableCell>
                     <TableCell>
                         <Button
-                            id={'Events_' + index}
+                            id={'Events_' + (index + page * rowsPerPage)}
                             onClick={handleEventOpen}
                         >
                             <ListAlt />
@@ -322,39 +334,10 @@ const GlobalViewCore = ({
                                 </TableCell>
                                 <TableCell>
                                     <FormattedMessage id="status" />
-                                    <span>
-                                        <Button
-                                            aria-controls="simple-menu"
-                                            aria-haspopup="true"
-                                            onClick={handleFilterStatusClick}
-                                        >
-                                            <FilterList />
-                                        </Button>
-                                        <Menu
-                                            id="simple-menu"
-                                            anchorEl={anchorFilterStatus}
-                                            keepMounted
-                                            open={Boolean(anchorFilterStatus)}
-                                            onClose={handleCloseFilterStatus}
-                                        >
-                                            <MenuItem>
-                                                <TextField
-                                                    id="levelTextField"
-                                                    label={
-                                                        <FormattedMessage id="filterOnStatus" />
-                                                    }
-                                                    type="text"
-                                                    defaultValue={statusFilter}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    onChange={
-                                                        handleStatusFilterChange
-                                                    }
-                                                />
-                                            </MenuItem>
-                                        </Menu>
-                                    </span>
+                                    <FilterMenu
+                                        filterHint="filterOnStatus"
+                                        handleChange={handleStatusFilterChange}
+                                    />
                                 </TableCell>
                                 <TableCell>
                                     <FormattedMessage id="globalViewCoreAction" />
@@ -373,7 +356,7 @@ const GlobalViewCore = ({
                                 </TableRow>
                             )}
                             {!isLoading &&
-                                filteredSteps
+                                filterSteps()
                                     .slice(
                                         page * rowsPerPage,
                                         page * rowsPerPage + rowsPerPage

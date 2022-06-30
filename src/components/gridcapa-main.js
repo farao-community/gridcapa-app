@@ -11,7 +11,8 @@ import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
 import BusinessDateView from './business-date-view';
-import GlobalView from './global-view';
+import { getWebSocketUrl } from '../utils/rest-api';
+import useWebSocket from 'react-use-websocket';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -50,6 +51,11 @@ const GridCapaMain = () => {
         setView(newValue);
     }, []);
 
+    useWebSocket(getWebSocketUrl('task'), {
+        shouldReconnect: (closeEvent) => true,
+        share: true,
+    });
+
     useEffect(() => {
         if (processName === null) {
             console.log('Fetching process metadata...');
@@ -77,10 +83,6 @@ const GridCapaMain = () => {
                         label={<FormattedMessage id="businessDateView" />}
                         data-test="business-view"
                     />
-                    <Tab
-                        label={<FormattedMessage id="globalView" />}
-                        data-test="global-view"
-                    />
                 </Tabs>
             </Grid>
             <Grid item xs={10}>
@@ -97,9 +99,6 @@ const GridCapaMain = () => {
                         timestamp={timestamp}
                         onTimestampChange={onTimestampChange}
                     />
-                </TabPanel>
-                <TabPanel value={view} index={2}>
-                    <GlobalView processName={processName} />
                 </TabPanel>
             </Grid>
         </Grid>

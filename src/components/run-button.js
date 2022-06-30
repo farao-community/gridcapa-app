@@ -19,7 +19,7 @@ function isDisabled(taskStatus) {
 }
 
 function isRunning(taskStatus) {
-    return taskStatus && taskStatus.endsWith('ING');
+    return taskStatus && (taskStatus === 'RUNNING' || taskStatus === 'PENDING');
 }
 
 export function RunButton({ status, timestamp }) {

@@ -121,6 +121,7 @@ const OverviewTableBusinessView = ({ timestamp }) => {
         shouldReconnect: (closeEvent) => true,
         onMessage: handleBusinessDateMessage,
         onOpen: updateBusinessData,
+        share: true,
     });
 
     useEffect(() => {

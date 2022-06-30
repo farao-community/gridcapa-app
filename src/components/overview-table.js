@@ -7,7 +7,6 @@
 
 import React from 'react';
 import {
-    Button,
     Paper,
     Table,
     TableBody,
@@ -18,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from './commons';
-import { GetApp } from '@material-ui/icons';
+import DownloadButton from './download-button';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
@@ -84,31 +83,6 @@ function FileGroupTable({ fileGroup, processFiles }) {
     );
 }
 
-async function downloadFile(processFile) {
-    const file = await fetch(processFile.fileUrl);
-
-    const blob = await file.blob();
-    const url = URL.createObjectURL(blob);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = url;
-    downloadLink.download = processFile.filename;
-
-    downloadLink.click();
-}
-
-function createLink(processFile) {
-    let result = '';
-    if (processFile.fileUrl !== null) {
-        result = (
-            <Button onClick={() => downloadFile(processFile)}>
-                <GetApp />
-            </Button>
-        );
-    }
-
-    return result;
-}
-
 function FileDataRow({ processFile, fileGroup }) {
     let fileType = processFile.fileType;
     let processFileStatus = processFile.processFileStatus;
@@ -135,7 +109,7 @@ function FileDataRow({ processFile, fileGroup }) {
                 {lastModificationDate}
             </TableCell>
             <TableCell data-test={fileType + '-' + fileGroup + '-latest-url'}>
-                {createLink(processFile)}
+                <DownloadButton processFile={processFile} />
             </TableCell>
         </TableRow>
     );
