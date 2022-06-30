@@ -317,67 +317,61 @@ const GlobalViewCore = ({
 
     return (
         <div>
-            <Paper sx={{ width: '100%' }}>
-                <TableContainer style={{ maxHeight: '74vh' }}>
-                    <Table
-                        stickyHeader
-                        aria-label="sticky custom pagination table"
-                        className="table"
-                    >
-                        <TableHead>
+            <TableContainer style={{ maxHeight: '74vh' }} component={Paper}>
+                <Table className="table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <FormattedMessage id="timestamp" />
+                            </TableCell>
+                            <TableCell>
+                                <FormattedMessage id="globalViewCoreFiles" />
+                            </TableCell>
+                            <TableCell>
+                                <FormattedMessage id="status" />
+                                <FilterMenu
+                                    filterHint="filterOnStatus"
+                                    handleChange={handleStatusFilterChange}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <FormattedMessage id="globalViewCoreAction" />
+                            </TableCell>
+                            <TableCell>
+                                <FormattedMessage id="events" />
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {isLoading && (
                             <TableRow>
-                                <TableCell>
-                                    <FormattedMessage id="timestamp" />
-                                </TableCell>
-                                <TableCell>
-                                    <FormattedMessage id="globalViewCoreFiles" />
-                                </TableCell>
-                                <TableCell>
-                                    <FormattedMessage id="status" />
-                                    <FilterMenu
-                                        filterHint="filterOnStatus"
-                                        handleChange={handleStatusFilterChange}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <FormattedMessage id="globalViewCoreAction" />
-                                </TableCell>
-                                <TableCell>
-                                    <FormattedMessage id="events" />
+                                <TableCell colSpan={5}>
+                                    <LinearProgress />
                                 </TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {isLoading && (
-                                <TableRow>
-                                    <TableCell colSpan={5}>
-                                        <LinearProgress />
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                            {!isLoading &&
-                                filterSteps()
-                                    .slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )
-                                    .map((step, index) =>
-                                        inputDataRow(step, index)
-                                    )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={filteredSteps.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
-                />
-            </Paper>
+                        )}
+                        {!isLoading &&
+                            filterSteps()
+                                .slice(
+                                    page * rowsPerPage,
+                                    page * rowsPerPage + rowsPerPage
+                                )
+                                .map((step, index) =>
+                                    inputDataRow(step, index)
+                                )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={filteredSteps.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
+            />
             <Modal
                 open={modalEventOpen}
                 onClose={handleEventClose}
