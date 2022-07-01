@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -76,12 +76,11 @@ const GlobalViewCore = ({
     const [steps, setSteps] = React.useState(
         createAllSteps(timestampMin, timestampMax, timestampStep)
     );
-    const [filteredSteps, setfilteredSteps] = React.useState(steps);
     const [modalEventOpen, setModalEventOpen] = React.useState(false);
     const [modalFileOpen, setModalFileOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState('');
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
@@ -98,8 +97,6 @@ const GlobalViewCore = ({
             if (globalIndex >= 0) {
                 plop[globalIndex].taskData = data;
                 setSteps(plop);
-                setStatusFilter('');
-                setfilteredSteps(plop);
             }
         },
         [steps]
@@ -143,13 +140,21 @@ const GlobalViewCore = ({
     };
 
     const handleStatusFilterChange = (event) => {
-        setStatusFilter(event.currentTarget.value.toUpperCase());
-        setPage(0);
+        let newFilter = event.currentTarget.value.toUpperCase();
+        setStatusFilter(newFilter);
+        if (filterSteps(newFilter).length < page * rowsPerPage) {
+            setPage(Math.floor(filterSteps(newFilter).length / rowsPerPage));
+        }
     };
 
-    const filterSteps = () => {
+    const filterSteps = (localFilter = null) => {
         return steps.filter((step) => {
-            return step.taskData && step.taskData.status.includes(statusFilter);
+            return (
+                step.taskData &&
+                step.taskData.status.includes(
+                    localFilter ? localFilter : statusFilter
+                )
+            );
         });
     };
 
@@ -198,7 +203,6 @@ const GlobalViewCore = ({
                 setIsLoading(false);
                 setSteps(allSteps);
                 setStatusFilter('');
-                setfilteredSteps(allSteps);
             });
         },
         [enqueueSnackbar, intlRef]
@@ -246,10 +250,11 @@ const GlobalViewCore = ({
                         data-test={
                             encryptedMessage + '-process-event-timestamp'
                         }
+                        size="small"
                     >
                         {formattedTimestamp}
                     </TableCell>
-                    <TableCell>
+                    <TableCell size="small">
                         <Grid container direction="row" spacing={2}>
                             <Grid item>
                                 <Grid container direction="column">
@@ -285,7 +290,7 @@ const GlobalViewCore = ({
                             </Grid>
                         </Grid>
                     </TableCell>
-                    <TableCell>
+                    <TableCell size="small">
                         <TaskStatusChip
                             data-test={'timestamp-status-' + step.timestamp}
                             taskstatus={step.taskData.status}
@@ -296,13 +301,13 @@ const GlobalViewCore = ({
                             }
                         />
                     </TableCell>
-                    <TableCell>
+                    <TableCell size="small">
                         <RunButton
                             status={step.taskData.status}
                             timestamp={step.taskData.timestamp}
                         />
                     </TableCell>
-                    <TableCell>
+                    <TableCell size="small">
                         <Button
                             id={'Events_' + (index + page * rowsPerPage)}
                             onClick={handleEventOpen}
@@ -317,8 +322,11 @@ const GlobalViewCore = ({
 
     return (
         <div>
-            <TableContainer style={{ maxHeight: '74vh' }} component={Paper}>
-                <Table className="table">
+            <TableContainer
+                style={{ maxHeight: '75vh', minHeight: '63vh' }}
+                component={Paper}
+            >
+                <Table stickyHeader className="table">
                     <TableHead>
                         <TableRow>
                             <TableCell>
@@ -363,9 +371,9 @@ const GlobalViewCore = ({
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[12, 24, 48]}
                 component="div"
-                count={filteredSteps.length}
+                count={filterSteps().length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

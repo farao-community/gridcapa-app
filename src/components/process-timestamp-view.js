@@ -69,9 +69,7 @@ const ProcessTimestampView = ({
         <Grid container direction="column">
             <Grid item>
                 <TableHeader
-                    taskStatus={
-                        timestampData ? timestampData.status : 'Not created'
-                    }
+                    taskData={timestampData}
                     processName={processName}
                     timestamp={timestamp}
                     onTimestampChange={onTimestampChange}

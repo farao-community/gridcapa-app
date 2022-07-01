@@ -13,7 +13,6 @@ import Box from '@material-ui/core/Box';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 
-import { RunButton } from './run-button';
 import { FormattedMessage } from 'react-intl';
 
 function TabPanel(props) {
@@ -37,12 +36,6 @@ function a11yProps(index) {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
-}
-
-function displayRunButton(taskData) {
-    return taskData !== null ? (
-        <RunButton status={taskData.status} timestamp={taskData.timestamp} />
-    ) : null;
 }
 
 const TableCore = ({ taskData }) => {
@@ -85,7 +78,6 @@ const TableCore = ({ taskData }) => {
             <TabPanel value={value} index={2}>
                 Item Three
             </TabPanel>
-            {displayRunButton(taskData)}
         </div>
     );
 };
