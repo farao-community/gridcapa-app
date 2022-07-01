@@ -45,8 +45,8 @@ function dateEquality(date1, date2) {
 
 function findTimestampData(businessDateTimestamps, timestamp) {
     if (businessDateTimestamps && businessDateTimestamps.length !== 0) {
-        for (let i = 0; i < businessDateTimestamps.length; i++) {
-            if (dateEquality(businessDateTimestamps[i], timestamp)) {
+        for (let businessDateTimestamp of businessDateTimestamps) {
+            if (dateEquality(businessDateTimestamp, timestamp)) {
                 return true;
             }
         }
@@ -118,7 +118,7 @@ const OverviewTableBusinessView = ({ timestamp }) => {
     }, [getBusinessData]);
 
     useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: (_closeEvent) => true,
         onMessage: handleBusinessDateMessage,
         onOpen: updateBusinessData,
         share: true,

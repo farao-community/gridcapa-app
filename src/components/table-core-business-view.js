@@ -42,7 +42,7 @@ function a11yProps(index) {
 
 const TableCoreBusinessView = ({ timestamp }) => {
     const [value, setValue] = React.useState(0);
-    const handleChange = (event, newValue) => {
+    const handleChange = (_event, newValue) => {
         setValue(newValue);
     };
     return (

@@ -65,13 +65,7 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     return result;
 };
 
-const GlobalViewCore = ({
-    timestampMin,
-    timestampMax,
-    timestampStep,
-    onTimestampChange,
-    processName,
-}) => {
+const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [openEvent, setOpenEvent] = React.useState([]);
     const [steps, setSteps] = React.useState(
         createAllSteps(timestampMin, timestampMax, timestampStep)
@@ -103,12 +97,12 @@ const GlobalViewCore = ({
     );
 
     useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: (_closeEvent) => true,
         share: true,
         onMessage: handleTimestampMessage,
     });
 
-    const handleChangePage = (event, newPage) => {
+    const handleChangePage = (_event, newPage) => {
         setPage(newPage);
         getMissingData(steps, newPage, rowsPerPage);
     };

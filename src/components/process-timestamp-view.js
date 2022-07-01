@@ -55,7 +55,7 @@ const ProcessTimestampView = ({
     );
 
     useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: (_closeEvent) => true,
         share: true,
         onMessage: handleTimestampMessage,
         onOpen: updateTimestampData,

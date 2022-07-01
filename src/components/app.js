@@ -34,7 +34,11 @@ import {
 import { FormattedMessage } from 'react-intl';
 import Box from '@material-ui/core/Box';
 
-import { fetchConfigParameter, fetchConfigParameters } from '../utils/rest-api';
+import {
+    fetchConfigParameter,
+    fetchConfigParameters,
+    getWebSocketUrl,
+} from '../utils/rest-api';
 import {
     APP_NAME,
     COMMON_APP_NAME,
@@ -46,7 +50,6 @@ import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import AppTopBar from './app-top-bar';
 import GridCapaMain from './gridcapa-main';
-import { getWebSocketUrl } from '../utils/rest-api';
 import useWebSocket from 'react-use-websocket';
 
 const noUserManager = { instance: null, error: null };
@@ -144,14 +147,14 @@ const App = () => {
 
     useEffect(() => {
         initialize()
-            .then((userManager) => {
-                setUserManager({ instance: userManager, error: null });
-                userManager.getUser().then((user) => {
+            .then((requestedUserManager) => {
+                setUserManager({ instance: requestedUserManager, error: null });
+                requestedUserManager.getUser().then((CheckedUser) => {
                     if (
-                        user == null &&
+                        CheckedUser == null &&
                         initialMatchSilentRenewCallbackUrl == null
                     ) {
-                        userManager.signinSilent().catch((error) => {
+                        requestedUserManager.signinSilent().catch((error) => {
                             const oidcHackReloaded =
                                 'gridsuite-oidc-hack-reloaded';
                             if (
@@ -177,38 +180,31 @@ const App = () => {
     }, [initialize, initialMatchSilentRenewCallbackUrl]);
 
     useEffect(() => {
+        const displayError = (errorMessage) => {
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'paramsRetrievingError',
+                    intlRef: intlRef,
+                },
+            });
+        };
+
         if (user !== null) {
             fetchConfigParameters(COMMON_APP_NAME)
                 .then((params) => updateParams(params))
-                .catch((errorMessage) =>
-                    displayErrorMessageWithSnackbar({
-                        errorMessage: errorMessage,
-                        enqueueSnackbar: enqueueSnackbar,
-                        headerMessage: {
-                            headerMessageId: 'paramsRetrievingError',
-                            intlRef: intlRef,
-                        },
-                    })
-                );
+                .catch((errorMessage) => displayError(errorMessage));
 
             fetchConfigParameters(APP_NAME)
                 .then((params) => updateParams(params))
-                .catch((errorMessage) =>
-                    displayErrorMessageWithSnackbar({
-                        errorMessage: errorMessage,
-                        enqueueSnackbar: enqueueSnackbar,
-                        headerMessage: {
-                            headerMessageId: 'paramsRetrievingError',
-                            intlRef: intlRef,
-                        },
-                    })
-                );
+                .catch((errorMessage) => displayError(errorMessage));
             resolver.resolve(getWebSocketUrl('config'));
         }
     }, [user, dispatch, updateParams, enqueueSnackbar, intlRef]);
 
     useWebSocket(readyUrl, {
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: (_closeEvent) => true,
         onMessage: onConfigEvent,
         onError: (event) => {
             console.error('Unexpected Notification WebSocket error', event);
