@@ -317,10 +317,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     return (
         <div>
             <TableContainer
-                style={{ maxHeight: '75vh', minHeight: '63vh' }}
+                style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
             >
-                <Table stickyHeader className="table">
+                <Table className="table">
                     <TableHead>
                         <TableRow>
                             <TableCell>
