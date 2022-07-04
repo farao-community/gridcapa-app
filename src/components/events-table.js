@@ -61,22 +61,20 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [processEvents] = React.useState(taskData.processEvents);
     const [levelFilter, setLevelFilter] = React.useState('');
     const [logFilter, setLogFilter] = React.useState('');
 
     const handleLevelChange = (event) => {
-        setLevelFilter(event.currentTarget.value.toUpperCase());
+        setLevelFilter(event.currentTarget.value);
     };
 
     const handleLogChange = (event) => {
-        setLogFilter(event.currentTarget.value.toUpperCase());
-        filterProcessEvent(levelFilter, event.currentTarget.value);
+        setLogFilter(event.currentTarget.value);
     };
 
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let filtered;
-        filtered = processEvents.filter(
+        filtered = taskData.processEvents.filter(
             (event) =>
                 event.level
                     .toUpperCase()

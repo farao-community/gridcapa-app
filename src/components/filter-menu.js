@@ -10,14 +10,17 @@ import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@material-ui/icons';
 
 const FilterMenu = ({ filterHint, handleChange }) => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [
+        anchorElementForFilterMenu,
+        setAnchorEllementForFilterMenu,
+    ] = React.useState(null);
     const [localFilter, setLocalFilter] = React.useState('');
     const handleMenuClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchorEllementForFilterMenu(event.currentTarget);
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchorEllementForFilterMenu(null);
     };
 
     const handleLocalChange = (event) => {
@@ -43,9 +46,9 @@ const FilterMenu = ({ filterHint, handleChange }) => {
             </Button>
             <Menu
                 id="simple-menu"
-                anchorEl={anchorEl}
+                anchorEl={anchorElementForFilterMenu}
                 keepMounted
-                open={Boolean(anchorEl)}
+                open={Boolean(anchorElementForFilterMenu)}
                 onClose={handleClose}
                 TransitionProps={{ onEntered: autofocus }}
             >

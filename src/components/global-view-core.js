@@ -9,7 +9,6 @@ import React, { useEffect, useCallback } from 'react';
 import {
     Button,
     Modal,
-    Grid,
     Typography,
     Box,
     Paper,
@@ -23,17 +22,15 @@ import {
     LinearProgress,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import { gridcapaFormatDate, sha256 } from './commons';
-import { ListAlt, Close, Visibility } from '@material-ui/icons';
+import { Close } from '@material-ui/icons';
 import EventsTable from './events-table';
-import { TaskStatusChip } from './task-status-chip';
 import OverviewTable from './overview-table';
-import { RunButton } from './run-button';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
 import useWebSocket from 'react-use-websocket';
 import FilterMenu from './filter-menu';
+import GlobalViewCoreRow from './global-view-core-row';
 
 const modalStyle = {
     position: 'absolute',
@@ -82,15 +79,15 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const handleTimestampMessage = useCallback(
         async (event) => {
             const data = JSON.parse(event.data);
-            const plop = [...steps];
-            let globalIndex = plop.findIndex(
+            const stepsCopy = [...steps];
+            let globalIndex = stepsCopy.findIndex(
                 (step) =>
                     Date.parse(data.timestamp) === step.timestamp ||
                     data.timestamp === step.timestamp
             );
             if (globalIndex >= 0) {
-                plop[globalIndex].taskData = data;
-                setSteps(plop);
+                stepsCopy[globalIndex].taskData = data;
+                setSteps(stepsCopy);
             }
         },
         [steps]
@@ -235,95 +232,6 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         return index >= 0 ? steps[index].taskData[field] : [];
     };
 
-    const inputDataRow = (step, index) => {
-        let timestamp = step.timestamp;
-        if (!openEvent[index + page * rowsPerPage]) {
-            openEvent[index + page * rowsPerPage] = false;
-        }
-        let formattedTimestamp = gridcapaFormatDate(timestamp);
-        let encryptedMessage = sha256(formattedTimestamp);
-
-        return (
-            step.taskData && (
-                <TableRow hover key={encryptedMessage}>
-                    <TableCell
-                        data-test={
-                            encryptedMessage + '-process-event-timestamp'
-                        }
-                        size="small"
-                    >
-                        {formattedTimestamp}
-                    </TableCell>
-                    <TableCell size="small">
-                        <Grid container direction="row" spacing={2}>
-                            <Grid item>
-                                <Grid container direction="column">
-                                    <Grid item>
-                                        Input&nbsp;:&nbsp;&nbsp;&nbsp;
-                                        {step.taskData.inputs.filter(
-                                            (i) =>
-                                                i.processFileStatus ===
-                                                'VALIDATED'
-                                        ).length +
-                                            '\u00a0/\u00a0' +
-                                            step.taskData.inputs.length}
-                                    </Grid>
-                                    <Grid item>
-                                        Output&nbsp;:&nbsp;
-                                        {step.taskData.outputs.filter(
-                                            (i) =>
-                                                i.processFileStatus ===
-                                                'VALIDATED'
-                                        ).length +
-                                            '\u00a0/\u00a0' +
-                                            step.taskData.outputs.length}
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Button
-                                    id={'Files_' + (index + page * rowsPerPage)}
-                                    onClick={() => {
-                                        handleFileOpen(step);
-                                    }}
-                                >
-                                    <Visibility />
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </TableCell>
-                    <TableCell size="small">
-                        <TaskStatusChip
-                            data-test={'timestamp-status-' + step.timestamp}
-                            taskstatus={step.taskData.status}
-                            variant={
-                                step.taskData.status === 'RUNNING'
-                                    ? 'outlined'
-                                    : 'default'
-                            }
-                        />
-                    </TableCell>
-                    <TableCell size="small">
-                        <RunButton
-                            status={step.taskData.status}
-                            timestamp={step.taskData.timestamp}
-                        />
-                    </TableCell>
-                    <TableCell size="small">
-                        <Button
-                            id={'Events_' + (index + page * rowsPerPage)}
-                            onClick={() => {
-                                handleEventOpen(step);
-                            }}
-                        >
-                            <ListAlt />
-                        </Button>
-                    </TableCell>
-                </TableRow>
-            )
-        );
-    };
-
     return (
         <div>
             <TableContainer
@@ -333,23 +241,23 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 <Table className="table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>
+                            <TableCell size="small">
                                 <FormattedMessage id="timestamp" />
                             </TableCell>
-                            <TableCell>
+                            <TableCell size="small">
                                 <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>
-                            <TableCell>
+                            <TableCell size="small">
                                 <FormattedMessage id="status" />
                                 <FilterMenu
                                     filterHint="filterOnStatus"
                                     handleChange={handleStatusFilterChange}
                                 />
                             </TableCell>
-                            <TableCell>
+                            <TableCell size="small">
                                 <FormattedMessage id="globalViewCoreAction" />
                             </TableCell>
-                            <TableCell>
+                            <TableCell size="small">
                                 <FormattedMessage id="events" />
                             </TableCell>
                         </TableRow>
@@ -368,9 +276,16 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     page * rowsPerPage,
                                     page * rowsPerPage + rowsPerPage
                                 )
-                                .map((step, index) =>
-                                    inputDataRow(step, index)
-                                )}
+                                .map((step, index) => (
+                                    <GlobalViewCoreRow
+                                        step={step}
+                                        index={index}
+                                        page={page}
+                                        rowsPerPage={rowsPerPage}
+                                        handleFileOpen={handleFileOpen}
+                                        handleEventOpen={handleEventOpen}
+                                    />
+                                ))}
                     </TableBody>
                 </Table>
             </TableContainer>

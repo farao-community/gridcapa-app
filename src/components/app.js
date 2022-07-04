@@ -74,11 +74,11 @@ const App = () => {
 
     const location = useLocation();
 
-    const readyUrl = () => {
+    const readyUrl = useCallback(() => {
         return new Promise((resolve) => {
             resolver.resolve = resolve;
         });
-    };
+    }, []);
 
     const updateParams = useCallback(
         (params) => {
@@ -108,16 +108,7 @@ const App = () => {
         if (eventData.headers && eventData.headers['parameterName']) {
             fetchConfigParameter(eventData.headers['parameterName'])
                 .then((param) => updateParams([param]))
-                .catch((errorMessage) =>
-                    displayErrorMessageWithSnackbar({
-                        errorMessage: errorMessage,
-                        enqueueSnackbar: enqueueSnackbar,
-                        headerMessage: {
-                            headerMessageId: 'paramsRetrievingError',
-                            intlRef: intlRef,
-                        },
-                    })
-                );
+                .catch((errorMessage) => displayError(errorMessage));
         }
     };
 
@@ -179,8 +170,8 @@ const App = () => {
         // Note: initialize and initialMatchSilentRenewCallbackUrl won't change
     }, [initialize, initialMatchSilentRenewCallbackUrl]);
 
-    useEffect(() => {
-        const displayError = (errorMessage) => {
+    const displayError = useCallback(
+        (errorMessage) => {
             displayErrorMessageWithSnackbar({
                 errorMessage: errorMessage,
                 enqueueSnackbar: enqueueSnackbar,
@@ -189,8 +180,11 @@ const App = () => {
                     intlRef: intlRef,
                 },
             });
-        };
+        },
+        [enqueueSnackbar, intlRef]
+    );
 
+    useEffect(() => {
         if (user !== null) {
             fetchConfigParameters(COMMON_APP_NAME)
                 .then((params) => updateParams(params))
@@ -201,7 +195,7 @@ const App = () => {
                 .catch((errorMessage) => displayError(errorMessage));
             resolver.resolve(getWebSocketUrl('config'));
         }
-    }, [user, dispatch, updateParams, enqueueSnackbar, intlRef]);
+    }, [user, dispatch, updateParams, enqueueSnackbar, intlRef, displayError]);
 
     useWebSocket(readyUrl, {
         shouldReconnect: (_closeEvent) => true,
