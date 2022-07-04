@@ -113,8 +113,11 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         getMissingData(steps, 0, event.target.value);
     };
 
-    const handleEventOpen = (event) => {
-        openEvent[parseInt(event.currentTarget.id.split('_')[1])] = true;
+    const handleEventOpen = (step) => {
+        let index = steps.findIndex(
+            (inSteps) => inSteps.timestamp === step.timestamp
+        );
+        openEvent[index] = true;
         setModalEventOpen(true);
     };
     const handleEventClose = () => {
@@ -123,8 +126,11 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         setModalEventOpen(false);
     };
 
-    const handleFileOpen = (event) => {
-        openEvent[parseInt(event.currentTarget.id.split('_')[1])] = true;
+    const handleFileOpen = (step) => {
+        let index = steps.findIndex(
+            (inSteps) => inSteps.timestamp === step.timestamp
+        );
+        openEvent[index] = true;
         setModalFileOpen(true);
     };
     const handleFileClose = () => {
@@ -277,7 +283,9 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             <Grid item>
                                 <Button
                                     id={'Files_' + (index + page * rowsPerPage)}
-                                    onClick={handleFileOpen}
+                                    onClick={() => {
+                                        handleFileOpen(step);
+                                    }}
                                 >
                                     <Visibility />
                                 </Button>
@@ -304,7 +312,9 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                     <TableCell size="small">
                         <Button
                             id={'Events_' + (index + page * rowsPerPage)}
-                            onClick={handleEventOpen}
+                            onClick={() => {
+                                handleEventOpen(step);
+                            }}
                         >
                             <ListAlt />
                         </Button>
