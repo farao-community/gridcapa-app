@@ -12,15 +12,15 @@ import { FilterList } from '@material-ui/icons';
 const FilterMenu = ({ filterHint, handleChange }) => {
     const [
         anchorElementForFilterMenu,
-        setAnchorEllementForFilterMenu,
+        setAnchorElementForFilterMenu,
     ] = React.useState(null);
     const [localFilter, setLocalFilter] = React.useState('');
     const handleMenuClick = (event) => {
-        setAnchorEllementForFilterMenu(event.currentTarget);
+        setAnchorElementForFilterMenu(event.currentTarget);
     };
 
     const handleClose = () => {
-        setAnchorEllementForFilterMenu(null);
+        setAnchorElementForFilterMenu(null);
     };
 
     const handleLocalChange = (event) => {

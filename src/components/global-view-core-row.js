@@ -11,7 +11,7 @@ import { gridcapaFormatDate, sha256 } from './commons';
 import { ListAlt, Visibility } from '@material-ui/icons';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
-import FileSummary from './fileSummary';
+import FileSummary from './file-summary';
 
 const GlobalViewCoreRow = ({
     step,
