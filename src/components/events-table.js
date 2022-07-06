@@ -97,6 +97,7 @@ const EventsTable = ({ taskData }) => {
                             <FilterMenu
                                 filterHint="filterOnLevel"
                                 handleChange={handleLevelChange}
+                                currentFilter={levelFilter}
                             />
                         </TableCell>
                         <TableCell>
@@ -107,6 +108,7 @@ const EventsTable = ({ taskData }) => {
                             <FilterMenu
                                 filterHint="filterOnLog"
                                 handleChange={handleLogChange}
+                                currentFilter={logFilter}
                             />
                         </TableCell>
                     </TableRow>

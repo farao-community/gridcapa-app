@@ -9,12 +9,12 @@ import { Button, TextField, Menu, MenuItem } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@material-ui/icons';
 
-const FilterMenu = ({ filterHint, handleChange }) => {
+const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
     const [
         anchorElementForFilterMenu,
         setAnchorElementForFilterMenu,
     ] = React.useState(null);
-    const [localFilter, setLocalFilter] = React.useState('');
+    const [localFilter, setLocalFilter] = React.useState(currentFilter);
     const handleMenuClick = (event) => {
         setAnchorElementForFilterMenu(event.currentTarget);
     };
@@ -57,7 +57,7 @@ const FilterMenu = ({ filterHint, handleChange }) => {
                         id={filterHint}
                         label={<FormattedMessage id={filterHint} />}
                         type="text"
-                        defaultValue={''}
+                        defaultValue={localFilter}
                         autoComplete="off"
                         InputLabelProps={{
                             shrink: true,

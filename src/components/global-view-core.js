@@ -199,7 +199,6 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 });
                 setIsLoading(false);
                 setSteps(allSteps);
-                setStatusFilter('');
             });
         },
         [enqueueSnackbar, intlRef]
@@ -252,6 +251,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 <FilterMenu
                                     filterHint="filterOnStatus"
                                     handleChange={handleStatusFilterChange}
+                                    currentFilter={statusFilter}
                                 />
                             </TableCell>
                             <TableCell size="small">
