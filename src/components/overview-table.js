@@ -57,7 +57,7 @@ function FileGroupTableHead({ fileGroup }) {
     );
 }
 
-function FileGroupTableRows({ fileGroup, processFiles }) {
+function FileGroupTableRows({ fileGroup, processFiles, timestamp }) {
     return (
         <TableBody>
             {processFiles.map((processFile, index) => (
@@ -65,25 +65,27 @@ function FileGroupTableRows({ fileGroup, processFiles }) {
                     key={'file_' + index}
                     processFile={processFile}
                     fileGroup={fileGroup}
+                    timestamp={timestamp}
                 />
             ))}
         </TableBody>
     );
 }
 
-function FileGroupTable({ fileGroup, processFiles }) {
+function FileGroupTable({ fileGroup, processFiles, timestamp }) {
     return (
         <>
             <FileGroupTableHead fileGroup={fileGroup} />
             <FileGroupTableRows
                 processFiles={processFiles}
                 fileGroup={fileGroup}
+                timestamp={timestamp}
             />
         </>
     );
 }
 
-function FileDataRow({ processFile, fileGroup }) {
+function FileDataRow({ processFile, fileGroup, timestamp }) {
     let fileType = processFile.fileType;
     let processFileStatus = processFile.processFileStatus;
     let lastModificationDate = gridcapaFormatDate(
@@ -109,23 +111,28 @@ function FileDataRow({ processFile, fileGroup }) {
                 {lastModificationDate}
             </TableCell>
             <TableCell data-test={fileType + '-' + fileGroup + '-latest-url'}>
-                <DownloadButton processFile={processFile} />
+                <DownloadButton
+                    processFile={processFile}
+                    timestamp={timestamp}
+                />
             </TableCell>
         </TableRow>
     );
 }
 
-const OverviewTable = ({ inputs, outputs }) => {
+const OverviewTable = ({ inputs, outputs, timestamp }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
                 <FileGroupTable
                     fileGroup={INPUT_FILE_GROUP}
                     processFiles={inputs}
+                    timestamp={timestamp}
                 />
                 <FileGroupTable
                     fileGroup={OUTPUT_FILE_GROUP}
                     processFiles={outputs}
+                    timestamp={timestamp}
                 />
             </Table>
         </TableContainer>

@@ -231,6 +231,11 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         return index >= 0 ? steps[index].taskData[field] : [];
     };
 
+    const getTimestamp = () => {
+        let index = openEvent.indexOf(true);
+        return index >= 0 ? steps[index].taskData.timestamp : null;
+    };
+
     return (
         <div>
             <TableContainer
@@ -349,6 +354,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                         id="modal-modal-description"
                         inputs={getFilesData('inputs') || []}
                         outputs={getFilesData('outputs') || []}
+                        timestamp={getTimestamp()}
                     />
                 </Box>
             </Modal>

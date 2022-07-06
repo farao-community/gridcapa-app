@@ -7,24 +7,35 @@
 
 import { Button } from '@material-ui/core';
 import { GetApp } from '@material-ui/icons';
+import { useSnackbar } from 'notistack';
+import { useIntlRef } from '../utils/messages';
+import { fetchFileFromProcess } from '../utils/rest-api';
 
-async function downloadFile(processFile) {
-    const file = await fetch(processFile.fileUrl);
-
-    const blob = await file.blob();
+async function downloadFile(processFile, timestamp, intlRef, enqueueSnackbar) {
+    const blob = await fetchFileFromProcess(
+        timestamp,
+        processFile.fileType,
+        intlRef,
+        enqueueSnackbar
+    );
     const url = URL.createObjectURL(blob);
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = processFile.filename;
-
     downloadLink.click();
 }
 
-const DownloadButton = ({ processFile }) => {
+const DownloadButton = ({ processFile, timestamp }) => {
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
     return processFile.fileUrl === null ? (
         ''
     ) : (
-        <Button onClick={() => downloadFile(processFile)}>
+        <Button
+            onClick={() =>
+                downloadFile(processFile, timestamp, intlRef, enqueueSnackbar)
+            }
+        >
             <GetApp />
         </Button>
     );

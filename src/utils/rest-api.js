@@ -13,6 +13,7 @@ import { displayErrorMessageWithSnackbar } from './messages';
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_QUERIES = '/task-manager/tasks';
+const PREFIX_FILE_QUERIES = '/task-manager/file';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 
@@ -113,6 +114,34 @@ export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
+}
+
+export function fetchFileFromProcess(
+    timestamp,
+    type,
+    intlRef,
+    enqueueSnackbar
+) {
+    console.info('Fetching file ' + type + ' for timestamp : ' + timestamp);
+    const fetchParams =
+        getBaseUrl() + PREFIX_FILE_QUERIES + `/${type}/${timestamp}`;
+    console.log(fetchParams);
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.blob()
                 : response.text().then((text) => Promise.reject(text))
         )
         .catch((errorMessage) =>
