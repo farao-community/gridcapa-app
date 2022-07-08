@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import React, { useEffect, useState } from 'react';
-import { LIGHT_THEME, logout, TopBar } from '@gridsuite/commons-ui';
+import { logout, TopBar } from '@gridsuite/commons-ui';
 import Parameters, { useParameterState } from './parameters';
 import { APP_NAME, PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchAppsAndUrls } from '../utils/rest-api';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -20,8 +20,6 @@ const AppTopBar = ({ user, userManager }) => {
     const dispatch = useDispatch();
 
     const [appsAndUrls, setAppsAndUrls] = useState([]);
-
-    const theme = useSelector((state) => state[PARAM_THEME]);
 
     const [themeLocal, handleChangeTheme] = useParameterState(PARAM_THEME);
 
@@ -52,13 +50,7 @@ const AppTopBar = ({ user, userManager }) => {
             <TopBar
                 appName={APP_NAME}
                 appColor="grey"
-                appLogo={
-                    theme === LIGHT_THEME ? (
-                        <FaraoLogo /> //GridCapaLogoLight
-                    ) : (
-                        <FaraoLogo /> //GridCapaLogoDark
-                    )
-                }
+                appLogo={<FaraoLogo />}
                 onParametersClick={() => setShowParameters(true)}
                 onLogoutClick={() => logout(dispatch, userManager.instance)}
                 onLogoClick={() => onLogoClicked()}

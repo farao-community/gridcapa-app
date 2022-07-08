@@ -13,6 +13,7 @@ import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import React, { useCallback } from 'react';
 import { TaskStatusChip } from './task-status-chip';
+import { RunButton } from './run-button';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -28,16 +29,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function displayRunButton(taskData) {
+    return taskData !== null ? (
+        <RunButton status={taskData.status} timestamp={taskData.timestamp} />
+    ) : null;
+}
+
 const TableHeader = ({
-    taskStatus,
+    taskData,
     processName,
     timestamp,
     onTimestampChange,
 }) => {
     const classes = useStyles();
+    const taskStatus = taskData ? taskData.status : 'Not created';
     const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
     const currentTime = dateFormat(timestamp, 'HH:MM');
-    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
+    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'default';
     const tableHeaderName = (processName || '') + ' Supervisor';
 
     const handleDateChange = useCallback(
@@ -103,12 +111,15 @@ const TableHeader = ({
                     />
                 </form>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
                 <TaskStatusChip
                     data-test="timestamp-status"
                     taskStatus={taskStatus}
                     variant={outlined}
                 />
+            </Grid>
+            <Grid item xs={1}>
+                {displayRunButton(taskData)}
             </Grid>
         </Grid>
     );

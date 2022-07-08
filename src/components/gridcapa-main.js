@@ -10,8 +10,9 @@ import { Grid, Tab, Tabs } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import BusinessDateView from './business-date-view';
+import { getWebSocketUrl } from '../utils/rest-api';
+import useWebSocket from 'react-use-websocket';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -24,11 +25,7 @@ function TabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
+            {value === index && <Box p={3}>{children}</Box>}
         </div>
     );
 }
@@ -50,9 +47,14 @@ const GridCapaMain = () => {
         setTimestamp(new Date(newTimestamp));
     }, []);
 
-    const handleViewChange = useCallback((event, newValue) => {
+    const handleViewChange = useCallback((_event, newValue) => {
         setView(newValue);
     }, []);
+
+    useWebSocket(getWebSocketUrl('task'), {
+        shouldReconnect: (_closeEvent) => true,
+        share: true,
+    });
 
     useEffect(() => {
         if (processName === null) {

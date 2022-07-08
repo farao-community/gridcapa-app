@@ -6,9 +6,9 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import Button from '@material-ui/core/Button';
-import { FormattedMessage } from 'react-intl';
+import { Button, CircularProgress } from '@material-ui/core';
 import { fetchJobLauncherPost } from '../utils/rest-api';
+import { PlayArrow } from '@material-ui/icons';
 
 function isDisabled(taskStatus) {
     return (
@@ -16,6 +16,10 @@ function isDisabled(taskStatus) {
         taskStatus !== 'SUCCESS' &&
         taskStatus !== 'ERROR'
     );
+}
+
+function isRunning(taskStatus) {
+    return taskStatus && (taskStatus === 'RUNNING' || taskStatus === 'PENDING');
 }
 
 export function RunButton({ status, timestamp }) {
@@ -31,15 +35,25 @@ export function RunButton({ status, timestamp }) {
     );
 
     return (
-        <Button
-            color="primary"
-            data-test="run-button"
-            variant="contained"
-            size="large"
-            disabled={disabled || isDisabled(status)}
-            onClick={launchTask}
-        >
-            <FormattedMessage id="runButtonLabel" />
-        </Button>
+        <span>
+            {!isRunning(status) && (
+                <Button
+                    color="primary"
+                    data-test="run-button"
+                    variant="contained"
+                    size="large"
+                    disabled={disabled || isDisabled(status)}
+                    onClick={launchTask}
+                >
+                    <PlayArrow />
+                </Button>
+            )}
+            {isRunning(status) && (
+                <CircularProgress
+                    size="24px"
+                    style={{ marginTop: '5px', marginLeft: '22px' }}
+                />
+            )}
+        </span>
     );
 }

@@ -16,7 +16,9 @@ import {
     TableRow,
 } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
+
 import { gridcapaFormatDate, sha256 } from './commons';
+import FilterMenu from './filter-menu';
 
 const processEventLevelStyles = {
     INFO: {
@@ -39,10 +41,10 @@ function inputDataRow(processEvent) {
     let formattedTimestamp = gridcapaFormatDate(timestamp);
 
     return (
-        <TableRow>
+        <TableRow key={timestamp + encryptedMessage}>
             <TableCell
                 data-test={encryptedMessage + '-process-event-level'}
-                style={processEventLevelStyles[level]}
+                style={{ ...processEventLevelStyles[level], width: '9vw' }}
             >
                 {level}
             </TableCell>
@@ -59,7 +61,32 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    let processEvents = taskData === null ? [] : taskData.processEvents;
+    const [levelFilter, setLevelFilter] = React.useState('');
+    const [logFilter, setLogFilter] = React.useState('');
+
+    const handleLevelChange = (event) => {
+        setLevelFilter(event.currentTarget.value);
+    };
+
+    const handleLogChange = (event) => {
+        setLogFilter(event.currentTarget.value);
+    };
+
+    const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
+        let filtered;
+        filtered = taskData.processEvents.filter(
+            (event) =>
+                event.level
+                    .toUpperCase()
+                    .includes(currentEventFilter.toUpperCase()) &&
+                event.message
+                    .toUpperCase()
+                    .includes(currentLogFilter.toUpperCase())
+        );
+
+        return filtered;
+    };
+
     return (
         <TableContainer component={Paper}>
             <Table className="table">
@@ -67,19 +94,30 @@ const EventsTable = ({ taskData }) => {
                     <TableRow>
                         <TableCell>
                             <FormattedMessage id="level" />
+                            <FilterMenu
+                                filterHint="filterOnLevel"
+                                handleChange={handleLevelChange}
+                                currentFilter={levelFilter}
+                            />
                         </TableCell>
                         <TableCell>
                             <FormattedMessage id="timestamp" />
                         </TableCell>
                         <TableCell>
                             <FormattedMessage id="eventDescription" />
+                            <FilterMenu
+                                filterHint="filterOnLog"
+                                handleChange={handleLogChange}
+                                currentFilter={logFilter}
+                            />
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {processEvents?.map((processEvent) =>
-                        inputDataRow(processEvent)
-                    )}
+                    {filterProcessEvent(
+                        levelFilter,
+                        logFilter
+                    )?.map((processEvent) => inputDataRow(processEvent))}
                 </TableBody>
             </Table>
         </TableContainer>

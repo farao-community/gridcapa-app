@@ -11,11 +11,9 @@ import TableHeader from './table-header';
 import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import {
-    connectNotificationsWsUpdateTask,
-    fetchTimestampData,
-} from '../utils/rest-api';
+import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
 import { gridcapaFormatDate } from './commons';
+import useWebSocket from 'react-use-websocket';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
@@ -56,15 +54,12 @@ const ProcessTimestampView = ({
         [timestamp]
     );
 
-    useEffect(() => {
-        const ws = connectNotificationsWsUpdateTask(
-            updateTimestampData,
-            handleTimestampMessage
-        );
-        return function () {
-            ws.close();
-        };
-    }, [updateTimestampData, handleTimestampMessage]);
+    useWebSocket(getWebSocketUrl('task'), {
+        shouldReconnect: (_closeEvent) => true,
+        share: true,
+        onMessage: handleTimestampMessage,
+        onOpen: updateTimestampData,
+    });
 
     useEffect(() => {
         updateTimestampData();
@@ -74,9 +69,7 @@ const ProcessTimestampView = ({
         <Grid container direction="column">
             <Grid item>
                 <TableHeader
-                    taskStatus={
-                        timestampData ? timestampData.status : 'Not created'
-                    }
+                    taskData={timestampData}
                     processName={processName}
                     timestamp={timestamp}
                     onTimestampChange={onTimestampChange}

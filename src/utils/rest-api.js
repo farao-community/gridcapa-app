@@ -56,37 +56,26 @@ export function connectNotificationsWsUpdateConfig() {
     return reconnectingWebSocket;
 }
 
-export function connectNotificationsWsUpdateTask(
-    onOpenHandler,
-    onMessageHandler
-) {
+export function getWebSocketUrl(type) {
     const webSocketBaseUrl = getBaseUrl()
         .replace(/^http:\/\//, 'ws://')
         .replace(/^https:\/\//, 'wss://');
-    const webSocketUrl =
-        webSocketBaseUrl + PREFIX_TASK_NOTIFICATION_WS + '/websocket';
-
-    let webSocketUrlWithToken = webSocketUrl + '?access_token=' + getToken();
-
-    const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken,
-        null,
-        wsOptions
-    );
-    reconnectingWebSocket.onopen = function () {
-        console.info(
-            'Connected Websocket update task ui ' + webSocketUrl + ' ...'
-        );
-        onOpenHandler();
-    };
-    reconnectingWebSocket.onmessage = function (event) {
-        onMessageHandler(event);
-    };
-    reconnectingWebSocket.onerror = function (event) {
-        console.error('Unexpected Notification WebSocket error', event);
-    };
-    reconnectingWebSocket.reconnect();
-    return reconnectingWebSocket;
+    let prefixConfig = '';
+    switch (type) {
+        case 'config':
+            prefixConfig =
+                PREFIX_CONFIG_NOTIFICATION_WS +
+                '/notify?appName=' +
+                APP_NAME +
+                '&';
+            break;
+        case 'task':
+            prefixConfig = PREFIX_TASK_NOTIFICATION_WS + '/websocket?';
+            break;
+        default:
+            console.err("Error don't know where to connect");
+    }
+    return webSocketBaseUrl + prefixConfig + 'access_token=' + getToken();
 }
 
 function backendFetch(url, init) {
@@ -124,6 +113,34 @@ export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
+}
+
+export function fetchFileFromProcess(
+    timestamp,
+    type,
+    intlRef,
+    enqueueSnackbar
+) {
+    console.info('Fetching file ' + type + ' for timestamp : ' + timestamp);
+    const fetchParams =
+        getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}/file/${type}`;
+    console.log(fetchParams);
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.blob()
                 : response.text().then((text) => Promise.reject(text))
         )
         .catch((errorMessage) =>

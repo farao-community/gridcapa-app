@@ -10,11 +10,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 
-import { RunButton } from './run-button';
 import { FormattedMessage } from 'react-intl';
 
 function TabPanel(props) {
@@ -28,11 +26,7 @@ function TabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
+            {value === index && <Box p={3}>{children}</Box>}
         </div>
     );
 }
@@ -44,15 +38,9 @@ function a11yProps(index) {
     };
 }
 
-function displayRunButton(taskData) {
-    return taskData !== null ? (
-        <RunButton status={taskData.status} timestamp={taskData.timestamp} />
-    ) : null;
-}
-
 const TableCore = ({ taskData }) => {
     const [value, setValue] = React.useState(0);
-    const handleChange = (event, newValue) => {
+    const handleChange = (_event, newValue) => {
         setValue(newValue);
     };
 
@@ -82,6 +70,7 @@ const TableCore = ({ taskData }) => {
                 <OverviewTable
                     inputs={taskData.inputs || []}
                     outputs={taskData.outputs || []}
+                    timestamp={taskData.timestamp}
                 />
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -90,7 +79,6 @@ const TableCore = ({ taskData }) => {
             <TabPanel value={value} index={2}>
                 Item Three
             </TabPanel>
-            {displayRunButton(taskData)}
         </div>
     );
 };

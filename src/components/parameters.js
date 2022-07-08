@@ -132,7 +132,7 @@ const Parameters = ({ showParameters, hideParameters }) => {
                         indicatorColor="primary"
                         variant="scrollable"
                         scrollButtons="auto"
-                        onChange={(event, newValue) => setTabIndex(newValue)}
+                        onChange={(_event, newValue) => setTabIndex(newValue)}
                         aria-label="parameters"
                     >
                         <Tab label={<FormattedMessage id="gui" />} />

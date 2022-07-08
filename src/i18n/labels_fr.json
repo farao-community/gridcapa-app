@@ -14,5 +14,17 @@
   "runButtonLabel": "Lancer un calcul",
   "level": "Niveau",
   "timestamp": "Horodatage",
-  "eventDescription": "Description de l'événement"
+  "eventDescription": "Description de l'événement",
+  "filterOnLevel" : "Filtrer sur le niveau de l'évènement",
+  "filterOnLog" : "Filtrer sur l'évènement",
+  "filterOnStatus" : "Filtrer sur le status",
+  "globalView": "Vue globale",
+  "selectMinTimestampDate": "Date min",
+  "selectMaxTimestampDate": "Date max",
+  "selectTimeStep": "interval",
+  "globalViewCoreFiles": "Fichiers",
+  "globalViewCoreAction": "Action",
+  "RowsPerPage" : "lignes par page",
+  "RangeError": "Période maximale de 48h",
+  "download": "Télécharger"
 }
