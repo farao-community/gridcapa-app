@@ -13,7 +13,6 @@ import { displayErrorMessageWithSnackbar } from './messages';
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_QUERIES = '/task-manager/tasks';
-const PREFIX_FILE_QUERIES = '/task-manager/file';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 
@@ -136,7 +135,7 @@ export function fetchFileFromProcess(
 ) {
     console.info('Fetching file ' + type + ' for timestamp : ' + timestamp);
     const fetchParams =
-        getBaseUrl() + PREFIX_FILE_QUERIES + `/${type}/${timestamp}`;
+        getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}/file/${type}`;
     console.log(fetchParams);
     return backendFetch(fetchParams)
         .then((response) =>
