@@ -41,13 +41,13 @@ const GlobalViewCoreRow = ({
                                 <Grid item>
                                     <FileSummary
                                         type="Input"
-                                        listoffile={step.taskData.inputs}
+                                        listOfFile={step.taskData.inputs}
                                     />
                                 </Grid>
                                 <Grid item>
                                     <FileSummary
                                         type="Output"
-                                        listoffile={step.taskData.outputs}
+                                        listOfFile={step.taskData.outputs}
                                     />
                                 </Grid>
                             </Grid>
@@ -67,7 +67,7 @@ const GlobalViewCoreRow = ({
                 <TableCell size="small">
                     <TaskStatusChip
                         data-test={'timestamp-status-' + step.timestamp}
-                        taskstatus={step.taskData.status}
+                        taskStatus={step.taskData.status}
                         variant={
                             step.taskData.status === 'RUNNING'
                                 ? 'outlined'
