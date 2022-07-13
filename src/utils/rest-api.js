@@ -15,6 +15,7 @@ const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_QUERIES = '/task-manager/tasks';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
+const PREFIX_INTERRUPT_PROCESS_QUERIES = '/gridcapa-job-launcher/stop/';
 
 function getToken() {
     const state = store.getState();
@@ -240,6 +241,19 @@ export function fetchJobLauncherPost(taskTimestamp) {
     };
     backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
+        requestOptions
+    ).then();
+}
+
+export function fetchJobLauncherToInterruptTask(taskTimestamp) {
+    console.log('Fetching job launcher for task:' + taskTimestamp);
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    };
+
+    backendFetch(
+        getBaseUrl() + PREFIX_INTERRUPT_PROCESS_QUERIES + taskTimestamp,
         requestOptions
     ).then();
 }

@@ -8,7 +8,6 @@
   "latestModification": "Latest modification",
   "overview": "Overview",
   "events": "Logs",
-  "artifacts": "Artifacts",
   "selectTimestampDate": "Timestamp date",
   "selectTimestampTime": "Timestamp time",
   "runButtonLabel": "Run",

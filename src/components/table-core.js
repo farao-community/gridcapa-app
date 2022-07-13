@@ -58,12 +58,6 @@ const TableCore = ({ taskData }) => {
                         data-test="events"
                         {...a11yProps(1)}
                     />
-                    <Tab
-                        label={<FormattedMessage id="artifacts" />}
-                        data-test="artifacts"
-                        {...a11yProps(2)}
-                        disabled
-                    />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>

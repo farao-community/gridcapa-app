@@ -12,6 +12,7 @@ import { ListAlt, Visibility } from '@material-ui/icons';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import FileSummary from './file-summary';
+import { StopButton } from './stop-button';
 
 const GlobalViewCoreRow = ({
     step,
@@ -77,6 +78,11 @@ const GlobalViewCoreRow = ({
                 </TableCell>
                 <TableCell size="small">
                     <RunButton
+                        status={step.taskData.status}
+                        timestamp={step.taskData.timestamp}
+                    />
+                    &nbsp;
+                    <StopButton
                         status={step.taskData.status}
                         timestamp={step.taskData.timestamp}
                     />
