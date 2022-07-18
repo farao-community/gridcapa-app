@@ -55,6 +55,7 @@ const GlobalViewCoreRow = ({
                         <Grid item>
                             <Button
                                 id={'Files_' + (index + page * rowsPerPage)}
+                                data-test={'timestamp-files-' + step.timestamp}
                                 onClick={() => {
                                     handleFileOpen(step);
                                 }}
