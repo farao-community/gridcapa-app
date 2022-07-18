@@ -39,7 +39,7 @@ export function RunButton({ status, timestamp }) {
             {!isRunning(status) && (
                 <Button
                     color="primary"
-                    data-test="run-button"
+                    data-test={'run-button-' + Date.parse(timestamp)}
                     variant="contained"
                     size="large"
                     disabled={disabled || isDisabled(status)}

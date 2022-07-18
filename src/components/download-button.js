@@ -32,6 +32,9 @@ const DownloadButton = ({ processFile, timestamp }) => {
         ''
     ) : (
         <Button
+            data-test={
+                'download-' + processFile.fileType + '-' + Date.parse(timestamp)
+            }
             onClick={() =>
                 downloadFile(processFile, timestamp, intlRef, enqueueSnackbar)
             }
