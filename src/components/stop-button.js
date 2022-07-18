@@ -10,7 +10,6 @@ import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
 import { Button } from '@material-ui/core';
 import { Stop } from '@material-ui/icons';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 
 function isDisabled(taskStatus) {
     return taskStatus !== 'RUNNING';
