@@ -13,7 +13,7 @@ import { displayErrorMessageWithSnackbar } from './messages';
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_QUERIES = '/task-manager/tasks';
-const PREFIX_TASK_NOTIFICATION_WS = '/task-notification';
+const PREFIX_TASK_NOTIFICATION_WS = '/task-notification/tasks/notify';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 
 function getToken() {
@@ -57,25 +57,27 @@ export function connectNotificationsWsUpdateConfig() {
 }
 
 export function getWebSocketUrl(type) {
-    const webSocketBaseUrl = getBaseUrl()
-        .replace(/^http:\/\//, 'ws://')
-        .replace(/^https:\/\//, 'wss://');
+    let webSocketBaseUrl = getBaseUrl();
     let prefixConfig = '';
     switch (type) {
         case 'config':
+            webSocketBaseUrl = webSocketBaseUrl
+                .replace(/^http:\/\//, 'ws://')
+                .replace(/^https:\/\//, 'wss://');
             prefixConfig =
                 PREFIX_CONFIG_NOTIFICATION_WS +
                 '/notify?appName=' +
                 APP_NAME +
-                '&';
+                '&access_token=' +
+                getToken();
             break;
         case 'task':
-            prefixConfig = PREFIX_TASK_NOTIFICATION_WS + '/websocket?';
+            prefixConfig = PREFIX_TASK_NOTIFICATION_WS;
             break;
         default:
             console.err("Error don't know where to connect");
     }
-    return webSocketBaseUrl + prefixConfig + 'access_token=' + getToken();
+    return webSocketBaseUrl + prefixConfig;
 }
 
 function backendFetch(url, init) {

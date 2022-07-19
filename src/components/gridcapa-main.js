@@ -11,8 +11,6 @@ import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@material-ui/core/Box';
 import BusinessDateView from './business-date-view';
-import { getWebSocketUrl } from '../utils/rest-api';
-import useWebSocket from 'react-use-websocket';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -50,11 +48,6 @@ const GridCapaMain = () => {
     const handleViewChange = useCallback((_event, newValue) => {
         setView(newValue);
     }, []);
-
-    useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (_closeEvent) => true,
-        share: true,
-    });
 
     useEffect(() => {
         if (processName === null) {

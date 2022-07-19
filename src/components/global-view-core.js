@@ -28,9 +28,9 @@ import OverviewTable from './overview-table';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
-import useWebSocket from 'react-use-websocket';
 import FilterMenu from './filter-menu';
 import GlobalViewCoreRow from './global-view-core-row';
+import SockJsClient from 'react-stomp';
 
 const modalStyle = {
     position: 'absolute',
@@ -78,7 +78,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const handleTimestampMessage = useCallback(
         async (event) => {
-            const data = JSON.parse(event.data);
+            const data = event;
             const stepsCopy = [...steps];
             let globalIndex = stepsCopy.findIndex(
                 (step) =>
@@ -93,11 +93,21 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         [steps]
     );
 
-    useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (_closeEvent) => true,
-        share: true,
-        onMessage: handleTimestampMessage,
-    });
+    const createWS = () => {
+        let listOfTopics = [
+            '/task/update/' +
+                new Date(timestampMin).toISOString().substr(0, 10),
+            '/task/update/' +
+                new Date(timestampMax).toISOString().substr(0, 10),
+        ];
+        return (
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={listOfTopics}
+                onMessage={handleTimestampMessage}
+            />
+        );
+    };
 
     const handleChangePage = (_event, newPage) => {
         setPage(newPage);
@@ -238,6 +248,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     return (
         <div>
+            {createWS()}
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
