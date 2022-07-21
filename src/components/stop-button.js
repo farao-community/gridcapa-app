@@ -32,10 +32,12 @@ export function StopButton({ status, timestamp }) {
             message: 'Do you want to stop the computation ?',
             buttons: [
                 {
+                    dataTest:'yes-button',
                     label: 'Yes',
                     onClick: () => stopTask(),
                 },
                 {
+                    dataTest:'cancel-button',
                     label: 'Cancel',
                 },
             ],
