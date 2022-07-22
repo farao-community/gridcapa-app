@@ -70,9 +70,6 @@ const TableCore = ({ taskData }) => {
             <TabPanel value={value} index={1}>
                 <EventsTable taskData={taskData} />
             </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel>
         </div>
     );
 };

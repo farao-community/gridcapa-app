@@ -25,5 +25,7 @@
   "globalViewCoreAction": "Action",
   "RowsPerPage" : "lignes par page",
   "RangeError": "Période maximale de 48h",
-  "download": "Télécharger"
+  "download": "Télécharger",
+  "cancel": "Annuler",
+  "stopButtonLabel": "Oui"
 }

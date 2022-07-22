@@ -6,10 +6,16 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
-import { Button } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+} from '@material-ui/core';
 import { Stop } from '@material-ui/icons';
-import { confirmAlert } from 'react-confirm-alert';
+import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
+import { FormattedMessage } from 'react-intl';
 
 function isDisabled(taskStatus) {
     return taskStatus !== 'RUNNING';
@@ -17,43 +23,53 @@ function isDisabled(taskStatus) {
 
 export function StopButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const stopTask = useCallback(
         async function () {
             setDisabled(true);
             await fetchJobLauncherToInterruptTask(timestamp);
             setDisabled(false);
+            handleClose();
         },
         [timestamp]
     );
 
-    const submit = () => {
-        confirmAlert({
-            message: 'Do you want to stop the computation ?',
-            buttons: [
-                {
-                    dataTest: 'yes-button',
-                    label: 'Yes',
-                    onClick: () => stopTask(),
-                },
-                {
-                    dataTest: 'cancel-button',
-                    label: 'Cancel',
-                },
-            ],
-        });
-    };
-
     return (
-        <Button
-            color="primary"
-            data-test="stop-button"
-            size="large"
-            variant="contained"
-            disabled={disabled || isDisabled(status)}
-            onClick={submit}
-        >
-            <Stop />
-        </Button>
+        <span>
+            <Button
+                color="primary"
+                data-test="stop-button"
+                size="large"
+                variant="contained"
+                disabled={disabled || isDisabled(status)}
+                onClick={handleClickOpen}
+            >
+                <Stop />
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogContent>
+                    <DialogContentText>
+                        <FormattedMessage id="interruptionProcessAlertMessage" />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={stopTask} color="primary">
+                        <FormattedMessage id="stopButtonLabel" />
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                        <FormattedMessage id="cancel" />
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </span>
     );
 }

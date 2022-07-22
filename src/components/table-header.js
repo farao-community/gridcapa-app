@@ -127,7 +127,6 @@ const TableHeader = ({
             </Grid>
             <Grid item xs={2}>
                 {displayRunButton(taskData)}
-                &nbsp;
                 {displayStopButton(taskData)}
             </Grid>
         </Grid>

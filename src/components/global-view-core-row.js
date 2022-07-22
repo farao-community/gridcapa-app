@@ -81,7 +81,6 @@ const GlobalViewCoreRow = ({
                         status={step.taskData.status}
                         timestamp={step.taskData.timestamp}
                     />
-                    &nbsp;
                     <StopButton
                         status={step.taskData.status}
                         timestamp={step.taskData.timestamp}
