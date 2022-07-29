@@ -14,6 +14,7 @@ import dateFormat from 'dateformat';
 import React, { useCallback } from 'react';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
+import { StopButton } from './stop-button';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -32,6 +33,12 @@ const useStyles = makeStyles((theme) => ({
 function displayRunButton(taskData) {
     return taskData !== null ? (
         <RunButton status={taskData.status} timestamp={taskData.timestamp} />
+    ) : null;
+}
+
+function displayStopButton(taskData) {
+    return taskData !== null ? (
+        <StopButton status={taskData.status} timestamp={taskData.timestamp} />
     ) : null;
 }
 
@@ -73,7 +80,7 @@ const TableHeader = ({
 
     return (
         <Grid container className={classes.container}>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
                 <Typography variant="body1">{tableHeaderName}</Typography>
             </Grid>
             <Grid item xs={3}>
@@ -118,8 +125,9 @@ const TableHeader = ({
                     variant={outlined}
                 />
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
                 {displayRunButton(taskData)}
+                {displayStopButton(taskData)}
             </Grid>
         </Grid>
     );

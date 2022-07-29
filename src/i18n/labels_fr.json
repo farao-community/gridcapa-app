@@ -8,7 +8,6 @@
   "latestModification": "Dernière modification",
   "overview": "Aperçu",
   "events": "Evénements",
-  "artifacts": "Artefacts",
   "selectTimestampDate": "Date du processus",
   "selectTimestampTime": "Heure du processus",
   "runButtonLabel": "Lancer un calcul",
@@ -26,5 +25,7 @@
   "globalViewCoreAction": "Action",
   "RowsPerPage" : "lignes par page",
   "RangeError": "Période maximale de 48h",
-  "download": "Télécharger"
+  "download": "Télécharger",
+  "cancel": "Annuler",
+  "stopButtonLabel": "Oui"
 }

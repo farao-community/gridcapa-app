@@ -44,6 +44,7 @@ export function RunButton({ status, timestamp }) {
                     size="large"
                     disabled={disabled || isDisabled(status)}
                     onClick={launchTask}
+                    style={{ marginRight: '5px' }}
                 >
                     <PlayArrow />
                 </Button>
