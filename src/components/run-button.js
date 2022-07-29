@@ -14,6 +14,7 @@ function isDisabled(taskStatus) {
     return (
         taskStatus !== 'READY' &&
         taskStatus !== 'SUCCESS' &&
+        taskStatus !== 'INTERRUPTED' &&
         taskStatus !== 'ERROR'
     );
 }
