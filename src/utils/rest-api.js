@@ -73,7 +73,8 @@ export function getWebSocketUrl(type) {
                 getToken();
             break;
         case 'task':
-            prefixConfig = PREFIX_TASK_NOTIFICATION_WS;
+            prefixConfig =
+                PREFIX_TASK_NOTIFICATION_WS + '?access_token=' + getToken();
             break;
         default:
             console.err("Error don't know where to connect");
