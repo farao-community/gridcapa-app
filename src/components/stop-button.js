@@ -62,10 +62,10 @@ export function StopButton({ status, timestamp }) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={stopTask} color="primary">
+                    <Button onClick={stopTask} color="primary" data-test="yes-button">
                         <FormattedMessage id="stopButtonLabel" />
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleClose} color="primary" data-test="cancel-button">
                         <FormattedMessage id="cancel" />
                     </Button>
                 </DialogActions>
