@@ -27,5 +27,6 @@
   "RangeError": "Période maximale de 48h",
   "download": "Télécharger",
   "cancel": "Annuler",
-  "stopButtonLabel": "Oui"
+  "stopButtonLabel": "Oui",
+  "upload": "Envoyer"
 }

@@ -54,8 +54,10 @@ const ProcessTimestampView = ({
         [timestamp]
     );
 
-    const createWS = (timestamp) => {
-        let listOfTopics = ['/task/update/' + timestamp.toISOString()];
+    const createWS = (timestampTosubscribe) => {
+        let listOfTopics = [
+            '/task/update/' + timestampTosubscribe.toISOString(),
+        ];
         return (
             <SockJsClient
                 url={getWebSocketUrl('task')}

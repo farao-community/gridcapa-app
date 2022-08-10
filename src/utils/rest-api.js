@@ -261,7 +261,7 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     ).then();
 }
 
-function getBaseUrl() {
+export function getBaseUrl() {
     let baseUrl = document.baseURI;
     if (process.env.REACT_APP_PROFILE === 'development') {
         baseUrl = process.env.REACT_APP_PUBLIC_URL;
