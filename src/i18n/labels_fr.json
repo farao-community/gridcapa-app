@@ -17,6 +17,7 @@
   "filterOnLevel" : "Filtrer sur le niveau de l'évènement",
   "filterOnLog" : "Filtrer sur l'évènement",
   "filterOnStatus" : "Filtrer sur le status",
+  "filterOnTimestamp" : "Filtrer sur l'horaire",
   "globalView": "Vue globale",
   "selectMinTimestampDate": "Date min",
   "selectMaxTimestampDate": "Date max",

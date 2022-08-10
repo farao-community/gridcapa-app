@@ -61,27 +61,33 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [levelFilter, setLevelFilter] = React.useState('');
-    const [logFilter, setLogFilter] = React.useState('');
+    const [levelFilter, setLevelFilter] = React.useState([]);
+    const [logFilter, setLogFilter] = React.useState([]);
 
-    const handleLevelChange = (event) => {
-        setLevelFilter(event.currentTarget.value);
+    const handleLevelChange = (filter) => {
+        setLevelFilter(filter);
     };
 
-    const handleLogChange = (event) => {
-        setLogFilter(event.currentTarget.value);
+    const handleLogChange = (filter) => {
+        setLogFilter(filter);
     };
 
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let filtered;
         filtered = taskData.processEvents.filter(
             (event) =>
-                event.level
-                    .toUpperCase()
-                    .includes(currentEventFilter.toUpperCase()) &&
-                event.message
-                    .toUpperCase()
-                    .includes(currentLogFilter.toUpperCase())
+                (currentEventFilter.length === 0 ||
+                    (currentEventFilter.length > 0 &&
+                        currentEventFilter.some((f) =>
+                            event.level.toUpperCase().includes(f.toUpperCase())
+                        ))) &&
+                (currentLogFilter.length === 0 ||
+                    (currentLogFilter.length > 0 &&
+                        currentLogFilter.some((f) =>
+                            event.message
+                                .toUpperCase()
+                                .includes(f.toUpperCase())
+                        )))
         );
 
         return filtered;

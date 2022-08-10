@@ -5,11 +5,25 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import React from 'react';
-import { Button, TextField, Menu, MenuItem } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    Menu,
+    MenuItem,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
+} from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@material-ui/icons';
 
-const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
+const FilterMenu = ({
+    filterHint,
+    handleChange,
+    currentFilter,
+    predefinedValues = [],
+    manual = true,
+}) => {
     const [
         anchorElementForFilterMenu,
         setAnchorElementForFilterMenu,
@@ -19,17 +33,63 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
         setAnchorElementForFilterMenu(event.currentTarget);
     };
 
+    const [selectedFilter, setSelectedFilter] = React.useState(
+        predefinedValues.map(() => true)
+    );
+    const [toFilter, settoFilter] = React.useState([]);
+
     const handleClose = () => {
         setAnchorElementForFilterMenu(null);
     };
 
     const handleLocalChange = (event) => {
-        setLocalFilter(event.currentTarget.value);
-        handleChange(event);
+        let newtoFilter = [];
+        let boxfilter = [...selectedFilter];
+        if (event.currentTarget.name === 'text') {
+            setLocalFilter([event.currentTarget.value]);
+            if (event.currentTarget.value !== '')
+                newtoFilter.push(event.currentTarget.value);
+        } else {
+            let index = event.currentTarget.name.split('_')[1];
+            boxfilter[index] = !boxfilter[parseInt(index)];
+            setSelectedFilter(boxfilter);
+            predefinedValues.forEach((filtre, filterIndex) => {
+                if (boxfilter[filterIndex]) newtoFilter.push(filtre);
+            });
+        }
+
+        settoFilter(newtoFilter);
+        handleChange(newtoFilter);
     };
 
     const autofocus = () => {
-        document.getElementById(filterHint).focus();
+        if (manual) {
+            document.getElementById(filterHint).focus();
+        }
+    };
+
+    const createFilterList = () => {
+        return (
+            <FormGroup row>
+                {predefinedValues.map((oneFilter, index) => {
+                    return (
+                        <FormControlLabel
+                            key={'checkBox' + index}
+                            control={
+                                <Checkbox
+                                    checked={selectedFilter[index]}
+                                    onChange={handleLocalChange}
+                                    name={'checkBox_' + index}
+                                    color="secondary"
+                                    value={oneFilter}
+                                />
+                            }
+                            label={oneFilter}
+                        />
+                    );
+                })}
+            </FormGroup>
+        );
     };
 
     return (
@@ -39,7 +99,7 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
                 aria-haspopup="true"
                 onClick={handleMenuClick}
                 style={{
-                    color: localFilter === '' ? 'inherit' : '#3F51b5',
+                    color: toFilter.length > 0 ? '#3F51b5' : 'inherit',
                 }}
             >
                 <FilterList />
@@ -52,19 +112,28 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
                 onClose={handleClose}
                 TransitionProps={{ onEntered: autofocus }}
             >
-                <MenuItem>
-                    <TextField
-                        id={filterHint}
-                        label={<FormattedMessage id={filterHint} />}
-                        type="text"
-                        defaultValue={localFilter}
-                        autoComplete="off"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={handleLocalChange}
-                    />
-                </MenuItem>
+                {manual && (
+                    <MenuItem>
+                        <TextField
+                            id={filterHint}
+                            label={<FormattedMessage id={filterHint} />}
+                            type="text"
+                            name="text"
+                            defaultValue={localFilter}
+                            autoComplete="off"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={handleLocalChange}
+                        />
+                    </MenuItem>
+                )}
+                {predefinedValues.length > 0 && (
+                    <MenuItem style={{ maxWidth: '20vw' }}>
+                        {' '}
+                        {createFilterList()}{' '}
+                    </MenuItem>
+                )}
             </Menu>
         </span>
     );

@@ -17,6 +17,7 @@
   "filterOnLevel" : "Filter on level",
   "filterOnLog" : "Filter on log",
   "filterOnStatus" : "Filter on status",
+  "filterOnTimestamp" : "Filter on timestamp",
   "globalView": "Global view",
   "selectMinTimestampDate": "Date min",
   "selectMaxTimestampDate": "Date max",
