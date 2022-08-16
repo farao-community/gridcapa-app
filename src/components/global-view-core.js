@@ -93,20 +93,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         [steps]
     );
 
-    const createWS = () => {
-        let listOfTopics = [
+    const getListOfTopics = () => {
+        return [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-        return (
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={listOfTopics}
-                onMessage={handleTimestampMessage}
-            />
-        );
     };
 
     const handleChangePage = (_event, newPage) => {
@@ -248,7 +241,11 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     return (
         <div>
-            {createWS()}
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopics()}
+                onMessage={handleTimestampMessage}
+            />
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
