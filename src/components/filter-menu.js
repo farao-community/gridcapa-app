@@ -44,17 +44,17 @@ const FilterMenu = ({
 
     const handleLocalChange = (event) => {
         let newtoFilter = [];
-        let boxfilter = [...selectedFilter];
+        let boxFilter = [...selectedFilter];
         if (event.currentTarget.name === 'text') {
             setLocalFilter([event.currentTarget.value]);
             if (event.currentTarget.value !== '')
                 newtoFilter.push(event.currentTarget.value);
         } else {
             let index = event.currentTarget.name.split('_')[1];
-            boxfilter[index] = !boxfilter[parseInt(index)];
-            setSelectedFilter(boxfilter);
-            predefinedValues.forEach((filtre, filterIndex) => {
-                if (boxfilter[filterIndex]) newtoFilter.push(filtre);
+            boxFilter[index] = !boxFilter[parseInt(index)];
+            setSelectedFilter(boxFilter);
+            predefinedValues.forEach((filter, filterIndex) => {
+                if (boxFilter[filterIndex]) newtoFilter.push(filter);
             });
         }
 

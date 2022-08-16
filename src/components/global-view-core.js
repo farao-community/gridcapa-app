@@ -152,8 +152,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         setModalFileOpen(false);
     };
 
-    const handleStatusFilterChange = (filtres) => {
-        let newFilter = filtres.map((filtre) => filtre.toUpperCase());
+    const handleStatusFilterChange = (filters) => {
+        let newFilter = filters.map((filter) => filter.toUpperCase());
         setStatusFilter(newFilter);
         if (
             filterSteps(newFilter, timestampFilter).length <
@@ -167,8 +167,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         }
     };
 
-    const handletimestampFilterChange = (filtres) => {
-        let newFilter = filtres.map((filtre) => filtre.toUpperCase());
+    const handleTimestampFilterChange = (filters) => {
+        let newFilter = filters.map((filter) => filter.toUpperCase());
         setTimestampFilter(newFilter);
         if (filterSteps(statusFilter, newFilter).length < page * rowsPerPage) {
             setPage(
@@ -180,7 +180,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     };
 
     const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
-        // gridcapaFormatDate is not accessible inside the filter we have to use an intermediaire
+        // gridcapaFormatDate is not accessible inside the filter we have to use an intermediate
         let formatDate = gridcapaFormatDate;
         return steps.filter((step) => {
             return (
@@ -294,10 +294,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 <FormattedMessage id="timestamp" />
                                 <FilterMenu
                                     filterHint="filterOnTimestamp"
-                                    handleChange={handletimestampFilterChange}
+                                    handleChange={handleTimestampFilterChange}
                                     currentFilter={statusFilter}
                                     manual={
-                                        fixedFilter.length > 0 ? false : true
+                                        fixedFilter.length <= 0
                                     }
                                     predefinedValues={fixedFilter}
                                 />
