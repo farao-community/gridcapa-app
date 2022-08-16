@@ -296,9 +296,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
                                     currentFilter={statusFilter}
-                                    manual={
-                                        fixedFilter.length <= 0
-                                    }
+                                    manual={fixedFilter.length <= 0}
                                     predefinedValues={fixedFilter}
                                 />
                             </TableCell>
