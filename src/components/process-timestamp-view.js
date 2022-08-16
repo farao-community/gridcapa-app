@@ -13,7 +13,7 @@ import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
 import { gridcapaFormatDate } from './commons';
-import useWebSocket from 'react-use-websocket';
+import SockJsClient from 'react-stomp';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
@@ -46,39 +46,44 @@ const ProcessTimestampView = ({
 
     const handleTimestampMessage = useCallback(
         async (event) => {
-            const data = JSON.parse(event.data);
-            if (data && timestampEquals(data.timestamp, timestamp)) {
-                setTimestampData(data);
+            if (event && timestampEquals(event.timestamp, timestamp)) {
+                setTimestampData(event);
             }
         },
         [timestamp]
     );
 
-    useWebSocket(getWebSocketUrl('task'), {
-        shouldReconnect: (_closeEvent) => true,
-        share: true,
-        onMessage: handleTimestampMessage,
-        onOpen: updateTimestampData,
-    });
+    const getListOfTopics = (timestampSubscription) => {
+        return ['/task/update/' + timestampSubscription.toISOString()];
+    };
 
     useEffect(() => {
         updateTimestampData();
     }, [updateTimestampData]);
 
     return (
-        <Grid container direction="column">
-            <Grid item>
-                <TableHeader
-                    taskData={timestampData}
-                    processName={processName}
-                    timestamp={timestamp}
-                    onTimestampChange={onTimestampChange}
-                />
+        <div>
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopics(timestamp)}
+                onMessage={handleTimestampMessage}
+            />
+            <Grid container direction="column">
+                <Grid item>
+                    <TableHeader
+                        taskData={timestampData}
+                        processName={processName}
+                        timestamp={timestamp}
+                        onTimestampChange={onTimestampChange}
+                    />
+                </Grid>
+                <Grid item>
+                    {timestampData ? (
+                        <TableCore taskData={timestampData} />
+                    ) : null}
+                </Grid>
             </Grid>
-            <Grid item>
-                {timestampData ? <TableCore taskData={timestampData} /> : null}
-            </Grid>
-        </Grid>
+        </div>
     );
 };
 
