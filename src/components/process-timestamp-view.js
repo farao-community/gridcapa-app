@@ -46,9 +46,8 @@ const ProcessTimestampView = ({
 
     const handleTimestampMessage = useCallback(
         async (event) => {
-            const data = event;
-            if (data && timestampEquals(data.timestamp, timestamp)) {
-                setTimestampData(data);
+            if (event && timestampEquals(event.timestamp, timestamp)) {
+                setTimestampData(event);
             }
         },
         [timestamp]
