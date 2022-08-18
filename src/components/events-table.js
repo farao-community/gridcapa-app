@@ -59,7 +59,11 @@ function inputDataRow(processEvent) {
         </TableRow>
     );
 }
-
+const eventPredefinedFilter = JSON.parse(
+    process.env.REACT_APP_EVENT_FILTER
+        ? process.env.REACT_APP_EVENT_FILTER
+        : '[]'
+);
 const EventsTable = ({ taskData }) => {
     const [levelFilter, setLevelFilter] = React.useState([]);
     const [logFilter, setLogFilter] = React.useState([]);
@@ -115,6 +119,8 @@ const EventsTable = ({ taskData }) => {
                                 filterHint="filterOnLog"
                                 handleChange={handleLogChange}
                                 currentFilter={logFilter}
+                                manual={true}
+                                predefinedValues={eventPredefinedFilter}
                             />
                         </TableCell>
                     </TableRow>

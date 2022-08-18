@@ -95,6 +95,14 @@ function backendFetch(url, init) {
     return fetch(url, initCopy);
 }
 
+export function fetchFileToBackend(formData) {
+        backendFetch(getBaseUrl() + '/task-manager/tasks/file',
+            {
+                method: 'POST',
+                body: formData,
+            });
+}
+
 export function fetchAppsAndUrls() {
     console.info(`Fetching apps and urls...`);
     return fetch('env.json')

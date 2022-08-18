@@ -17,6 +17,14 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@material-ui/icons';
 
+const createselectedFilterArray = (predefinedValues, isSelected = true) => {
+    if (Array.isArray(predefinedValues)) {
+        return predefinedValues.map(() => isSelected);
+    } else {
+        return Object.keys(predefinedValues).map(() => isSelected);
+    }
+};
+
 const FilterMenu = ({
     filterHint,
     handleChange,
@@ -34,7 +42,7 @@ const FilterMenu = ({
     };
 
     const [selectedFilter, setSelectedFilter] = React.useState(
-        predefinedValues.map(() => true)
+        createselectedFilterArray(predefinedValues, currentFilter.length > 0)
     );
     const [toFilter, settoFilter] = React.useState([]);
 
@@ -53,9 +61,21 @@ const FilterMenu = ({
             let index = event.currentTarget.name.split('_')[1];
             boxFilter[index] = !boxFilter[parseInt(index)];
             setSelectedFilter(boxFilter);
-            predefinedValues.forEach((filter, filterIndex) => {
-                if (boxFilter[filterIndex]) newtoFilter.push(filter);
-            });
+
+            if (Array.isArray(predefinedValues)) {
+                predefinedValues.forEach((filtre, filterIndex) => {
+                    if (boxFilter[filterIndex]) newtoFilter.push(filtre);
+                });
+            } else {
+                Object.keys(predefinedValues).forEach((category, keyIndex) => {
+                    if (boxFilter[keyIndex]) {
+                        predefinedValues[category].forEach((fil) =>
+                            newtoFilter.push(fil)
+                        );
+                    }
+                });
+                newtoFilter = [...new Set(newtoFilter)];
+            }
         }
 
         settoFilter(newtoFilter);
@@ -69,9 +89,14 @@ const FilterMenu = ({
     };
 
     const createFilterList = () => {
+        let listOfkey = [];
+        if (Array.isArray(predefinedValues)) listOfkey = predefinedValues;
+        else if (Object.keys(predefinedValues).length > 0)
+            listOfkey = Object.keys(predefinedValues);
+
         return (
             <FormGroup row>
-                {predefinedValues.map((oneFilter, index) => {
+                {listOfkey.map((oneFilter, index) => {
                     return (
                         <FormControlLabel
                             key={'checkBox' + index}
@@ -107,13 +132,12 @@ const FilterMenu = ({
             <Menu
                 id="simple-menu"
                 anchorEl={anchorElementForFilterMenu}
-                keepMounted
                 open={Boolean(anchorElementForFilterMenu)}
                 onClose={handleClose}
                 TransitionProps={{ onEntered: autofocus }}
             >
                 {manual && (
-                    <MenuItem>
+                    <MenuItem onKeyDown={(e) => e.stopPropagation()}>
                         <TextField
                             id={filterHint}
                             label={<FormattedMessage id={filterHint} />}
@@ -128,7 +152,9 @@ const FilterMenu = ({
                         />
                     </MenuItem>
                 )}
-                {predefinedValues.length > 0 && (
+                {((Array.isArray(predefinedValues) &&
+                    predefinedValues.length > 0) ||
+                    Object.keys(predefinedValues).length > 0) && (
                     <MenuItem style={{ maxWidth: '20vw' }}>
                         {' '}
                         {createFilterList()}{' '}

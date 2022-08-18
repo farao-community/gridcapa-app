@@ -295,7 +295,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 <FilterMenu
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
-                                    currentFilter={statusFilter}
+                                    currentFilter={timestampFilter}
                                     manual={fixedFilter.length <= 0}
                                     predefinedValues={fixedFilter}
                                 />
