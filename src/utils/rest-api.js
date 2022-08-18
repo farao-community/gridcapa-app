@@ -96,11 +96,10 @@ function backendFetch(url, init) {
 }
 
 export function fetchFileToBackend(formData) {
-        backendFetch(getBaseUrl() + '/task-manager/tasks/file',
-            {
-                method: 'POST',
-                body: formData,
-            });
+    backendFetch(getBaseUrl() + '/task-manager/tasks/file', {
+        method: 'POST',
+        body: formData,
+    });
 }
 
 export function fetchAppsAndUrls() {

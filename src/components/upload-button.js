@@ -36,7 +36,7 @@ function sendFileToback(event, processEvent) {
     formData.append('file', file);
     formData.append('fileName', file.name);
     formData.append('directory', dest);
-    fetchFileToBackend(formData)
+    fetchFileToBackend(formData);
 }
 
 function downloadFile(processFile) {
