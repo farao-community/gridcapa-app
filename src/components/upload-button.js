@@ -7,7 +7,7 @@
 
 import { Button } from '@material-ui/core';
 import { Publish } from '@material-ui/icons';
-import { getBaseUrl } from '../utils/rest-api';
+import { fetchFileToBackend, getBaseUrl } from '../utils/rest-api';
 
 // File types to upload files on FTP
 const type = {
@@ -36,10 +36,7 @@ function sendFileToback(event, processEvent) {
     formData.append('file', file);
     formData.append('fileName', file.name);
     formData.append('directory', dest);
-    fetch(url.toString() + '/task-manager/tasks/file', {
-        method: 'POST',
-        body: formData,
-    });
+    fetchFileToBackend(formData);
 }
 
 function downloadFile(processFile) {
