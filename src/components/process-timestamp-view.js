@@ -46,25 +46,15 @@ const ProcessTimestampView = ({
 
     const handleTimestampMessage = useCallback(
         async (event) => {
-            const data = event;
-            if (data && timestampEquals(data.timestamp, timestamp)) {
-                setTimestampData(data);
+            if (event && timestampEquals(event.timestamp, timestamp)) {
+                setTimestampData(event);
             }
         },
         [timestamp]
     );
 
-    const createWS = (timestampTosubscribe) => {
-        let listOfTopics = [
-            '/task/update/' + timestampTosubscribe.toISOString(),
-        ];
-        return (
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={listOfTopics}
-                onMessage={handleTimestampMessage}
-            />
-        );
+    const getListOfTopics = (timestampSubscription) => {
+        return ['/task/update/' + timestampSubscription.toISOString()];
     };
 
     useEffect(() => {
@@ -73,7 +63,11 @@ const ProcessTimestampView = ({
 
     return (
         <div>
-            {createWS(timestamp)}
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopics(timestamp)}
+                onMessage={handleTimestampMessage}
+            />
             <Grid container direction="column">
                 <Grid item>
                     <TableHeader
