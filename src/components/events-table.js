@@ -61,9 +61,11 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [eventPredefinedFilter, setEventPredefinedFilter] = React.useState([]);
+    const [eventPredefinedFilter, setEventPredefinedFilter] = React.useState(
+        []
+    );
     useEffect(() => {
-        if(eventPredefinedFilter.length === 0) {
+        if (eventPredefinedFilter.length === 0) {
             fetch('process-metadata.json')
                 .then((res) => res.json())
                 .then((res) => {

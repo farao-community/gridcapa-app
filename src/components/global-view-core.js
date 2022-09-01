@@ -74,7 +74,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
-    const [globalViewTimestampFilter, setGlobalViewTimestampFilter] = React.useState([]);
+    const [
+        globalViewTimestampFilter,
+        setGlobalViewTimestampFilter,
+    ] = React.useState([]);
     useEffect(() => {
         if (globalViewTimestampFilter.length === 0) {
             fetch('process-metadata.json')
@@ -86,10 +89,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     });
     const [timestampFilter, setTimestampFilter] = React.useState([]);
     useEffect(() => {
-        if (timestampFilter.length === 0 && globalViewTimestampFilter.length >= 0) {
+        if (
+            timestampFilter.length === 0 &&
+            globalViewTimestampFilter.length >= 0
+        ) {
             setTimestampFilter(globalViewTimestampFilter);
         }
-    });
+    }, [timestampFilter.length, globalViewTimestampFilter]);
 
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
@@ -308,9 +314,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
                                     currentFilter={timestampFilter}
-                                    manual={globalViewTimestampFilter.length <= 0}
+                                    manual={
+                                        globalViewTimestampFilter.length <= 0
+                                    }
                                     predefinedValues={globalViewTimestampFilter}
-
                                 />
                             </TableCell>
 
