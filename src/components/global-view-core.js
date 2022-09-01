@@ -62,11 +62,7 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
 
     return result;
 };
-const fixedFilter = JSON.parse(
-    process.env.REACT_APP_TIMESTAMP_FILTER
-        ? process.env.REACT_APP_TIMESTAMP_FILTER
-        : '[]'
-);
+
 const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [openEvent, setOpenEvent] = React.useState([]);
     const [steps, setSteps] = React.useState(
@@ -78,7 +74,23 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
-    const [timestampFilter, setTimestampFilter] = React.useState(fixedFilter);
+    const [globalViewTimestampFilter, setGlobalViewTimestampFilter] = React.useState([]);
+    useEffect(() => {
+        if (globalViewTimestampFilter.length === 0) {
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setGlobalViewTimestampFilter(res.globalViewTimestampFilter);
+                });
+        }
+    });
+    const [timestampFilter, setTimestampFilter] = React.useState([]);
+    useEffect(() => {
+        if (timestampFilter.length === 0 && globalViewTimestampFilter.length >= 0) {
+            setTimestampFilter(globalViewTimestampFilter);
+        }
+    });
+
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
 
@@ -296,10 +308,12 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
                                     currentFilter={timestampFilter}
-                                    manual={fixedFilter.length <= 0}
-                                    predefinedValues={fixedFilter}
+                                    manual={globalViewTimestampFilter.length <= 0}
+                                    predefinedValues={globalViewTimestampFilter}
+
                                 />
                             </TableCell>
+
                             <TableCell size="small">
                                 <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>

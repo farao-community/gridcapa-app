@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Paper,
     Table,
@@ -59,12 +59,18 @@ function inputDataRow(processEvent) {
         </TableRow>
     );
 }
-const eventPredefinedFilter = JSON.parse(
-    process.env.REACT_APP_EVENT_FILTER
-        ? process.env.REACT_APP_EVENT_FILTER
-        : '[]'
-);
+
 const EventsTable = ({ taskData }) => {
+    const [eventPredefinedFilter, setEventPredefinedFilter] = React.useState([]);
+    useEffect(() => {
+        if(eventPredefinedFilter.length === 0) {
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setEventPredefinedFilter(res.eventPredefinedFilter);
+                });
+        }
+    });
     const [levelFilter, setLevelFilter] = React.useState([]);
     const [logFilter, setLogFilter] = React.useState([]);
 
