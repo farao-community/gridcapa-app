@@ -1,3 +1,7 @@
 {
-  "processName": "Process Name"
+  "processName": "Process Name",
+  "globalViewTimestampFilter": [
+  ],
+  "eventPredefinedFilter": {
+  }
 }

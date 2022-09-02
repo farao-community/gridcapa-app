@@ -17,6 +17,7 @@
   "filterOnLevel" : "Filter on level",
   "filterOnLog" : "Filter on log",
   "filterOnStatus" : "Filter on status",
+  "filterOnTimestamp" : "Filter on timestamp",
   "globalView": "Global view",
   "selectMinTimestampDate": "Date min",
   "selectMaxTimestampDate": "Date max",
@@ -27,5 +28,6 @@
   "RangeError": "Max range is 48h",
   "download": "Download",
   "cancel": "Cancel",
-  "stopButtonLabel": "Yes"
+  "stopButtonLabel": "Yes",
+  "upload": "Upload"
 }

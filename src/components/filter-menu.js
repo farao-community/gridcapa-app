@@ -5,11 +5,33 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import React from 'react';
-import { Button, TextField, Menu, MenuItem } from '@material-ui/core';
+import {
+    Button,
+    TextField,
+    Menu,
+    MenuItem,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
+} from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@material-ui/icons';
 
-const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
+const createselectedFilterArray = (predefinedValues, isSelected = true) => {
+    if (Array.isArray(predefinedValues)) {
+        return predefinedValues.map(() => isSelected);
+    } else {
+        return Object.keys(predefinedValues).map(() => isSelected);
+    }
+};
+
+const FilterMenu = ({
+    filterHint,
+    handleChange,
+    currentFilter,
+    predefinedValues = [],
+    manual = true,
+}) => {
     const [
         anchorElementForFilterMenu,
         setAnchorElementForFilterMenu,
@@ -19,17 +41,80 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
         setAnchorElementForFilterMenu(event.currentTarget);
     };
 
+    const [selectedFilter, setSelectedFilter] = React.useState(
+        createselectedFilterArray(predefinedValues, currentFilter.length > 0)
+    );
+    const [toFilter, settoFilter] = React.useState([]);
+
     const handleClose = () => {
         setAnchorElementForFilterMenu(null);
     };
 
     const handleLocalChange = (event) => {
-        setLocalFilter(event.currentTarget.value);
-        handleChange(event);
+        let newtoFilter = [];
+        let boxFilter = [...selectedFilter];
+        if (event.currentTarget.name === 'text') {
+            setLocalFilter([event.currentTarget.value]);
+            if (event.currentTarget.value !== '')
+                newtoFilter.push(event.currentTarget.value);
+        } else {
+            let index = event.currentTarget.name.split('_')[1];
+            boxFilter[index] = !boxFilter[parseInt(index)];
+            setSelectedFilter(boxFilter);
+
+            if (Array.isArray(predefinedValues)) {
+                predefinedValues.forEach((filtre, filterIndex) => {
+                    if (boxFilter[filterIndex]) newtoFilter.push(filtre);
+                });
+            } else {
+                Object.keys(predefinedValues).forEach((category, keyIndex) => {
+                    if (boxFilter[keyIndex]) {
+                        predefinedValues[category].forEach((fil) =>
+                            newtoFilter.push(fil)
+                        );
+                    }
+                });
+                newtoFilter = [...new Set(newtoFilter)];
+            }
+        }
+
+        settoFilter(newtoFilter);
+        handleChange(newtoFilter);
     };
 
     const autofocus = () => {
-        document.getElementById(filterHint).focus();
+        if (manual) {
+            document.getElementById(filterHint).focus();
+        }
+    };
+
+    const createFilterList = () => {
+        let listOfkey = [];
+        if (Array.isArray(predefinedValues)) listOfkey = predefinedValues;
+        else if (Object.keys(predefinedValues).length > 0)
+            listOfkey = Object.keys(predefinedValues);
+
+        return (
+            <FormGroup row>
+                {listOfkey.map((oneFilter, index) => {
+                    return (
+                        <FormControlLabel
+                            key={'checkBox' + index}
+                            control={
+                                <Checkbox
+                                    checked={selectedFilter[index]}
+                                    onChange={handleLocalChange}
+                                    name={'checkBox_' + index}
+                                    color="secondary"
+                                    value={oneFilter}
+                                />
+                            }
+                            label={oneFilter}
+                        />
+                    );
+                })}
+            </FormGroup>
+        );
     };
 
     return (
@@ -39,7 +124,7 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
                 aria-haspopup="true"
                 onClick={handleMenuClick}
                 style={{
-                    color: localFilter === '' ? 'inherit' : '#3F51b5',
+                    color: toFilter.length > 0 ? '#3F51b5' : 'inherit',
                 }}
             >
                 <FilterList />
@@ -47,24 +132,34 @@ const FilterMenu = ({ filterHint, handleChange, currentFilter }) => {
             <Menu
                 id="simple-menu"
                 anchorEl={anchorElementForFilterMenu}
-                keepMounted
                 open={Boolean(anchorElementForFilterMenu)}
                 onClose={handleClose}
                 TransitionProps={{ onEntered: autofocus }}
             >
-                <MenuItem>
-                    <TextField
-                        id={filterHint}
-                        label={<FormattedMessage id={filterHint} />}
-                        type="text"
-                        defaultValue={localFilter}
-                        autoComplete="off"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        onChange={handleLocalChange}
-                    />
-                </MenuItem>
+                {manual && (
+                    <MenuItem onKeyDown={(e) => e.stopPropagation()}>
+                        <TextField
+                            id={filterHint}
+                            label={<FormattedMessage id={filterHint} />}
+                            type="text"
+                            name="text"
+                            defaultValue={localFilter}
+                            autoComplete="off"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={handleLocalChange}
+                        />
+                    </MenuItem>
+                )}
+                {((Array.isArray(predefinedValues) &&
+                    predefinedValues.length > 0) ||
+                    Object.keys(predefinedValues).length > 0) && (
+                    <MenuItem style={{ maxWidth: '20vw' }}>
+                        {' '}
+                        {createFilterList()}{' '}
+                    </MenuItem>
+                )}
             </Menu>
         </span>
     );

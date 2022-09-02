@@ -29,6 +29,7 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
 import FilterMenu from './filter-menu';
+import { gridcapaFormatDate } from './commons';
 import GlobalViewCoreRow from './global-view-core-row';
 import SockJsClient from 'react-stomp';
 
@@ -72,7 +73,30 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
-    const [statusFilter, setStatusFilter] = React.useState('');
+    const [statusFilter, setStatusFilter] = React.useState([]);
+    const [
+        globalViewTimestampFilter,
+        setGlobalViewTimestampFilter,
+    ] = React.useState([]);
+    useEffect(() => {
+        if (globalViewTimestampFilter.length === 0) {
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setGlobalViewTimestampFilter(res.globalViewTimestampFilter);
+                });
+        }
+    });
+    const [timestampFilter, setTimestampFilter] = React.useState([]);
+    useEffect(() => {
+        if (
+            timestampFilter.length === 0 &&
+            globalViewTimestampFilter.length >= 0
+        ) {
+            setTimestampFilter(globalViewTimestampFilter);
+        }
+    }, [timestampFilter.length, globalViewTimestampFilter]);
+
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
 
@@ -93,13 +117,20 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         [steps]
     );
 
-    const getListOfTopics = () => {
-        return [
+    const createWS = () => {
+        let listOfTopics = [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
+        return (
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={listOfTopics}
+                onMessage={handleTimestampMessage}
+            />
+        );
     };
 
     const handleChangePage = (_event, newPage) => {
@@ -139,21 +170,49 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         setModalFileOpen(false);
     };
 
-    const handleStatusFilterChange = (event) => {
-        let newFilter = event.currentTarget.value.toUpperCase();
+    const handleStatusFilterChange = (filters) => {
+        let newFilter = filters.map((filter) => filter.toUpperCase());
         setStatusFilter(newFilter);
-        if (filterSteps(newFilter).length < page * rowsPerPage) {
-            setPage(Math.floor(filterSteps(newFilter).length / rowsPerPage));
+        if (
+            filterSteps(newFilter, timestampFilter).length <
+            page * rowsPerPage
+        ) {
+            setPage(
+                Math.floor(
+                    filterSteps(newFilter, timestampFilter).length / rowsPerPage
+                )
+            );
         }
     };
 
-    const filterSteps = (localFilter = null) => {
+    const handleTimestampFilterChange = (filters) => {
+        let newFilter = filters.map((filter) => filter.toUpperCase());
+        setTimestampFilter(newFilter);
+        if (filterSteps(statusFilter, newFilter).length < page * rowsPerPage) {
+            setPage(
+                Math.floor(
+                    filterSteps(statusFilter, newFilter).length / rowsPerPage
+                )
+            );
+        }
+    };
+
+    const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
+        // gridcapaFormatDate is not accessible inside the filter we have to use an intermediate
+        let formatDate = gridcapaFormatDate;
         return steps.filter((step) => {
             return (
                 step.taskData &&
-                step.taskData.status.includes(
-                    localFilter ? localFilter : statusFilter
-                )
+                (currentStatusFilter.length === 0 ||
+                    (currentStatusFilter.length > 0 &&
+                        currentStatusFilter.some((f) =>
+                            step.taskData.status.includes(f)
+                        ))) &&
+                (currentTimestampFilter.length === 0 ||
+                    (currentTimestampFilter.length > 0 &&
+                        currentTimestampFilter.some((f) =>
+                            formatDate(step.taskData.timestamp).includes(f)
+                        )))
             );
         });
     };
@@ -241,11 +300,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     return (
         <div>
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopics()}
-                onMessage={handleTimestampMessage}
-            />
+            {createWS()}
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
@@ -255,7 +310,17 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                         <TableRow>
                             <TableCell size="small">
                                 <FormattedMessage id="timestamp" />
+                                <FilterMenu
+                                    filterHint="filterOnTimestamp"
+                                    handleChange={handleTimestampFilterChange}
+                                    currentFilter={timestampFilter}
+                                    manual={
+                                        globalViewTimestampFilter.length <= 0
+                                    }
+                                    predefinedValues={globalViewTimestampFilter}
+                                />
                             </TableCell>
+
                             <TableCell size="small">
                                 <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>
@@ -284,7 +349,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             </TableRow>
                         )}
                         {!isLoading &&
-                            filterSteps()
+                            filterSteps(statusFilter, timestampFilter)
                                 .slice(
                                     page * rowsPerPage,
                                     page * rowsPerPage + rowsPerPage
@@ -305,7 +370,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             <TablePagination
                 rowsPerPageOptions={[12, 24, 48]}
                 component="div"
-                count={filterSteps().length}
+                count={filterSteps(statusFilter, timestampFilter).length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

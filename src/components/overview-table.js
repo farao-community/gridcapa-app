@@ -18,6 +18,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from './commons';
 import DownloadButton from './download-button';
+import UploadButton from './upload-button';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
@@ -51,6 +52,9 @@ function FileGroupTableHead({ fileGroup }) {
                 </TableCell>
                 <TableCell>
                     <FormattedMessage id="download" />
+                </TableCell>
+                <TableCell>
+                    <FormattedMessage id="upload" />
                 </TableCell>
             </TableRow>
         </TableHead>
@@ -115,6 +119,9 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
                     processFile={processFile}
                     timestamp={timestamp}
                 />
+            </TableCell>
+            <TableCell data-test={fileType + '-' + fileGroup + '-latest-url'}>
+                <UploadButton processFile={processFile} timestamp={timestamp} />
             </TableCell>
         </TableRow>
     );

@@ -95,6 +95,13 @@ function backendFetch(url, init) {
     return fetch(url, initCopy);
 }
 
+export function fetchFileToBackend(formData) {
+    backendFetch(getBaseUrl() + '/task-manager/tasks/file', {
+        method: 'POST',
+        body: formData,
+    });
+}
+
 export function fetchAppsAndUrls() {
     console.info(`Fetching apps and urls...`);
     return fetch('env.json')
@@ -261,7 +268,7 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     ).then();
 }
 
-function getBaseUrl() {
+export function getBaseUrl() {
     let baseUrl = document.baseURI;
     if (process.env.REACT_APP_PROFILE === 'development') {
         baseUrl = process.env.REACT_APP_PUBLIC_URL;

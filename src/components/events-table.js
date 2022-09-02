@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Paper,
     Table,
@@ -61,27 +61,45 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [levelFilter, setLevelFilter] = React.useState('');
-    const [logFilter, setLogFilter] = React.useState('');
+    const [eventPredefinedFilter, setEventPredefinedFilter] = React.useState(
+        []
+    );
+    useEffect(() => {
+        if (eventPredefinedFilter.length === 0) {
+            fetch('process-metadata.json')
+                .then((res) => res.json())
+                .then((res) => {
+                    setEventPredefinedFilter(res.eventPredefinedFilter);
+                });
+        }
+    });
+    const [levelFilter, setLevelFilter] = React.useState([]);
+    const [logFilter, setLogFilter] = React.useState([]);
 
-    const handleLevelChange = (event) => {
-        setLevelFilter(event.currentTarget.value);
+    const handleLevelChange = (filter) => {
+        setLevelFilter(filter);
     };
 
-    const handleLogChange = (event) => {
-        setLogFilter(event.currentTarget.value);
+    const handleLogChange = (filter) => {
+        setLogFilter(filter);
     };
 
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let filtered;
         filtered = taskData.processEvents.filter(
             (event) =>
-                event.level
-                    .toUpperCase()
-                    .includes(currentEventFilter.toUpperCase()) &&
-                event.message
-                    .toUpperCase()
-                    .includes(currentLogFilter.toUpperCase())
+                (currentEventFilter.length === 0 ||
+                    (currentEventFilter.length > 0 &&
+                        currentEventFilter.some((f) =>
+                            event.level.toUpperCase().includes(f.toUpperCase())
+                        ))) &&
+                (currentLogFilter.length === 0 ||
+                    (currentLogFilter.length > 0 &&
+                        currentLogFilter.some((f) =>
+                            event.message
+                                .toUpperCase()
+                                .includes(f.toUpperCase())
+                        )))
         );
 
         return filtered;
@@ -109,6 +127,8 @@ const EventsTable = ({ taskData }) => {
                                 filterHint="filterOnLog"
                                 handleChange={handleLogChange}
                                 currentFilter={logFilter}
+                                manual={true}
+                                predefinedValues={eventPredefinedFilter}
                             />
                         </TableCell>
                     </TableRow>
