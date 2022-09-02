@@ -35,6 +35,7 @@ const processFileStatusStyles = {
 };
 
 function FileGroupTableHead({ fileGroup }) {
+    // Hiding Upload button for now until we complete the feature
     return (
         <TableHead>
             <TableRow>
@@ -53,9 +54,11 @@ function FileGroupTableHead({ fileGroup }) {
                 <TableCell>
                     <FormattedMessage id="download" />
                 </TableCell>
-                <TableCell>
-                    <FormattedMessage id="upload" />
-                </TableCell>
+                {null && (
+                    <TableCell>
+                        <FormattedMessage id="upload" />
+                    </TableCell>
+                )}
             </TableRow>
         </TableHead>
     );
@@ -95,6 +98,7 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
     let lastModificationDate = gridcapaFormatDate(
         processFile.lastModificationDate
     );
+    // Hiding Upload button for now until we complete the feature
     return (
         <TableRow>
             <TableCell data-test={fileType + '-' + fileGroup + '-type'}>
@@ -120,9 +124,16 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
                     timestamp={timestamp}
                 />
             </TableCell>
-            <TableCell data-test={fileType + '-' + fileGroup + '-latest-url'}>
-                <UploadButton processFile={processFile} timestamp={timestamp} />
-            </TableCell>
+            {null && (
+                <TableCell
+                    data-test={fileType + '-' + fileGroup + '-latest-url'}
+                >
+                    <UploadButton
+                        processFile={processFile}
+                        timestamp={timestamp}
+                    />
+                </TableCell>
+            )}
         </TableRow>
     );
 }
