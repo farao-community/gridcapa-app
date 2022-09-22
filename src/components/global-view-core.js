@@ -74,31 +74,24 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
-    const [
-        globalViewTimestampFilter,
-        setGlobalViewTimestampFilter,
-    ] = React.useState([]);
-    useEffect(() => {
-        if (globalViewTimestampFilter.length === 0) {
-            fetch('process-metadata.json')
-                .then((res) => res.json())
-                .then((res) => {
-                    setGlobalViewTimestampFilter(res.globalViewTimestampFilter);
-                });
-        }
-    });
     const [timestampFilter, setTimestampFilter] = React.useState([]);
-    useEffect(() => {
-        if (
-            timestampFilter.length === 0 &&
-            globalViewTimestampFilter.length >= 0
-        ) {
-            setTimestampFilter(globalViewTimestampFilter);
-        }
-    }, [timestampFilter.length, globalViewTimestampFilter]);
-
+    const [timestampFilterRef, setTimestampFilterRef] = React.useState([]);
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
+    useEffect(() => {
+        async function getTimestampFilter() {
+            let filter = await fetch('process-metadata.json')
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    return res.globalViewTimestampFilter;
+                });
+            setTimestampFilter(filter);
+            setTimestampFilterRef(filter);
+        }
+        getTimestampFilter();
+    }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleTimestampMessage = useCallback(
         async (event) => {
@@ -117,20 +110,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         [steps]
     );
 
-    const createWS = () => {
-        let listOfTopics = [
+    const getListOfTopics = () => {
+        return [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-        return (
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={listOfTopics}
-                onMessage={handleTimestampMessage}
-            />
-        );
     };
 
     const handleChangePage = (_event, newPage) => {
@@ -300,7 +286,11 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     return (
         <div>
-            {createWS()}
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopics()}
+                onMessage={handleTimestampMessage}
+            />
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
@@ -314,13 +304,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
                                     currentFilter={timestampFilter}
-                                    manual={
-                                        globalViewTimestampFilter.length <= 0
-                                    }
-                                    predefinedValues={globalViewTimestampFilter}
+                                    manual={timestampFilterRef.length <= 0}
+                                    predefinedValues={timestampFilterRef}
                                 />
                             </TableCell>
-
                             <TableCell size="small">
                                 <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>
@@ -357,6 +344,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 .map((step, index) => (
                                     <GlobalViewCoreRow
                                         step={step}
+                                        key={'GlobalViewCoreRow' + index}
                                         index={index}
                                         page={page}
                                         rowsPerPage={rowsPerPage}

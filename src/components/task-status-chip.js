@@ -17,8 +17,8 @@ export function TaskStatusChip(props) {
     return (
         <Chip
             {...props}
-            label={props.taskStatus}
-            style={{ ...getTaskStatusStyle(props.taskStatus, theme) }}
+            label={props['task-status']}
+            style={{ ...getTaskStatusStyle(props['task-status'], theme) }}
         />
     );
 }

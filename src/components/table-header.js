@@ -121,7 +121,7 @@ const TableHeader = ({
             <Grid item xs={2}>
                 <TaskStatusChip
                     data-test="timestamp-status"
-                    taskStatus={taskStatus}
+                    task-status={taskStatus}
                     variant={outlined}
                 />
             </Grid>
