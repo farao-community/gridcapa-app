@@ -54,7 +54,7 @@ function FileGroupTableHead({ fileGroup }) {
                 <TableCell>
                     <FormattedMessage id="download" />
                 </TableCell>
-                {null && (
+                {true && (
                     <TableCell>
                         <FormattedMessage id="upload" />
                     </TableCell>
@@ -124,7 +124,7 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
                     timestamp={timestamp}
                 />
             </TableCell>
-            {null && (
+            {true && (
                 <TableCell
                     data-test={fileType + '-' + fileGroup + '-latest-url'}
                 >

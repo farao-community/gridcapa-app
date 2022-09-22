@@ -69,7 +69,7 @@ const GlobalViewCoreRow = ({
                 <TableCell size="small">
                     <TaskStatusChip
                         data-test={'timestamp-status-' + step.timestamp}
-                        taskStatus={step.taskData.status}
+                        task-status={step.taskData.status}
                         variant={
                             step.taskData.status === 'RUNNING'
                                 ? 'outlined'
