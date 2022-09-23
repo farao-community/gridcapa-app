@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Button,
     TextField,
@@ -41,9 +41,21 @@ const FilterMenu = ({
         setAnchorElementForFilterMenu(event.currentTarget);
     };
 
-    const [selectedFilter, setSelectedFilter] = React.useState(
-        createselectedFilterArray(predefinedValues, currentFilter.length > 0)
-    );
+    const [selectedFilter, setSelectedFilter] = React.useState([]);
+
+    useEffect(() => {
+        setSelectedFilter(
+            createselectedFilterArray(
+                predefinedValues,
+                currentFilter.length > 0
+            )
+        );
+        // eslint-disable-next-line
+    }, [predefinedValues.length]); //tell to eslint to ignore this line.
+    // We only trigger this effect when the size of the filter change. Typically when we receive it from the fetch.
+    // We have an infinite loop otherwise.
+    // refer to https://reactjs.org/docs/hooks-effect.html
+
     const [toFilter, settoFilter] = React.useState([]);
 
     const handleClose = () => {
