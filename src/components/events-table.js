@@ -69,7 +69,9 @@ const EventsTable = ({ taskData }) => {
             fetch('process-metadata.json')
                 .then((res) => res.json())
                 .then((res) => {
-                    setEventPredefinedFilter(res.eventPredefinedFilter);
+                    let filter = res.eventPredefinedFilter;
+                    setEventPredefinedFilter(filter);
+                    setLogFilter(filter);
                 });
         }
     });
