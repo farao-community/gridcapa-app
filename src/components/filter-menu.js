@@ -44,12 +44,7 @@ const FilterMenu = ({
     const [selectedFilter, setSelectedFilter] = React.useState([]);
 
     useEffect(() => {
-        setSelectedFilter(
-            createselectedFilterArray(
-                predefinedValues,
-                currentFilter.length > 0
-            )
-        );
+        setSelectedFilter(createselectedFilterArray(predefinedValues));
         // eslint-disable-next-line
     }, [predefinedValues.length]); //tell to eslint to ignore this line.
     // We only trigger this effect when the size of the filter change. Typically when we receive it from the fetch.
