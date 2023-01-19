@@ -1,6 +1,7 @@
 {
   "timestampView": "Timestamp view",
   "businessDateView": "Business date view",
+  "runningTasksView": "Global view",
   "input": "Input",
   "output": "Output",
   "status": "Status",

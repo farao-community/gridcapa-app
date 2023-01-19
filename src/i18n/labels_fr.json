@@ -1,6 +1,7 @@
 {
   "timestampView": "Vue horaire",
   "businessDateView": "Vue journalière",
+  "runningTasksView": "Vue globale",
   "input": "Intrant",
   "output": "Sortant",
   "status": "Statut",

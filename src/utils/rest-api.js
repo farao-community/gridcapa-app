@@ -192,6 +192,31 @@ export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
         );
 }
 
+export function fetchRunningTasksData(intlRef, enqueueSnackbar) {
+    console.info('Fetching all running tasks');
+    const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + '/runningtasks';
+    console.log(fetchParams);
+    return backendFetch(fetchParams)
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .then((result) => {
+            return result;
+        })
+        .catch((errorMessage) =>
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'taskRetrievingError',
+                    intlRef: intlRef,
+                },
+            })
+        );
+}
+
 export function fetchConfigParameters(appName) {
     console.info('Fetching UI configuration params for app : ' + appName);
     const fetchParams =
