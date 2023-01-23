@@ -71,7 +71,7 @@ const EventsTable = ({ taskData }) => {
                 .then((res) => {
                     let filter = res.eventPredefinedFilter;
                     setEventPredefinedFilter(filter);
-                    setLogFilter(filter);
+                    setLogFilter(filter.Summary);
                 });
         }
     });
