@@ -19,7 +19,7 @@ import { FilterList } from '@material-ui/icons';
 
 const createselectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
-        return predefinedValues.map(filter => {
+        return predefinedValues.map((filter) => {
             if (filter.filterName) {
                 return filter.defaultChecked;
             } else {
@@ -105,7 +105,10 @@ const FilterMenu = ({
 
     const createFilterList = () => {
         let listOfkey = [];
-        if (Array.isArray(predefinedValues)) listOfkey = predefinedValues.map((filter) => {return filter.filterName? filter.filterName : filter;});
+        if (Array.isArray(predefinedValues))
+            listOfkey = predefinedValues.map((filter) => {
+                return filter.filterName ? filter.filterName : filter;
+            });
         else if (Object.keys(predefinedValues).length > 0)
             listOfkey = Object.keys(predefinedValues);
 
