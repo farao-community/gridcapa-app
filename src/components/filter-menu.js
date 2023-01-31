@@ -19,7 +19,13 @@ import { FilterList } from '@material-ui/icons';
 
 const createselectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
-        return predefinedValues.map(() => isSelected);
+        return predefinedValues.map(filter => {
+            if (filter.filterName) {
+                return filter.defaultChecked;
+            } else {
+                return isSelected;
+            }
+        });
     } else {
         return Object.keys(predefinedValues).map(() => isSelected);
     }
@@ -36,7 +42,7 @@ const FilterMenu = ({
         anchorElementForFilterMenu,
         setAnchorElementForFilterMenu,
     ] = React.useState(null);
-    const [localFilter, setLocalFilter] = React.useState(currentFilter);
+    const [localFilter, setLocalFilter] = React.useState();
     const handleMenuClick = (event) => {
         setAnchorElementForFilterMenu(event.currentTarget);
     };
@@ -71,7 +77,9 @@ const FilterMenu = ({
 
             if (Array.isArray(predefinedValues)) {
                 predefinedValues.forEach((filtre, filterIndex) => {
-                    if (boxFilter[filterIndex]) newtoFilter.push(filtre);
+                    if (boxFilter[filterIndex] && filtre.filterValue) {
+                        newtoFilter.push(...filtre.filterValue);
+                    } else if (boxFilter[filterIndex]) newtoFilter.push(filtre);
                 });
             } else {
                 Object.keys(predefinedValues).forEach((category, keyIndex) => {
@@ -97,7 +105,7 @@ const FilterMenu = ({
 
     const createFilterList = () => {
         let listOfkey = [];
-        if (Array.isArray(predefinedValues)) listOfkey = predefinedValues;
+        if (Array.isArray(predefinedValues)) listOfkey = predefinedValues.map((filter) => {return filter.filterName? filter.filterName : filter;});
         else if (Object.keys(predefinedValues).length > 0)
             listOfkey = Object.keys(predefinedValues);
 
