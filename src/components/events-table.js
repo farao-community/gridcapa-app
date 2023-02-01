@@ -120,7 +120,7 @@ const EventsTable = ({ taskData }) => {
             <Table className="table">
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{width: "10%"}}>
+                        <TableCell style={{width: "12%"}}>
                             <FormattedMessage id="level" />
                             <FilterMenu
                                 filterHint="filterOnLevel"
@@ -131,7 +131,7 @@ const EventsTable = ({ taskData }) => {
                         <TableCell style={{width: "12%"}}>
                             <FormattedMessage id="timestamp" />
                         </TableCell>
-                        <TableCell style={{width: "78%"}}>
+                        <TableCell style={{width: "76%"}}>
                             <FormattedMessage id="eventDescription" />
                             <FilterMenu
                                 filterHint="filterOnLog"
