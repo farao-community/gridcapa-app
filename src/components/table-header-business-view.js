@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback } from 'react';
+import { RunAllButton } from './run-all-timstamps-for-business-date-button';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -67,6 +68,9 @@ const TableHeaderBusinessView = ({
                         onChange={handleDateChange}
                     />
                 </form>
+            </Grid>
+            <Grid item xs={3}>
+                <RunAllButton timestamp={timestamp} />
             </Grid>
         </Grid>
     );

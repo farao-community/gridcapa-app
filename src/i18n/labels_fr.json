@@ -30,5 +30,6 @@
   "download": "Télécharger",
   "cancel": "Annuler",
   "stopButtonLabel": "Oui",
-  "upload": "Envoyer"
+  "upload": "Envoyer",
+  "runBusinessDate": "Lancer tous les calculs"
 }
