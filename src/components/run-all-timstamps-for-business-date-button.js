@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Button } from '@material-ui/core';
 import dateFormat from 'dateformat';
 import {
@@ -43,29 +43,46 @@ export function RunAllButton({ timestamp }) {
     const timestampMin = refTimestamp.getTime();
     const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
     const [tasks, setTasks] = useState([]);
+    const [disabled, setDisabled] = useState(false);
+    const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);
 
     const fetchTasks = useCallback(async () => {
         let timestampMid =
-            new Date(Date.parse(timestamp)).getTime() + 12 * 60 * 60 * 1000;
+            new Date(Date.parse(currentTimestamp)).getTime() +
+            12 * 60 * 60 * 1000;
         let currentDate = dateFormat(timestampMid, 'yyyy-mm-dd');
         setTasks(
             await fetchBusinessDateData(currentDate, intlRef, enqueueSnackbar)
         );
-    }, [timestamp, intlRef, enqueueSnackbar]);
+    }, [enqueueSnackbar, intlRef, currentTimestamp]);
 
-    const fetchDisabled = () => {
-        fetchTasks();
-        return isDisabled(tasks);
-    };
+    useEffect(() => {
+        setCurrentTimestamp(timestamp);
+        async function getBackendTasks() {
+            let timestampMid =
+                new Date(Date.parse(currentTimestamp)).getTime() +
+                12 * 60 * 60 * 1000;
+            let currentDate = dateFormat(timestampMid, 'yyyy-mm-dd');
+            let backendTasks = await fetchBusinessDateData(
+                currentDate,
+                intlRef,
+                enqueueSnackbar
+            );
+            setTasks(backendTasks);
+        }
+        getBackendTasks();
+    }, [enqueueSnackbar, intlRef, timestamp, currentTimestamp]);
 
     const launchTask = useCallback(
         function () {
+            setDisabled(true);
             fetchTasks();
             tasks.forEach(async (task) => {
                 if (!isDisabledTask(task.status))
                     await fetchJobLauncherPost(task.timestamp);
             });
             fetchTasks();
+            setDisabled(false);
         },
         [tasks, fetchTasks]
     );
@@ -91,7 +108,7 @@ export function RunAllButton({ timestamp }) {
                 data-test={'run-all-button-' + timestamp}
                 variant="contained"
                 size="large"
-                disabled={fetchDisabled()}
+                disabled={disabled || isDisabled(tasks)}
                 onClick={launchTask}
                 style={{ marginRight: '5px' }}
             >
