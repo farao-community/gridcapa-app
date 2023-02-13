@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 import { IntlProvider } from 'react-intl';
@@ -19,22 +19,25 @@ import { SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 let container = null;
+let root = null;
 beforeEach(() => {
     // setup a DOM element as a render target
     container = document.createElement('div');
     document.body.appendChild(container);
+    root = createRoot(container);
 });
 
 afterEach(() => {
     // cleanup on exiting
-    unmountComponentAtNode(container);
     container.remove();
     container = null;
+    root.unmount();
+    root = null;
 });
 
 it('renders', async () => {
     await act(async () =>
-        render(
+        root.render(
             <IntlProvider locale="en">
                 <BrowserRouter>
                     <Provider store={store}>
