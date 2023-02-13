@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,12 +10,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-    Redirect,
+    Navigate,
     Route,
-    Switch,
-    useHistory,
+    Routes,
     useLocation,
-    useRouteMatch,
+    useMatch,
+    useNavigate,
 } from 'react-router-dom';
 
 import {
@@ -68,7 +68,7 @@ const App = () => {
 
     const [userManager, setUserManager] = useState(noUserManager);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
 
@@ -112,11 +112,10 @@ const App = () => {
         }
     };
 
-    // Can't use lazy initializer because useRouteMatch is a hook
+    // Can't use lazy initializer because useMatch is a hook
     const [initialMatchSilentRenewCallbackUrl] = useState(
-        useRouteMatch({
+        useMatch({
             path: '/silent-renew-callback',
-            exact: true,
         })
     );
 
@@ -209,30 +208,44 @@ const App = () => {
         <>
             <AppTopBar user={user} userManager={userManager} />
             {user !== null ? (
-                <Switch>
-                    <Route exact path="/">
-                        <Box mt={1}>
-                            <GridCapaMain />
-                        </Box>
-                    </Route>
-                    <Route exact path="/sign-in-callback">
-                        <Redirect to={getPreLoginPath() || '/'} />
-                    </Route>
-                    <Route exact path="/logout-callback">
-                        <h1>Error: logout failed; you are still logged in.</h1>
-                    </Route>
-                    <Route>
-                        <h1>
-                            <FormattedMessage id="PageNotFound" />
-                        </h1>
-                    </Route>
-                </Switch>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <Box mt={1}>
+                                <GridCapaMain />
+                            </Box>
+                        }
+                    />
+                    <Route
+                        path="sign-in-callback"
+                        element={
+                            <Navigate replace to={getPreLoginPath() || '/'} />
+                        }
+                    />
+                    <Route
+                        path="logout-callback"
+                        element={
+                            <h1>
+                                Error: logout failed; you are still logged in.
+                            </h1>
+                        }
+                    />
+                    <Route
+                        path="*"
+                        element={
+                            <h1>
+                                <FormattedMessage id="PageNotFound" />
+                            </h1>
+                        }
+                    />
+                </Routes>
             ) : (
                 <AuthenticationRouter
                     userManager={userManager}
                     signInCallbackError={signInCallbackError}
                     dispatch={dispatch}
-                    history={history}
+                    history={navigate}
                     location={location}
                 />
             )}
