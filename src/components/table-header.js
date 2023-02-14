@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@mui/material/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import React, { useCallback } from 'react';
@@ -52,7 +52,7 @@ const TableHeader = ({
     const taskStatus = taskData ? taskData.status : 'Not created';
     const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
     const currentTime = dateFormat(timestamp, 'HH:MM');
-    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'default';
+    const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
     const tableHeaderName = (processName || '') + ' Supervisor';
 
     const handleDateChange = useCallback(
@@ -86,6 +86,7 @@ const TableHeader = ({
             <Grid item xs={3}>
                 <form noValidate>
                     <TextField
+                        variant="standard"
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"
@@ -102,6 +103,7 @@ const TableHeader = ({
             <Grid item xs={3}>
                 <form noValidate>
                     <TextField
+                        variant="standard"
                         id="time"
                         label={<FormattedMessage id="selectTimestampTime" />}
                         type="time"

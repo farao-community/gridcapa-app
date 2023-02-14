@@ -4,11 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import dateFormat from 'dateformat';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import { FormattedMessage } from 'react-intl';
 import React, { useCallback } from 'react';
 import { RunAllButton } from './run-all-timstamps-for-business-date-button';
@@ -56,6 +56,7 @@ const TableHeaderBusinessView = ({
             <Grid item xs={3}>
                 <form noValidate>
                     <TextField
+                        variant="standard"
                         id="date"
                         label={<FormattedMessage id="selectTimestampDate" />}
                         type="date"

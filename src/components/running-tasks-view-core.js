@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -20,9 +20,9 @@ import {
     TableRow,
     TablePagination,
     LinearProgress,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { Close } from '@material-ui/icons';
+import { Close } from '@mui/icons-material';
 import EventsTable from './events-table';
 import OverviewTable from './overview-table';
 import { fetchRunningTasksData, getWebSocketUrl } from '../utils/rest-api';

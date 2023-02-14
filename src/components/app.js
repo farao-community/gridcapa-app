@@ -32,7 +32,7 @@ import {
 } from '@gridsuite/commons-ui';
 
 import { FormattedMessage } from 'react-intl';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 
 import {
     fetchConfigParameter,

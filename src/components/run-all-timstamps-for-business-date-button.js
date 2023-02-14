@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import dateFormat from 'dateformat';
 import {
     getWebSocketUrl,
@@ -104,7 +104,6 @@ export function RunAllButton({ timestamp }) {
                 onMessage={fetchTasks}
             />
             <Button
-                color="primary"
                 data-test={'run-all-button-' + timestamp}
                 variant="contained"
                 size="large"
