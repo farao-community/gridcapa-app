@@ -16,17 +16,14 @@ import { useNavigate } from 'react-router-dom';
 
 const AppTopBar = ({ user, userManager }) => {
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
 
-    const [appsAndUrls, setAppsAndUrls] = useState([]);
-
     const [themeLocal, handleChangeTheme] = useParameterState(PARAM_THEME);
-
     const [languageLocal, handleChangeLanguage] = useParameterState(
         PARAM_LANGUAGE
     );
 
+    const [appsAndUrls, setAppsAndUrls] = useState([]);
     const [showParameters, setShowParameters] = useState(false);
 
     useEffect(() => {

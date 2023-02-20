@@ -26,18 +26,19 @@ import {
 
 import {
     AuthenticationRouter,
+    CardErrorBoundary,
     getPreLoginPath,
-    initializeAuthenticationProd,
     initializeAuthenticationDev,
+    initializeAuthenticationProd,
 } from '@gridsuite/commons-ui';
 
 import { FormattedMessage } from 'react-intl';
 import Box from '@mui/material/Box';
 
 import {
+    connectNotificationsWsUpdateConfig,
     fetchConfigParameter,
     fetchConfigParameters,
-    getWebSocketUrl,
 } from '../utils/rest-api';
 import {
     APP_NAME,
@@ -50,68 +51,28 @@ import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import AppTopBar from './app-top-bar';
 import GridCapaMain from './gridcapa-main';
-import useWebSocket from 'react-use-websocket';
 
 const noUserManager = { instance: null, error: null };
-const resolver = { resolve: null };
 
 const App = () => {
+    const dispatch = useDispatch();
     const intlRef = useIntlRef();
-
+    const navigate = useNavigate();
+    const location = useLocation();
     const { enqueueSnackbar } = useSnackbar();
 
     const user = useSelector((state) => state.user);
-
     const signInCallbackError = useSelector(
         (state) => state.signInCallbackError
     );
-
-    const [userManager, setUserManager] = useState(noUserManager);
-
-    const navigate = useNavigate();
-
-    const dispatch = useDispatch();
-
-    const location = useLocation();
-
-    const readyUrl = useCallback(() => {
-        return new Promise((resolve) => {
-            resolver.resolve = resolve;
-        });
-    }, []);
-
-    const updateParams = useCallback(
-        (params) => {
-            console.debug('received UI parameters : ', params);
-            params.forEach((param) => {
-                switch (param.name) {
-                    case PARAM_THEME:
-                        dispatch(selectTheme(param.value));
-                        break;
-                    case PARAM_LANGUAGE:
-                        dispatch(selectLanguage(param.value));
-                        dispatch(
-                            selectComputedLanguage(
-                                getComputedLanguage(param.value)
-                            )
-                        );
-                        break;
-                    default:
-                }
-            });
-        },
-        [dispatch]
+    const authenticationRouterError = useSelector(
+        (state) => state.authenticationRouterError
+    );
+    const showAuthenticationRouterLogin = useSelector(
+        (state) => state.showAuthenticationRouterLogin
     );
 
-    const onConfigEvent = (event) => {
-        let eventData = JSON.parse(event.data);
-        if (eventData.headers && eventData.headers['parameterName']) {
-            fetchConfigParameter(eventData.headers['parameterName'])
-                .then((param) => updateParams([param]))
-                .catch((errorMessage) => displayError(errorMessage));
-        }
-    };
-
+    const [userManager, setUserManager] = useState(noUserManager);
     // Can't use lazy initializer because useMatch is a hook
     const [initialMatchSilentRenewCallbackUrl] = useState(
         useMatch({
@@ -139,35 +100,34 @@ const App = () => {
         initialize()
             .then((requestedUserManager) => {
                 setUserManager({ instance: requestedUserManager, error: null });
-                requestedUserManager.getUser().then((CheckedUser) => {
-                    if (
-                        CheckedUser == null &&
-                        initialMatchSilentRenewCallbackUrl == null
-                    ) {
-                        requestedUserManager.signinSilent().catch((error) => {
-                            const oidcHackReloaded =
-                                'gridsuite-oidc-hack-reloaded';
-                            if (
-                                !sessionStorage.getItem(oidcHackReloaded) &&
-                                error.message ===
-                                    'authority mismatch on settings vs. signin state'
-                            ) {
-                                sessionStorage.setItem(oidcHackReloaded, true);
-                                console.log(
-                                    'Hack oidc, reload page to make login work'
-                                );
-                                window.location.reload();
-                            }
-                        });
-                    }
-                });
             })
-            .catch(function (error) {
+            .catch((error) => {
                 setUserManager({ instance: null, error: error.message });
-                console.debug('error when importing the idp settings');
             });
-        // Note: initialize and initialMatchSilentRenewCallbackUrl won't change
-    }, [initialize, initialMatchSilentRenewCallbackUrl]);
+    }, [initialize]);
+
+    const updateParams = useCallback(
+        (params) => {
+            console.debug('received UI parameters : ', params);
+            params.forEach((param) => {
+                switch (param.name) {
+                    case PARAM_THEME:
+                        dispatch(selectTheme(param.value));
+                        break;
+                    case PARAM_LANGUAGE:
+                        dispatch(selectLanguage(param.value));
+                        dispatch(
+                            selectComputedLanguage(
+                                getComputedLanguage(param.value)
+                            )
+                        );
+                        break;
+                    default:
+                }
+            });
+        },
+        [dispatch]
+    );
 
     const displayError = useCallback(
         (errorMessage) => {
@@ -183,6 +143,25 @@ const App = () => {
         [enqueueSnackbar, intlRef]
     );
 
+    const connectNotificationsUpdateConfig = useCallback(() => {
+        const ws = connectNotificationsWsUpdateConfig();
+
+        ws.onmessage = (event) => {
+            let eventData = JSON.parse(event.data);
+            if (eventData.headers && eventData.headers['parameterName']) {
+                fetchConfigParameter(eventData.headers['parameterName'])
+                    .then((param) => updateParams([param]))
+                    .catch((errorMessage) => displayError(errorMessage));
+            }
+        };
+
+        ws.onerror = (event) => {
+            console.error('Unexpected Notification WebSocket error', event);
+        };
+
+        return ws;
+    }, [updateParams, displayError]);
+
     useEffect(() => {
         if (user !== null) {
             fetchConfigParameters(COMMON_APP_NAME)
@@ -192,63 +171,70 @@ const App = () => {
             fetchConfigParameters(APP_NAME)
                 .then((params) => updateParams(params))
                 .catch((errorMessage) => displayError(errorMessage));
-            resolver.resolve(getWebSocketUrl('config'));
-        }
-    }, [user, dispatch, updateParams, enqueueSnackbar, intlRef, displayError]);
 
-    useWebSocket(readyUrl, {
-        shouldReconnect: (_closeEvent) => true,
-        onMessage: onConfigEvent,
-        onError: (event) => {
-            console.error('Unexpected Notification WebSocket error', event);
-        },
-    });
+            const ws = connectNotificationsUpdateConfig();
+
+            return () => {
+                ws.close();
+            };
+        }
+    }, [connectNotificationsUpdateConfig, displayError, updateParams, user]);
 
     return (
         <>
             <AppTopBar user={user} userManager={userManager} />
-            {user !== null ? (
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Box mt={1}>
-                                <GridCapaMain />
-                            </Box>
+            <CardErrorBoundary>
+                {user !== null ? (
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Box mt={1}>
+                                    <GridCapaMain />
+                                </Box>
+                            }
+                        />
+                        <Route
+                            path="sign-in-callback"
+                            element={
+                                <Navigate
+                                    replace
+                                    to={getPreLoginPath() || '/'}
+                                />
+                            }
+                        />
+                        <Route
+                            path="logout-callback"
+                            element={
+                                <h1>
+                                    Error: logout failed; you are still logged
+                                    in.
+                                </h1>
+                            }
+                        />
+                        <Route
+                            path="*"
+                            element={
+                                <h1>
+                                    <FormattedMessage id="PageNotFound" />
+                                </h1>
+                            }
+                        />
+                    </Routes>
+                ) : (
+                    <AuthenticationRouter
+                        userManager={userManager}
+                        signInCallbackError={signInCallbackError}
+                        authenticationRouterError={authenticationRouterError}
+                        showAuthenticationRouterLogin={
+                            showAuthenticationRouterLogin
                         }
+                        dispatch={dispatch}
+                        navigate={navigate}
+                        location={location}
                     />
-                    <Route
-                        path="sign-in-callback"
-                        element={
-                            <Navigate replace to={getPreLoginPath() || '/'} />
-                        }
-                    />
-                    <Route
-                        path="logout-callback"
-                        element={
-                            <h1>
-                                Error: logout failed; you are still logged in.
-                            </h1>
-                        }
-                    />
-                    <Route
-                        path="*"
-                        element={
-                            <h1>
-                                <FormattedMessage id="PageNotFound" />
-                            </h1>
-                        }
-                    />
-                </Routes>
-            ) : (
-                <AuthenticationRouter
-                    userManager={userManager}
-                    signInCallbackError={signInCallbackError}
-                    dispatch={dispatch}
-                    history={navigate}
-                    location={location}
-                />
-            )}
+                )}
+            </CardErrorBoundary>
         </>
     );
 };
