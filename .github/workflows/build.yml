@@ -7,6 +7,12 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - name: Get node version
+              run: node --version
+
+            - name: Get NPM version
+              run: npm --version
+
             - name: Checkout
               uses: actions/checkout@v2
 
