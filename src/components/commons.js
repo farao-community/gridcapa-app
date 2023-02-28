@@ -6,10 +6,9 @@
  */
 import { blue, green, grey, orange, red } from '@mui/material/colors';
 import dateFormat from 'dateformat';
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 
-export const sha256 = (x) =>
-    crypto.createHash('sha256').update(x, 'utf8').digest('hex'); // UTF8 text hash
+export const sha256 = (x) => CryptoJS.SHA256(x).toString(CryptoJS.enc.Hex);
 
 export function getBackgroundColor(taskStatus) {
     switch (taskStatus) {
