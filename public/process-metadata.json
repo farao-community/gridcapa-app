@@ -3,6 +3,6 @@
   "dayIncrementInDate": 0,
   "globalViewTimestampFilter": [
   ],
-  "eventPredefinedFilter": {
-  }
+  "eventPredefinedFilter": [
+  ]
 }
