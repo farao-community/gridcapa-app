@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 import React from 'react';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import { AppBar } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { AppBar } from '@mui/material';
+import Box from '@mui/material/Box';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 
@@ -46,7 +46,7 @@ const TableCore = ({ taskData }) => {
 
     return (
         <div>
-            <AppBar position="static" color="transparent">
+            <AppBar position="static" color="transparent" enableColorOnDark>
                 <Tabs value={value} onChange={handleChange} variant="fullWidth">
                     <Tab
                         label={<FormattedMessage id="overview" />}

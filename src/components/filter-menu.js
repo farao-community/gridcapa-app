@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -13,9 +13,9 @@ import {
     FormControlLabel,
     Checkbox,
     FormGroup,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { FilterList } from '@material-ui/icons';
+import { FilterList } from '@mui/icons-material';
 
 const createselectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
@@ -157,6 +157,7 @@ const FilterMenu = ({
                 {manual && (
                     <MenuItem onKeyDown={(e) => e.stopPropagation()}>
                         <TextField
+                            variant="standard"
                             id={filterHint}
                             label={<FormattedMessage id={filterHint} />}
                             type="text"

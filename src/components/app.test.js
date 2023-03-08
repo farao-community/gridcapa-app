@@ -1,12 +1,12 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
 
 import { IntlProvider } from 'react-intl';
@@ -14,36 +14,45 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from './app';
 import { store } from '../redux/store';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {
+    createTheme,
+    ThemeProvider,
+    StyledEngineProvider,
+} from '@mui/material/styles';
 import { SnackbarProvider } from '@gridsuite/commons-ui';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 
 let container = null;
+let root = null;
 beforeEach(() => {
     // setup a DOM element as a render target
     container = document.createElement('div');
     document.body.appendChild(container);
+    root = createRoot(container);
 });
 
 afterEach(() => {
     // cleanup on exiting
-    unmountComponentAtNode(container);
     container.remove();
     container = null;
+    root.unmount();
+    root = null;
 });
 
 it('renders', async () => {
     await act(async () =>
-        render(
+        root.render(
             <IntlProvider locale="en">
                 <BrowserRouter>
                     <Provider store={store}>
-                        <ThemeProvider theme={createMuiTheme({})}>
-                            <SnackbarProvider hideIconVariant={false}>
-                                <CssBaseline />
-                                <App />
-                            </SnackbarProvider>
-                        </ThemeProvider>
+                        <StyledEngineProvider injectFirst>
+                            <ThemeProvider theme={createTheme({})}>
+                                <SnackbarProvider hideIconVariant={false}>
+                                    <CssBaseline />
+                                    <App />
+                                </SnackbarProvider>
+                            </ThemeProvider>
+                        </StyledEngineProvider>
                     </Provider>
                 </BrowserRouter>
             </IntlProvider>,

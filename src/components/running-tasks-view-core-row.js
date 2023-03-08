@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 import React from 'react';
-import { Button, Grid, TableCell, TableRow } from '@material-ui/core';
+import { Button, Grid, TableCell, TableRow } from '@mui/material';
 import { gridcapaFormatDate, sha256 } from './commons';
-import { ListAlt, Visibility } from '@material-ui/icons';
+import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
@@ -70,7 +70,7 @@ const RunningTasksViewCoreRow = ({
                         data-test={'timestamp-status-' + task.timestamp}
                         task-status={task.status}
                         variant={
-                            task.status === 'RUNNING' ? 'outlined' : 'default'
+                            task.status === 'RUNNING' ? 'outlined' : 'filled'
                         }
                     />
                 </TableCell>
