@@ -70,7 +70,7 @@ const GridCapaMain = () => {
                     );
                 });
         }
-    }, []);
+    }, [processName]);
 
     function setTimestampWithDaysIncrement(date, days) {
         let result = new Date(date);
