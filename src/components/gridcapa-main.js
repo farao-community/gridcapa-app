@@ -57,8 +57,17 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
-                    let daysToIncrement = Number.isInteger( res.dayIncrementInDate ) ? res.dayIncrementInDate : 0;
-                    setTimestamp(setTimestampWithDaysIncrement(TODAY_TIMESTAMP, daysToIncrement));
+                    let daysToIncrement = Number.isInteger(
+                        res.dayIncrementInDate
+                    )
+                        ? res.dayIncrementInDate
+                        : 0;
+                    setTimestamp(
+                        setTimestampWithDaysIncrement(
+                            TODAY_TIMESTAMP,
+                            daysToIncrement
+                        )
+                    );
                 });
         }
     }, []);
@@ -69,48 +78,50 @@ const GridCapaMain = () => {
         return result;
     }
 
-    return (timestamp &&
-        <Grid container>
-            <Grid item xs={2}>
-                <Tabs
-                    value={view}
-                    onChange={handleViewChange}
-                    orientation="vertical"
-                >
-                    <Tab
-                        label={<FormattedMessage id="timestampView"/> }
-                        data-test="timestamp-view"
-                    />
-                    <Tab
-                        label={<FormattedMessage id="businessDateView"/> }
-                        data-test="business-view"
-                    />
-                    <Tab
-                        label={<FormattedMessage id="runningTasksView"/> }
-                        data-test="global-view"
-                    />
-                </Tabs>
+    return (
+        timestamp && (
+            <Grid container>
+                <Grid item xs={2}>
+                    <Tabs
+                        value={view}
+                        onChange={handleViewChange}
+                        orientation="vertical"
+                    >
+                        <Tab
+                            label={<FormattedMessage id="timestampView" />}
+                            data-test="timestamp-view"
+                        />
+                        <Tab
+                            label={<FormattedMessage id="businessDateView" />}
+                            data-test="business-view"
+                        />
+                        <Tab
+                            label={<FormattedMessage id="runningTasksView" />}
+                            data-test="global-view"
+                        />
+                    </Tabs>
+                </Grid>
+                <Grid item xs={10}>
+                    <TabPanel value={view} index={0}>
+                        <ProcessTimestampView
+                            processName={processName}
+                            timestamp={timestamp}
+                            onTimestampChange={onTimestampChange}
+                        />
+                    </TabPanel>
+                    <TabPanel value={view} index={1}>
+                        <BusinessDateView
+                            processName={processName}
+                            timestamp={timestamp}
+                            onTimestampChange={onTimestampChange}
+                        />
+                    </TabPanel>
+                    <TabPanel value={view} index={2}>
+                        <RunningTasksView processName={processName} />
+                    </TabPanel>
+                </Grid>
             </Grid>
-            <Grid item xs={10}>
-                <TabPanel value={view} index={0}>
-                    <ProcessTimestampView
-                        processName={processName}
-                        timestamp={timestamp}
-                        onTimestampChange={onTimestampChange}
-                    />
-                </TabPanel>
-                <TabPanel value={view} index={1}>
-                    <BusinessDateView
-                        processName={processName}
-                        timestamp={timestamp}
-                        onTimestampChange={onTimestampChange}
-                    />
-                </TabPanel>
-                <TabPanel value={view} index={2}>
-                    <RunningTasksView processName={processName}/>
-                </TabPanel>
-            </Grid>
-        </Grid>
+        )
     );
 };
 
