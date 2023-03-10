@@ -5,16 +5,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, {useCallback, useEffect} from 'react';
-import {Grid, Tab, Tabs} from '@mui/material';
-import {FormattedMessage} from 'react-intl';
+import React, { useCallback, useEffect } from 'react';
+import { Grid, Tab, Tabs } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
 
 function TabPanel(props) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props;
 
     return (
         <div
@@ -57,7 +57,7 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
-                    let daysToIncrement = Number.isInteger(res.dayIncrementInDate) ? res.dayIncrementInDate : 0;
+                    let daysToIncrement = Number.isInteger( res.dayIncrementInDate ) ? res.dayIncrementInDate : 0;
                     setTimestamp(setTimestampWithDaysIncrement(TODAY_TIMESTAMP, daysToIncrement));
                 });
         }
@@ -78,15 +78,15 @@ const GridCapaMain = () => {
                     orientation="vertical"
                 >
                     <Tab
-                        label={<FormattedMessage id="timestampView"/>}
+                        label={<FormattedMessage id="timestampView"/> }
                         data-test="timestamp-view"
                     />
                     <Tab
-                        label={<FormattedMessage id="businessDateView"/>}
+                        label={<FormattedMessage id="businessDateView"/> }
                         data-test="business-view"
                     />
                     <Tab
-                        label={<FormattedMessage id="runningTasksView"/>}
+                        label={<FormattedMessage id="runningTasksView"/> }
                         data-test="global-view"
                     />
                 </Tabs>
