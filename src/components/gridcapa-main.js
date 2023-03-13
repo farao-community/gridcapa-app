@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Grid, Tab, Tabs } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
-import {setTimestampWithDaysIncrement} from "./commons";
+import { setTimestampWithDaysIncrement } from './commons';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
