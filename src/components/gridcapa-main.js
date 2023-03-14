@@ -58,7 +58,7 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
-                    let daysToIncrement = Number.isInteger(
+                    const daysToIncrement = Number.isInteger(
                         res.dayIncrementInDate
                     )
                         ? res.dayIncrementInDate
