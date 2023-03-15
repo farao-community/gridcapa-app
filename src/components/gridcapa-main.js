@@ -5,13 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Grid, Tab, Tabs } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
+import { setTimestampWithDaysIncrement } from './commons';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -38,9 +39,9 @@ const TODAY_TIMESTAMP = new Date(
 );
 
 const GridCapaMain = () => {
-    const [view, setView] = React.useState(0);
-    const [processName, setProcessName] = React.useState(null);
-    const [timestamp, setTimestamp] = React.useState(TODAY_TIMESTAMP);
+    const [view, setView] = useState(0);
+    const [processName, setProcessName] = useState(null);
+    const [timestamp, setTimestamp] = useState(null);
 
     const onTimestampChange = useCallback((newTimestamp) => {
         setTimestamp(new Date(newTimestamp));
@@ -57,52 +58,65 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
+                    const daysToIncrement = Number.isInteger(
+                        res.dayIncrementInDate
+                    )
+                        ? res.dayIncrementInDate
+                        : 0;
+                    setTimestamp(
+                        setTimestampWithDaysIncrement(
+                            TODAY_TIMESTAMP,
+                            daysToIncrement
+                        )
+                    );
                 });
         }
-    });
+    }, [processName]);
 
     return (
-        <Grid container>
-            <Grid item xs={2}>
-                <Tabs
-                    value={view}
-                    onChange={handleViewChange}
-                    orientation="vertical"
-                >
-                    <Tab
-                        label={<FormattedMessage id="timestampView" />}
-                        data-test="timestamp-view"
-                    />
-                    <Tab
-                        label={<FormattedMessage id="businessDateView" />}
-                        data-test="business-view"
-                    />
-                    <Tab
-                        label={<FormattedMessage id="runningTasksView" />}
-                        data-test="global-view"
-                    />
-                </Tabs>
+        timestamp && (
+            <Grid container>
+                <Grid item xs={2}>
+                    <Tabs
+                        value={view}
+                        onChange={handleViewChange}
+                        orientation="vertical"
+                    >
+                        <Tab
+                            label={<FormattedMessage id="timestampView" />}
+                            data-test="timestamp-view"
+                        />
+                        <Tab
+                            label={<FormattedMessage id="businessDateView" />}
+                            data-test="business-view"
+                        />
+                        <Tab
+                            label={<FormattedMessage id="runningTasksView" />}
+                            data-test="global-view"
+                        />
+                    </Tabs>
+                </Grid>
+                <Grid item xs={10}>
+                    <TabPanel value={view} index={0}>
+                        <ProcessTimestampView
+                            processName={processName}
+                            timestamp={timestamp}
+                            onTimestampChange={onTimestampChange}
+                        />
+                    </TabPanel>
+                    <TabPanel value={view} index={1}>
+                        <BusinessDateView
+                            processName={processName}
+                            timestamp={timestamp}
+                            onTimestampChange={onTimestampChange}
+                        />
+                    </TabPanel>
+                    <TabPanel value={view} index={2}>
+                        <RunningTasksView processName={processName} />
+                    </TabPanel>
+                </Grid>
             </Grid>
-            <Grid item xs={10}>
-                <TabPanel value={view} index={0}>
-                    <ProcessTimestampView
-                        processName={processName}
-                        timestamp={timestamp}
-                        onTimestampChange={onTimestampChange}
-                    />
-                </TabPanel>
-                <TabPanel value={view} index={1}>
-                    <BusinessDateView
-                        processName={processName}
-                        timestamp={timestamp}
-                        onTimestampChange={onTimestampChange}
-                    />
-                </TabPanel>
-                <TabPanel value={view} index={2}>
-                    <RunningTasksView processName={processName} />
-                </TabPanel>
-            </Grid>
-        </Grid>
+        )
     );
 };
 
