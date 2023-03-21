@@ -96,8 +96,11 @@ const EventsTable = ({ taskData }) => {
             if (
                 f.addErrors &&
                 f.addErrors === true &&
-                JSON.stringify(currentLogFilter) ===
+                JSON.stringify(currentLogFilter).includes(
                     JSON.stringify(f.filterValue)
+                        .replaceAll('[', '')
+                        .replaceAll(']', '')
+                )
             ) {
                 result = true;
             }
