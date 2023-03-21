@@ -109,6 +109,7 @@ const EventsTable = ({ taskData }) => {
     };
 
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
+        let isAddErrors = isCurrentLogFilterAddErrors(currentLogFilter);
         let filtered;
         filtered = taskData.processEvents.filter(
             (event) =>
@@ -124,7 +125,7 @@ const EventsTable = ({ taskData }) => {
                                 .toUpperCase()
                                 .includes(f.toUpperCase())
                         ) ||
-                            (isCurrentLogFilterAddErrors(currentLogFilter) &&
+                            (isAddErrors &&
                                 event.level.toUpperCase() === 'ERROR'))))
         );
 
