@@ -55,7 +55,7 @@ jobs:
         run: npm run-script test
 
       - name: Build and publish Docker image without authentication
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: farao/gridcapa-app
           username: farao
@@ -68,7 +68,7 @@ jobs:
           REACT_APP_USE_AUTHENTICATION: true
 
       - name: Build and publish Docker image with authentication
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: farao/gridcapa-app
           username: farao
