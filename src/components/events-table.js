@@ -94,7 +94,6 @@ const EventsTable = ({ taskData }) => {
         let result = false;
         eventPredefinedFilter.forEach((f) => {
             if (
-                f.addErrors &&
                 f.addErrors === true &&
                 JSON.stringify(currentLogFilter).includes(
                     JSON.stringify(f.filterValue)
