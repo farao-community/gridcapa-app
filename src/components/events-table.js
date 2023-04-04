@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Paper,
     Table,
@@ -61,30 +61,26 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [eventPredefinedFilter, setEventPredefinedFilter] = React.useState(
-        []
-    );
+    const [eventPredefinedFilter, setEventPredefinedFilter] = useState([]);
+    const [levelFilter, setLevelFilter] = useState([]);
+    const [logFilter, setLogFilter] = useState([]);
+
     useEffect(() => {
-        if (eventPredefinedFilter.length === 0) {
-            fetch('process-metadata.json')
-                .then((res) => res.json())
-                .then((res) => {
-                    let filter = res.eventPredefinedFilter;
-                    setEventPredefinedFilter(filter);
-                    if (Array.isArray(filter)) {
-                        let newtoFilter = [];
-                        filter.forEach((f) => {
-                            if (f.defaultChecked && f.defaultChecked === true) {
-                                newtoFilter.push(f.filterValue);
-                            }
-                        });
-                        setLogFilter(...newtoFilter);
+        fetch('process-metadata.json')
+            .then((res) => res.json())
+            .then((res) => {
+                const filter = res.eventPredefinedFilter;
+                setEventPredefinedFilter(filter);
+                let newtoFilter = [];
+                filter.forEach((f) => {
+                    if (f.defaultChecked && f.defaultChecked === true) {
+                        newtoFilter.push(...f.filterValue);
                     }
                 });
-        }
-    });
-    const [levelFilter, setLevelFilter] = React.useState([]);
-    const [logFilter, setLogFilter] = React.useState([]);
+                newtoFilter = Array.from(new Set(newtoFilter));
+                setLogFilter(newtoFilter);
+            });
+    }, []);
 
     const handleLevelChange = (filter) => {
         setLevelFilter(filter);
