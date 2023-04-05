@@ -90,7 +90,25 @@ const EventsTable = ({ taskData }) => {
         setLogFilter(filter);
     };
 
+    const isCurrentLogFilterAddErrors = (currentLogFilter) => {
+        let result = false;
+        eventPredefinedFilter.forEach((f) => {
+            if (
+                f.addErrors === true &&
+                JSON.stringify(currentLogFilter).includes(
+                    JSON.stringify(f.filterValue)
+                        .replaceAll('[', '')
+                        .replaceAll(']', '')
+                )
+            ) {
+                result = true;
+            }
+        });
+        return result;
+    };
+
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
+        let isAddErrors = isCurrentLogFilterAddErrors(currentLogFilter);
         let filtered;
         filtered = taskData.processEvents.filter(
             (event) =>
@@ -101,11 +119,13 @@ const EventsTable = ({ taskData }) => {
                         ))) &&
                 (currentLogFilter.length === 0 ||
                     (currentLogFilter.length > 0 &&
-                        currentLogFilter.some((f) =>
+                        (currentLogFilter.some((f) =>
                             event.message
                                 .toUpperCase()
                                 .includes(f.toUpperCase())
-                        )))
+                        ) ||
+                            (isAddErrors &&
+                                event.level.toUpperCase() === 'ERROR'))))
         );
 
         return filtered;
