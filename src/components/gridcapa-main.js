@@ -13,6 +13,8 @@ import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
 import { setTimestampWithDaysIncrement } from './commons';
+import { fetchMinioStorageData } from '../utils/rest-api';
+import { PieChart, Pie, Cell } from 'recharts';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -30,6 +32,63 @@ function TabPanel(props) {
     );
 }
 
+function MinioChart(props) {
+    const { used, free } = props;
+    const data = [
+        { name: 'FREE', value: free },
+        { name: 'USED', value: used },
+    ];
+    const COLORS = ['#007700', '#880000'];
+
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({
+        cx,
+        cy,
+        midAngle,
+        innerRadius,
+        outerRadius,
+        percent,
+        index,
+    }) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text
+                x={x}
+                y={y}
+                fill="white"
+                textAnchor={x > cx ? 'start' : 'end'}
+                dominantBaseline="central"
+            >
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
+    return (
+        <PieChart width={120} height={120}>
+            <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={renderCustomizedLabel}
+                outerRadius={50}
+                fill="#8884d8"
+                dataKey="value"
+            >
+                {data.map((entry, index) => (
+                    <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                    />
+                ))}
+            </Pie>
+        </PieChart>
+    );
+}
+
 const TODAY_TIMESTAMP = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
@@ -42,6 +101,8 @@ const GridCapaMain = () => {
     const [view, setView] = useState(0);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
+    const [usedDiskSpace, setUsedDiskSpace] = useState(0);
+    const [freeDiskSpace, setFreeDiskSpace] = useState(100);
 
     const onTimestampChange = useCallback((newTimestamp) => {
         setTimestamp(new Date(newTimestamp));
@@ -73,6 +134,19 @@ const GridCapaMain = () => {
         }
     }, [processName]);
 
+    useEffect(() => {
+        fetchMinioStorageData().then((res) => {
+            setUsedDiskSpace(0);
+            setFreeDiskSpace(0);
+            res.info.servers.foreach((server) => {
+                server.drives.foreach((drive) => {
+                    setUsedDiskSpace(usedDiskSpace + drive.usedspace);
+                    setFreeDiskSpace(freeDiskSpace + drive.availspace);
+                });
+            });
+        });
+    }, [usedDiskSpace, freeDiskSpace]);
+
     return (
         timestamp && (
             <Grid container>
@@ -95,6 +169,10 @@ const GridCapaMain = () => {
                             data-test="global-view"
                         />
                     </Tabs>
+                    <div class="center">
+                        <MinioChart free={freeDiskSpace} used={usedDiskSpace} />
+                        <FormattedMessage id="minioDiskUsage" />
+                    </div>
                 </Grid>
                 <Grid item xs={10}>
                     <TabPanel value={view} index={0}>
