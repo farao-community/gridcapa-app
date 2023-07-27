@@ -145,7 +145,7 @@ const GridCapaMain = () => {
                 });
             });
         });
-    }, []);
+    });
 
     return (
         timestamp && (
