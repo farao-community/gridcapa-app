@@ -74,7 +74,7 @@ function MinioChart(props) {
                 cy="50%"
                 labelLine={false}
                 label={renderCustomizedLabel}
-                outerRadius={50}
+                outerRadius={60}
                 fill="#8884d8"
                 dataKey="value"
             >
