@@ -138,14 +138,14 @@ const GridCapaMain = () => {
         fetchMinioStorageData().then((res) => {
             setUsedDiskSpace(0);
             setFreeDiskSpace(0);
-            res.info.servers.foreach((server) => {
-                server.drives.foreach((drive) => {
+            res.info.servers.forEach((server) => {
+                server.drives.forEach((drive) => {
                     setUsedDiskSpace(usedDiskSpace + drive.usedspace);
                     setFreeDiskSpace(freeDiskSpace + drive.availspace);
                 });
             });
         });
-    }, [usedDiskSpace, freeDiskSpace]);
+    }, []);
 
     return (
         timestamp && (
