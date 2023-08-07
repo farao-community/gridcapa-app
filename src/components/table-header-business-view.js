@@ -4,7 +4,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import makeStyles from '@mui/styles/makeStyles';
 import dateFormat from 'dateformat';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -13,26 +12,25 @@ import { FormattedMessage } from 'react-intl';
 import React, { useCallback } from 'react';
 import { RunAllButton } from './run-all-timstamps-for-business-date-button';
 
-const useStyles = makeStyles((theme) => ({
-    container: {
+const styles = {
+    container: (theme) => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(3),
         display: 'flex',
         flexWrap: 'wrap',
-    },
-    textField: {
+    }),
+    textField: (theme) => ({
         marginLeft: theme.spacing(3),
         marginRight: theme.spacing(3),
         width: 200,
-    },
-}));
+    }),
+};
 
 const TableHeaderBusinessView = ({
     processName,
     timestamp,
     onTimestampChange,
 }) => {
-    const classes = useStyles();
     const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
     const tableHeaderName = (processName || '') + ' Supervisor';
 
@@ -49,7 +47,7 @@ const TableHeaderBusinessView = ({
     );
 
     return (
-        <Grid container className={classes.container}>
+        <Grid container sx={styles.container}>
             <Grid item xs={3}>
                 <Typography variant="body1">{tableHeaderName}</Typography>
             </Grid>
@@ -62,7 +60,7 @@ const TableHeaderBusinessView = ({
                         type="date"
                         defaultValue={currentDate}
                         inputProps={{ 'data-test': 'timestamp-date-picker' }}
-                        className={classes.textField}
+                        sx={styles.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
