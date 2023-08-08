@@ -18,7 +18,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
@@ -27,20 +26,20 @@ import { updateConfigParameter } from '../utils/rest-api';
 import { useSnackbar } from 'notistack';
 import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 
-const useStyles = makeStyles((theme) => ({
-    title: {
+const styles = {
+    title: (theme) => ({
         padding: theme.spacing(2),
-    },
-    grid: {
+    }),
+    grid: (theme) => ({
         padding: theme.spacing(2),
-    },
-    controlItem: {
+    }),
+    controlItem: (theme) => ({
         justifyContent: 'flex-end',
-    },
-    button: {
+    }),
+    button: (theme) => ({
         marginBottom: '30px',
-    },
-}));
+    }),
+};
 
 export function useParameterState(paramName) {
     const intlRef = useIntlRef();
@@ -83,8 +82,6 @@ export function useParameterState(paramName) {
 }
 
 const Parameters = ({ showParameters, hideParameters }) => {
-    const classes = useStyles();
-
     const [tabIndex, setTabIndex] = useState(0);
 
     function TabPanel(props) {
@@ -105,7 +102,7 @@ const Parameters = ({ showParameters, hideParameters }) => {
     }
 
     function GUITab() {
-        return <Grid container spacing={2} className={classes.grid} />;
+        return <Grid container spacing={2} sx={styles.grid} />;
     }
 
     return (
@@ -117,11 +114,7 @@ const Parameters = ({ showParameters, hideParameters }) => {
             fullWidth={true}
         >
             <DialogTitle id="form-dialog-title">
-                <Typography
-                    component="span"
-                    variant="h5"
-                    className={classes.title}
-                >
+                <Typography component="span" variant="h5" sx={styles.title}>
                     <FormattedMessage id="parameters" />
                 </Typography>
             </DialogTitle>
@@ -147,7 +140,7 @@ const Parameters = ({ showParameters, hideParameters }) => {
                             onClick={hideParameters}
                             variant="contained"
                             color="primary"
-                            className={classes.button}
+                            sx={styles.button}
                         >
                             <FormattedMessage id="close" />
                         </Button>

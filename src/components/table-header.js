@@ -6,7 +6,6 @@
  */
 
 import Grid from '@mui/material/Grid';
-import makeStyles from '@mui/styles/makeStyles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FormattedMessage } from 'react-intl';
@@ -16,19 +15,19 @@ import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
 
-const useStyles = makeStyles((theme) => ({
-    container: {
+const styles = {
+    container: (theme) => ({
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(3),
         display: 'flex',
         flexWrap: 'wrap',
-    },
-    textField: {
+    }),
+    textField: (theme) => ({
         marginLeft: theme.spacing(3),
         marginRight: theme.spacing(3),
         width: 200,
-    },
-}));
+    }),
+};
 
 function displayRunButton(taskData) {
     return taskData !== null ? (
@@ -48,7 +47,6 @@ const TableHeader = ({
     timestamp,
     onTimestampChange,
 }) => {
-    const classes = useStyles();
     const taskStatus = taskData ? taskData.status : 'Not created';
     const currentDate = dateFormat(timestamp, 'yyyy-mm-dd');
     const currentTime = dateFormat(timestamp, 'HH:MM');
@@ -79,7 +77,7 @@ const TableHeader = ({
     );
 
     return (
-        <Grid container className={classes.container}>
+        <Grid container sx={styles.container}>
             <Grid item xs={2}>
                 <Typography variant="body1">{tableHeaderName}</Typography>
             </Grid>
@@ -92,7 +90,7 @@ const TableHeader = ({
                         type="date"
                         defaultValue={currentDate}
                         inputProps={{ 'data-test': 'timestamp-date-picker' }}
-                        className={classes.textField}
+                        sx={styles.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -112,7 +110,7 @@ const TableHeader = ({
                             'data-test': 'timestamp-time-picker',
                             step: 3600,
                         }}
-                        className={classes.textField}
+                        sx={styles.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
