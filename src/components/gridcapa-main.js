@@ -39,6 +39,10 @@ const TODAY_TIMESTAMP = new Date(
     30
 );
 
+const minioProgressStyle = {
+    height: '8px',
+};
+
 const GridCapaMain = () => {
     const [view, setView] = useState(0);
     const [processName, setProcessName] = useState(null);
@@ -115,6 +119,7 @@ const GridCapaMain = () => {
                         <FormattedMessage id="minioDiskUsage" />
                         {Math.round(usedDiskSpacePercentage)}%
                         <LinearProgress
+                            sx={minioProgressStyle}
                             variant="determinate"
                             value={usedDiskSpacePercentage}
                         />
