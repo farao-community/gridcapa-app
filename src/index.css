@@ -17,8 +17,9 @@ code {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
-    border: 3px;
+    width: 70%;
+    border: 20px;
     padding: 10px;
     text-align: center;
+    font-size: smaller;
 }
