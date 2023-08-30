@@ -116,6 +116,19 @@ export function fetchAppsAndUrls() {
         });
 }
 
+export function fetchMinioStorageData() {
+    console.info(`Fetching minio storage data...`);
+    return fetch('env.json')
+        .then((res) => res.json())
+        .then((res) => {
+            return backendFetch(
+                removeTrailingSlash(res.appsMinioStorageServerUrl)
+            ).then((response) => {
+                return response.json();
+            });
+        });
+}
+
 export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
     console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;

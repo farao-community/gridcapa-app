@@ -31,5 +31,6 @@
   "cancel": "Annuler",
   "stopButtonLabel": "Oui",
   "upload": "Envoyer",
-  "runBusinessDate": "Lancer tous les calculs"
+  "runBusinessDate": "Lancer tous les calculs",
+  "minioDiskUsage": "Utilisation Disque Minio "
 }

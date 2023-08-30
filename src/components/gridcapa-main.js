@@ -6,13 +6,14 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Grid, Tab, Tabs } from '@mui/material';
+import { Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
 import { setTimestampWithDaysIncrement } from './commons';
+import { fetchMinioStorageData } from '../utils/rest-api';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -38,10 +39,15 @@ const TODAY_TIMESTAMP = new Date(
     30
 );
 
+const minioProgressStyle = {
+    height: '8px',
+};
+
 const GridCapaMain = () => {
     const [view, setView] = useState(0);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
+    const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
 
     const onTimestampChange = useCallback((newTimestamp) => {
         setTimestamp(new Date(newTimestamp));
@@ -73,6 +79,24 @@ const GridCapaMain = () => {
         }
     }, [processName]);
 
+    useEffect(() => {
+        fetchMinioStorageData().then((res) => {
+            let usedDiskSpace = 0;
+            let freeDiskSpace = 0;
+            res.info.servers.forEach((server) => {
+                server.drives.forEach((drive) => {
+                    usedDiskSpace = usedDiskSpace + drive.usedspace;
+                    freeDiskSpace = freeDiskSpace + drive.availspace;
+                });
+            });
+            setUsedDiskSpacePercentage(
+                Math.round(
+                    (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
+                )
+            );
+        });
+    }, []);
+
     return (
         timestamp && (
             <Grid container>
@@ -95,6 +119,15 @@ const GridCapaMain = () => {
                             data-test="global-view"
                         />
                     </Tabs>
+                    <div class="center">
+                        <FormattedMessage id="minioDiskUsage" />
+                        {usedDiskSpacePercentage}%
+                        <LinearProgress
+                            sx={minioProgressStyle}
+                            variant="determinate"
+                            value={usedDiskSpacePercentage}
+                        />
+                    </div>
                 </Grid>
                 <Grid item xs={10}>
                     <TabPanel value={view} index={0}>

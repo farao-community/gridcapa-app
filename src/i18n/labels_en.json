@@ -31,5 +31,6 @@
   "cancel": "Cancel",
   "stopButtonLabel": "Yes",
   "upload": "Upload",
-  "runBusinessDate": "Run business date"
+  "runBusinessDate": "Run business date",
+  "minioDiskUsage": "Minio Disk Usage "
 }
