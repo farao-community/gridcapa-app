@@ -77,9 +77,8 @@ const GridCapaMain = () => {
                     );
                 });
             fetchMinioStorageData().then((res) => {
-                setUsedDiskSpacePercentage(0);
-                var usedDiskSpace = 0;
-                var freeDiskSpace = 0;
+                let usedDiskSpace = 0;
+                let freeDiskSpace = 0;
                 res.info.servers.forEach((server) => {
                     server.drives.forEach((drive) => {
                         usedDiskSpace = usedDiskSpace + drive.usedspace;
@@ -87,11 +86,13 @@ const GridCapaMain = () => {
                     });
                 });
                 setUsedDiskSpacePercentage(
-                    (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
+                    Math.round(
+                        (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
+                    )
                 );
             });
         }
-    }, [processName, usedDiskSpacePercentage]);
+    }, [processName]);
 
     return (
         timestamp && (
@@ -117,7 +118,7 @@ const GridCapaMain = () => {
                     </Tabs>
                     <div class="center">
                         <FormattedMessage id="minioDiskUsage" />
-                        {Math.round(usedDiskSpacePercentage)}%
+                        {usedDiskSpacePercentage}%
                         <LinearProgress
                             sx={minioProgressStyle}
                             variant="determinate"
