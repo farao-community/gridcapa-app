@@ -76,23 +76,26 @@ const GridCapaMain = () => {
                         )
                     );
                 });
-            fetchMinioStorageData().then((res) => {
-                let usedDiskSpace = 0;
-                let freeDiskSpace = 0;
-                res.info.servers.forEach((server) => {
-                    server.drives.forEach((drive) => {
-                        usedDiskSpace = usedDiskSpace + drive.usedspace;
-                        freeDiskSpace = freeDiskSpace + drive.availspace;
-                    });
-                });
-                setUsedDiskSpacePercentage(
-                    Math.round(
-                        (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
-                    )
-                );
-            });
         }
     }, [processName]);
+
+    useEffect(() => {
+        fetchMinioStorageData().then((res) => {
+            let usedDiskSpace = 0;
+            let freeDiskSpace = 0;
+            res.info.servers.forEach((server) => {
+                server.drives.forEach((drive) => {
+                    usedDiskSpace = usedDiskSpace + drive.usedspace;
+                    freeDiskSpace = freeDiskSpace + drive.availspace;
+                });
+            });
+            setUsedDiskSpacePercentage(
+                Math.round(
+                    (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
+                )
+            );
+        });
+    }, []);
 
     return (
         timestamp && (
