@@ -287,7 +287,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 setIsLoadingEvent(false);
             });
         }
-    }, [isLoadingEvent]);
+    }, [
+        isLoadingEvent,
+        enqueueSnackbar,
+        intlRef,
+        openEvent,
+        steps,
+    ]);
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);

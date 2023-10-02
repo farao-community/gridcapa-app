@@ -30,7 +30,7 @@ import { useIntlRef } from '../utils/messages';
 import {
     fetchRunningTasksData,
     fetchTimestampData,
-    getWebSocketUrl
+    getWebSocketUrl,
 } from '../utils/rest-api';
 import FilterMenu from './filter-menu';
 import { gridcapaFormatDate } from './commons';
@@ -218,7 +218,13 @@ const RunningTasksViewCore = () => {
                 setIsLoadingEvent(false);
             });
         }
-    }, [isLoadingEvent]);
+    }, [
+       isLoadingEvent,
+       enqueueSnackbar,
+       intlRef,
+       openEvent,
+       tasks,
+    ]);
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
