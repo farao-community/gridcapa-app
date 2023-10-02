@@ -75,6 +75,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [modalEventOpen, setModalEventOpen] = React.useState(false);
     const [modalFileOpen, setModalFileOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingEvent, setIsLoadingEvent] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
@@ -138,6 +139,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         let index = steps.findIndex(
             (inSteps) => inSteps.timestamp === step.timestamp
         );
+        setIsLoadingEvent(true);
         openEvent[index] = true;
         setModalEventOpen(true);
     };
@@ -273,7 +275,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         getMissingData,
     ]);
 
-    const getEventsData = () => {
+    useEffect(() => {
         let index = openEvent.indexOf(true);
         if (index >= 0) {
             fetchTimestampData(
@@ -282,11 +284,14 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 enqueueSnackbar
             ).then((res) => {
                 steps[index].taskData.processEvents = res.processEvents;
+                setIsLoadingEvent(false);
             });
-            return steps[index].taskData;
-        } else {
-            return [];
         }
+    }, [isLoadingEvent]);
+
+    const getEventsData = () => {
+        let index = openEvent.indexOf(true);
+        return index >= 0 ? steps[index].taskData : [];
     };
 
     const getFilesData = (field) => {
@@ -400,10 +405,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             <Close />
                         </Button>
                     </Typography>
-                    <EventsTable
-                        id="modal-modal-description"
-                        taskData={getEventsData()}
-                    />
+                    {isLoadingEvent && <LinearProgress />}
+                    {!isLoadingEvent && (
+                        <EventsTable
+                            id="modal-modal-description"
+                            taskData={getEventsData()}
+                        />
+                    )}
                 </Box>
             </Modal>
             <Modal
