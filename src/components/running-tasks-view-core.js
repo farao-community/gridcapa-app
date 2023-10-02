@@ -218,13 +218,7 @@ const RunningTasksViewCore = () => {
                 setIsLoadingEvent(false);
             });
         }
-    }, [
-       isLoadingEvent,
-       enqueueSnackbar,
-       intlRef,
-       openEvent,
-       tasks,
-    ]);
+    }, [isLoadingEvent, enqueueSnackbar, intlRef, openEvent, tasks]);
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
