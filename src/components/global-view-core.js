@@ -27,7 +27,11 @@ import EventsTable from './events-table';
 import OverviewTable from './overview-table';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
-import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
+import {
+    fetchBusinessDateData,
+    fetchTimestampData,
+    getWebSocketUrl,
+} from '../utils/rest-api';
 import FilterMenu from './filter-menu';
 import { gridcapaFormatDate } from './commons';
 import GlobalViewCoreRow from './global-view-core-row';
@@ -271,7 +275,18 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
-        return index >= 0 ? steps[index].taskData : [];
+        if (index >= 0) {
+            fetchTimestampData(
+                new Date(steps[index].timestamp).toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((res) => {
+                steps[index].taskData.processEvents = res.processEvents;
+            });
+            return steps[index].taskData;
+        } else {
+            return [];
+        }
     };
 
     const getFilesData = (field) => {
