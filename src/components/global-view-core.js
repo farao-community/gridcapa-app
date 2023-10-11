@@ -142,7 +142,18 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         setIsLoadingEvent(true);
         openEvent[index] = true;
         setModalEventOpen(true);
+        if (index >= 0) {
+            fetchTimestampData(
+                new Date(steps[index].timestamp).toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((res) => {
+                steps[index].taskData.processEvents = res.processEvents;
+                setIsLoadingEvent(false);
+            });
+        }
     };
+
     const handleEventClose = () => {
         let index = openEvent.indexOf(true);
         openEvent[index] = false;
@@ -275,20 +286,6 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         getMissingData,
     ]);
 
-    useEffect(() => {
-        let index = openEvent.indexOf(true);
-        if (index >= 0) {
-            fetchTimestampData(
-                new Date(steps[index].timestamp).toISOString(),
-                intlRef,
-                enqueueSnackbar
-            ).then((res) => {
-                steps[index].taskData.processEvents = res.processEvents;
-                setIsLoadingEvent(false);
-            });
-        }
-    }, [isLoadingEvent, enqueueSnackbar, intlRef, openEvent, steps]);
-
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
         return index >= 0 ? steps[index].taskData : [];
@@ -405,8 +402,9 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             <Close />
                         </Button>
                     </Typography>
-                    {isLoadingEvent && <LinearProgress />}
-                    {!isLoadingEvent && (
+                    {isLoadingEvent ? (
+                        <LinearProgress />
+                    ) : (
                         <EventsTable
                             id="modal-modal-description"
                             taskData={getEventsData()}

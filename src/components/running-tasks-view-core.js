@@ -134,7 +134,18 @@ const RunningTasksViewCore = () => {
         setIsLoadingEvent(true);
         openEvent[index] = true;
         setModalEventOpen(true);
+        if (index >= 0) {
+            fetchTimestampData(
+                new Date(tasks[index].timestamp).toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((res) => {
+                tasks[index].processEvents = res.processEvents;
+                setIsLoadingEvent(false);
+            });
+        }
     };
+
     const handleEventClose = () => {
         let index = openEvent.indexOf(true);
         openEvent[index] = false;
@@ -205,20 +216,6 @@ const RunningTasksViewCore = () => {
         setPage(0);
         setOpenEvent([]);
     }, [rowsPerPage]);
-
-    useEffect(() => {
-        let index = openEvent.indexOf(true);
-        if (index >= 0) {
-            fetchTimestampData(
-                new Date(tasks[index].timestamp).toISOString(),
-                intlRef,
-                enqueueSnackbar
-            ).then((res) => {
-                tasks[index].processEvents = res.processEvents;
-                setIsLoadingEvent(false);
-            });
-        }
-    }, [isLoadingEvent, enqueueSnackbar, intlRef, openEvent, tasks]);
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
@@ -336,8 +333,9 @@ const RunningTasksViewCore = () => {
                             <Close />
                         </Button>
                     </Typography>
-                    {isLoadingEvent && <LinearProgress />}
-                    {!isLoadingEvent && (
+                    {isLoadingEvent ? (
+                        <LinearProgress />
+                    ) : (
                         <EventsTable
                             id="modal-modal-description"
                             taskData={getEventsData()}
