@@ -25,7 +25,13 @@ import { FormattedMessage } from 'react-intl';
 import { Close } from '@mui/icons-material';
 import EventsTable from './events-table';
 import OverviewTable from './overview-table';
-import { fetchRunningTasksData, getWebSocketUrl } from '../utils/rest-api';
+import { useSnackbar } from 'notistack';
+import { useIntlRef } from '../utils/messages';
+import {
+    fetchRunningTasksData,
+    fetchTimestampData,
+    getWebSocketUrl,
+} from '../utils/rest-api';
 import FilterMenu from './filter-menu';
 import { gridcapaFormatDate } from './commons';
 import RunningTasksViewCoreRow from './running-tasks-view-core-row';
@@ -52,11 +58,14 @@ const RunningTasksViewCore = () => {
     const [modalEventOpen, setModalEventOpen] = React.useState(false);
     const [modalFileOpen, setModalFileOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingEvent, setIsLoadingEvent] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
     const [timestampFilter, setTimestampFilter] = React.useState([]);
     const [timestampFilterRef, setTimestampFilterRef] = React.useState([]);
+    const { enqueueSnackbar } = useSnackbar();
+    const intlRef = useIntlRef();
     useEffect(() => {
         async function getTimestampFilter() {
             let filter = await fetch('process-metadata.json')
@@ -122,9 +131,21 @@ const RunningTasksViewCore = () => {
         let index = tasks.findIndex(
             (inTasks) => inTasks.timestamp === task.timestamp
         );
+        setIsLoadingEvent(true);
         openEvent[index] = true;
         setModalEventOpen(true);
+        if (index >= 0) {
+            fetchTimestampData(
+                new Date(tasks[index].timestamp).toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((res) => {
+                tasks[index].processEvents = res.processEvents;
+                setIsLoadingEvent(false);
+            });
+        }
     };
+
     const handleEventClose = () => {
         let index = openEvent.indexOf(true);
         openEvent[index] = false;
@@ -312,10 +333,14 @@ const RunningTasksViewCore = () => {
                             <Close />
                         </Button>
                     </Typography>
-                    <EventsTable
-                        id="modal-modal-description"
-                        taskData={getEventsData()}
-                    />
+                    {isLoadingEvent ? (
+                        <LinearProgress />
+                    ) : (
+                        <EventsTable
+                            id="modal-modal-description"
+                            taskData={getEventsData()}
+                        />
+                    )}
                 </Box>
             </Modal>
             <Modal

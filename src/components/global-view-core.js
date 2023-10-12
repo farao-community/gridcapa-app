@@ -27,7 +27,11 @@ import EventsTable from './events-table';
 import OverviewTable from './overview-table';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
-import { fetchBusinessDateData, getWebSocketUrl } from '../utils/rest-api';
+import {
+    fetchBusinessDateData,
+    fetchTimestampData,
+    getWebSocketUrl,
+} from '../utils/rest-api';
 import FilterMenu from './filter-menu';
 import { gridcapaFormatDate } from './commons';
 import GlobalViewCoreRow from './global-view-core-row';
@@ -71,6 +75,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [modalEventOpen, setModalEventOpen] = React.useState(false);
     const [modalFileOpen, setModalFileOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoadingEvent, setIsLoadingEvent] = React.useState(false);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(12);
     const [statusFilter, setStatusFilter] = React.useState([]);
@@ -134,9 +139,21 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         let index = steps.findIndex(
             (inSteps) => inSteps.timestamp === step.timestamp
         );
+        setIsLoadingEvent(true);
         openEvent[index] = true;
         setModalEventOpen(true);
+        if (index >= 0) {
+            fetchTimestampData(
+                new Date(steps[index].timestamp).toISOString(),
+                intlRef,
+                enqueueSnackbar
+            ).then((res) => {
+                steps[index].taskData.processEvents = res.processEvents;
+                setIsLoadingEvent(false);
+            });
+        }
     };
+
     const handleEventClose = () => {
         let index = openEvent.indexOf(true);
         openEvent[index] = false;
@@ -385,10 +402,14 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             <Close />
                         </Button>
                     </Typography>
-                    <EventsTable
-                        id="modal-modal-description"
-                        taskData={getEventsData()}
-                    />
+                    {isLoadingEvent ? (
+                        <LinearProgress />
+                    ) : (
+                        <EventsTable
+                            id="modal-modal-description"
+                            taskData={getEventsData()}
+                        />
+                    )}
                 </Box>
             </Modal>
             <Modal
