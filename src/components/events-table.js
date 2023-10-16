@@ -62,6 +62,7 @@ function inputDataRow(processEvent) {
 
 const EventsTable = ({ taskData }) => {
     const [eventPredefinedFilter, setEventPredefinedFilter] = useState([]);
+    const [eventLevelPredefinedFilter, setEventLevelPredefinedFilter] = useState([]);
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
 
@@ -79,6 +80,17 @@ const EventsTable = ({ taskData }) => {
                 });
                 newtoFilter = Array.from(new Set(newtoFilter));
                 setLogFilter(newtoFilter);
+
+                const levelFilter = res.eventLevelPredefinedFilter;
+                setEventLevelPredefinedFilter(levelFilter);
+                let newtoLevelFilter = [];
+                levelFilter.forEach((f) => {
+                    if (f.defaultChecked && f.defaultChecked === true) {
+                        newtoLevelFilter.push(...f.filterValue);
+                    }
+                });
+                newtoLevelFilter = Array.from(new Set(newtoLevelFilter));
+                setLevelFilter(newtoLevelFilter);
             });
     }, []);
 
@@ -142,6 +154,7 @@ const EventsTable = ({ taskData }) => {
                                 filterHint="filterOnLevel"
                                 handleChange={handleLevelChange}
                                 currentFilter={levelFilter}
+                                predefinedValues={eventLevelPredefinedFilter}
                             />
                         </TableCell>
                         <TableCell style={{ width: '12%' }}>

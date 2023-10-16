@@ -4,5 +4,7 @@
   "globalViewTimestampFilter": [
   ],
   "eventPredefinedFilter": [
+  ],
+  "eventLevelPredefinedFilter": [
   ]
 }
