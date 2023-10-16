@@ -61,7 +61,7 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [eventPredefinedFilter, setEventPredefinedFilter] = useState([]);
+    const [eventLogPredefinedFilter, setEventLogPredefinedFilter] = useState([]);
     const [eventLevelPredefinedFilter, setEventLevelPredefinedFilter] = useState([]);
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
@@ -70,16 +70,16 @@ const EventsTable = ({ taskData }) => {
         fetch('process-metadata.json')
             .then((res) => res.json())
             .then((res) => {
-                const filter = res.eventPredefinedFilter;
-                setEventPredefinedFilter(filter);
-                let newtoFilter = [];
+                const filter = res.eventLogPredefinedFilter;
+                setEventLogPredefinedFilter(filter);
+                let newtoLogFilter = [];
                 filter.forEach((f) => {
                     if (f.defaultChecked && f.defaultChecked === true) {
-                        newtoFilter.push(...f.filterValue);
+                        newtoLogFilter.push(...f.filterValue);
                     }
                 });
-                newtoFilter = Array.from(new Set(newtoFilter));
-                setLogFilter(newtoFilter);
+                newtoLogFilter = Array.from(new Set(newtoLogFilter));
+                setLogFilter(newtoLogFilter);
 
                 const levelFilter = res.eventLevelPredefinedFilter;
                 setEventLevelPredefinedFilter(levelFilter);
@@ -104,7 +104,7 @@ const EventsTable = ({ taskData }) => {
 
     const isCurrentLogFilterAddErrors = (currentLogFilter) => {
         let result = false;
-        eventPredefinedFilter.forEach((f) => {
+        eventLogPredefinedFilter.forEach((f) => {
             if (
                 f.addErrors === true &&
                 JSON.stringify(currentLogFilter).includes(
@@ -167,7 +167,7 @@ const EventsTable = ({ taskData }) => {
                                 handleChange={handleLogChange}
                                 currentFilter={logFilter}
                                 manual={true}
-                                predefinedValues={eventPredefinedFilter}
+                                predefinedValues={eventLogPredefinedFilter}
                             />
                         </TableCell>
                     </TableRow>
