@@ -71,31 +71,36 @@ const EventsTable = ({ taskData }) => {
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
 
+    const loadPredefinedFilter = (
+        predefinedFilter,
+        setPredefinedFilter,
+        setActiveFilter
+    ) => {
+        setPredefinedFilter(predefinedFilter);
+        let activePredefinedFilter = [];
+        predefinedFilter.forEach((f) => {
+            if (f.defaultChecked && f.defaultChecked === true) {
+                activePredefinedFilter.push(...f.filterValue);
+            }
+        });
+        activePredefinedFilter = Array.from(new Set(activePredefinedFilter));
+        setActiveFilter(activePredefinedFilter);
+    };
+
     useEffect(() => {
         fetch('process-metadata.json')
             .then((res) => res.json())
             .then((res) => {
-                const filter = res.eventLogPredefinedFilter;
-                setEventLogPredefinedFilter(filter);
-                let newtoLogFilter = [];
-                filter.forEach((f) => {
-                    if (f.defaultChecked && f.defaultChecked === true) {
-                        newtoLogFilter.push(...f.filterValue);
-                    }
-                });
-                newtoLogFilter = Array.from(new Set(newtoLogFilter));
-                setLogFilter(newtoLogFilter);
-
-                const levelFilter = res.eventLevelPredefinedFilter;
-                setEventLevelPredefinedFilter(levelFilter);
-                let newtoLevelFilter = [];
-                levelFilter.forEach((f) => {
-                    if (f.defaultChecked && f.defaultChecked === true) {
-                        newtoLevelFilter.push(...f.filterValue);
-                    }
-                });
-                newtoLevelFilter = Array.from(new Set(newtoLevelFilter));
-                setLevelFilter(newtoLevelFilter);
+                loadPredefinedFilter(
+                    res.eventLogPredefinedFilter,
+                    setEventLogPredefinedFilter,
+                    setLogFilter
+                );
+                loadPredefinedFilter(
+                    res.eventLevelPredefinedFilter,
+                    setEventLevelPredefinedFilter,
+                    setLevelFilter
+                );
             });
     }, []);
 
