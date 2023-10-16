@@ -61,13 +61,13 @@ function inputDataRow(processEvent) {
 }
 
 const EventsTable = ({ taskData }) => {
-    const [eventLogPredefinedFilter, setEventLogPredefinedFilter] = useState(
-        []
-    );
     const [
         eventLevelPredefinedFilter,
         setEventLevelPredefinedFilter,
     ] = useState([]);
+    const [eventLogPredefinedFilter, setEventLogPredefinedFilter] = useState(
+        []
+    );
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
 
@@ -92,14 +92,14 @@ const EventsTable = ({ taskData }) => {
             .then((res) => res.json())
             .then((res) => {
                 loadPredefinedFilter(
-                    res.eventLogPredefinedFilter,
-                    setEventLogPredefinedFilter,
-                    setLogFilter
-                );
-                loadPredefinedFilter(
                     res.eventLevelPredefinedFilter,
                     setEventLevelPredefinedFilter,
                     setLevelFilter
+                );
+                loadPredefinedFilter(
+                    res.eventLogPredefinedFilter,
+                    setEventLogPredefinedFilter,
+                    setLogFilter
                 );
             });
     }, []);
