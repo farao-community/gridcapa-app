@@ -60,8 +60,30 @@ function inputDataRow(processEvent) {
     );
 }
 
+function loadPredefinedFilter(
+    predefinedFilter,
+    setPredefinedFilter,
+    setActiveFilter
+) {
+    setPredefinedFilter(predefinedFilter);
+    let activePredefinedFilter = [];
+    predefinedFilter.forEach((f) => {
+        if (f.defaultChecked && f.defaultChecked === true) {
+            activePredefinedFilter.push(...f.filterValue);
+        }
+    });
+    activePredefinedFilter = Array.from(new Set(activePredefinedFilter));
+    setActiveFilter(activePredefinedFilter);
+}
+
 const EventsTable = ({ taskData }) => {
-    const [eventPredefinedFilter, setEventPredefinedFilter] = useState([]);
+    const [
+        eventLevelPredefinedFilter,
+        setEventLevelPredefinedFilter,
+    ] = useState([]);
+    const [eventLogPredefinedFilter, setEventLogPredefinedFilter] = useState(
+        []
+    );
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
 
@@ -69,16 +91,16 @@ const EventsTable = ({ taskData }) => {
         fetch('process-metadata.json')
             .then((res) => res.json())
             .then((res) => {
-                const filter = res.eventPredefinedFilter;
-                setEventPredefinedFilter(filter);
-                let newtoFilter = [];
-                filter.forEach((f) => {
-                    if (f.defaultChecked && f.defaultChecked === true) {
-                        newtoFilter.push(...f.filterValue);
-                    }
-                });
-                newtoFilter = Array.from(new Set(newtoFilter));
-                setLogFilter(newtoFilter);
+                loadPredefinedFilter(
+                    res.eventLevelPredefinedFilter,
+                    setEventLevelPredefinedFilter,
+                    setLevelFilter
+                );
+                loadPredefinedFilter(
+                    res.eventLogPredefinedFilter,
+                    setEventLogPredefinedFilter,
+                    setLogFilter
+                );
             });
     }, []);
 
@@ -92,7 +114,7 @@ const EventsTable = ({ taskData }) => {
 
     const isCurrentLogFilterAddErrors = (currentLogFilter) => {
         let result = false;
-        eventPredefinedFilter.forEach((f) => {
+        eventLogPredefinedFilter.forEach((f) => {
             if (
                 f.addErrors === true &&
                 JSON.stringify(currentLogFilter).includes(
@@ -142,6 +164,7 @@ const EventsTable = ({ taskData }) => {
                                 filterHint="filterOnLevel"
                                 handleChange={handleLevelChange}
                                 currentFilter={levelFilter}
+                                predefinedValues={eventLevelPredefinedFilter}
                             />
                         </TableCell>
                         <TableCell style={{ width: '12%' }}>
@@ -154,7 +177,7 @@ const EventsTable = ({ taskData }) => {
                                 handleChange={handleLogChange}
                                 currentFilter={logFilter}
                                 manual={true}
-                                predefinedValues={eventPredefinedFilter}
+                                predefinedValues={eventLogPredefinedFilter}
                             />
                         </TableCell>
                     </TableRow>
