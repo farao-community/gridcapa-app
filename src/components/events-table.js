@@ -60,6 +60,22 @@ function inputDataRow(processEvent) {
     );
 }
 
+function loadPredefinedFilter(
+    predefinedFilter,
+    setPredefinedFilter,
+    setActiveFilter
+) {
+    setPredefinedFilter(predefinedFilter);
+    let activePredefinedFilter = [];
+    predefinedFilter.forEach((f) => {
+        if (f.defaultChecked && f.defaultChecked === true) {
+            activePredefinedFilter.push(...f.filterValue);
+        }
+    });
+    activePredefinedFilter = Array.from(new Set(activePredefinedFilter));
+    setActiveFilter(activePredefinedFilter);
+}
+
 const EventsTable = ({ taskData }) => {
     const [
         eventLevelPredefinedFilter,
@@ -70,22 +86,6 @@ const EventsTable = ({ taskData }) => {
     );
     const [levelFilter, setLevelFilter] = useState([]);
     const [logFilter, setLogFilter] = useState([]);
-
-    const loadPredefinedFilter = (
-        predefinedFilter,
-        setPredefinedFilter,
-        setActiveFilter
-    ) => {
-        setPredefinedFilter(predefinedFilter);
-        let activePredefinedFilter = [];
-        predefinedFilter.forEach((f) => {
-            if (f.defaultChecked && f.defaultChecked === true) {
-                activePredefinedFilter.push(...f.filterValue);
-            }
-        });
-        activePredefinedFilter = Array.from(new Set(activePredefinedFilter));
-        setActiveFilter(activePredefinedFilter);
-    };
 
     useEffect(() => {
         fetch('process-metadata.json')
