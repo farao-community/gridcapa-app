@@ -8,7 +8,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
             - name: Install dependencies
               run: npm install
@@ -42,10 +42,10 @@ jobs:
               if: github.ref == 'refs/heads/master'
               uses: elgohr/Publish-Docker-Github-Action@master
               with:
-                name: farao/gridcapa-app
+                name: farao/gridcapa-app-auth
                 username: farao
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
-                tags: "latest-auth"
+                tags: "latest, latest-auth"
 
             - name: Broadcast update event
               if: github.ref == 'refs/heads/master'
