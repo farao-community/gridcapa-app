@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
@@ -42,9 +42,8 @@ function displayStopButton(taskData) {
     ) : null;
 }
 
-function displayManualExportButton(taskData) {
-    const isManualExportEnabled = true; // TODO use a parameter from process-metadata
-    return taskData !== null && isManualExportEnabled ? (
+function displayManualExportButton(taskData, manualExportEnabled) {
+    return taskData !== null && manualExportEnabled ? (
         <ManualExportButton
             status={taskData.status}
             timestamp={taskData.timestamp}
@@ -63,6 +62,21 @@ const TableHeader = ({
     const currentTime = dateFormat(timestamp, 'HH:MM');
     const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
     const tableHeaderName = (processName || '') + ' Supervisor';
+    const [manualExportEnabled, setManualExportEnabled] = useState([]);
+
+    useEffect(() => {
+        async function getManualExportEnabled() {
+            let filter = await fetch('process-metadata.json')
+                .then((res) => {
+                    return res.json();
+                })
+                .then((res) => {
+                    return res.manualExportEnabled || false;
+                });
+            setManualExportEnabled(filter);
+        }
+        getManualExportEnabled();
+    }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleDateChange = useCallback(
         (event) => {
@@ -139,7 +153,7 @@ const TableHeader = ({
             <Grid item xs={2}>
                 {displayRunButton(taskData)}
                 {displayStopButton(taskData)}
-                {displayManualExportButton(taskData)}
+                {displayManualExportButton(taskData, manualExportEnabled)}
             </Grid>
         </Grid>
     );
