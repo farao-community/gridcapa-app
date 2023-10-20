@@ -14,6 +14,7 @@ import React, { useCallback } from 'react';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
+import { ManualExportButton } from './manual-export-button';
 
 const styles = {
     container: (theme) => ({
@@ -38,6 +39,16 @@ function displayRunButton(taskData) {
 function displayStopButton(taskData) {
     return taskData !== null ? (
         <StopButton status={taskData.status} timestamp={taskData.timestamp} />
+    ) : null;
+}
+
+function displayManualExportButton(taskData) {
+    const isManualExportEnabled = true; // TODO use a parameter from process-metadata
+    return taskData !== null && isManualExportEnabled ? (
+        <ManualExportButton
+            status={taskData.status}
+            timestamp={taskData.timestamp}
+        />
     ) : null;
 }
 
@@ -128,6 +139,7 @@ const TableHeader = ({
             <Grid item xs={2}>
                 {displayRunButton(taskData)}
                 {displayStopButton(taskData)}
+                {displayManualExportButton(taskData)}
             </Grid>
         </Grid>
     );

@@ -29,7 +29,7 @@
   "RangeError": "Max range is 48h",
   "download": "Download",
   "cancel": "Cancel",
-  "stopButtonLabel": "Yes",
+  "yes": "Yes",
   "upload": "Upload",
   "runBusinessDate": "Run business date",
   "minioDiskUsage": "Minio Disk Usage "

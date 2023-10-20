@@ -306,6 +306,18 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     ).then();
 }
 
+export function fetchTaskManagerManualExport(taskTimestamp) {
+    console.log('Requesting export for task: ' + taskTimestamp);
+    const requestOptions = {
+        method: 'POST',
+    };
+
+    backendFetch(
+        getBaseUrl() + PREFIX_TASK_QUERIES + '/' + taskTimestamp + '/export',
+        requestOptions
+    ).then();
+}
+
 export function getBaseUrl() {
     let baseUrl = document.baseURI;
     if (process.env.REACT_APP_PROFILE === 'development') {
