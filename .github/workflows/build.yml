@@ -45,7 +45,7 @@ jobs:
                 name: farao/gridcapa-app-auth
                 username: farao
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
-                tags: "latest, latest-auth"
+                tags: "latest"
 
             - name: Broadcast update event
               if: github.ref == 'refs/heads/master'

@@ -60,7 +60,7 @@ jobs:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "v${{ github.event.inputs.releaseVersion }}, v${{ github.event.inputs.releaseVersion }}-no-auth"
+          tags: "v${{ github.event.inputs.releaseVersion }}"
 
       - name: Build with authentication
         run: npm run-script build
@@ -73,4 +73,4 @@ jobs:
           name: farao/gridcapa-app-auth
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "v${{ github.event.inputs.releaseVersion }}, v${{ github.event.inputs.releaseVersion }}-auth"
+          tags: "v${{ github.event.inputs.releaseVersion }}"
