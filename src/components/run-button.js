@@ -23,6 +23,13 @@ function isRunning(taskStatus) {
     return taskStatus && (taskStatus === 'RUNNING' || taskStatus === 'PENDING');
 }
 
+const style = {
+    runButtonStyle: {
+        marginLeft: '3px',
+        marginRight: '3px',
+    },
+};
+
 export function RunButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
 
@@ -35,13 +42,6 @@ export function RunButton({ status, timestamp }) {
         [timestamp]
     );
 
-    const style = {
-        exportButtonStyle: {
-            marginLeft: '3px',
-            marginRight: '3px',
-        },
-    };
-
     return (
         <>
             {!isRunning(status) && (
@@ -52,7 +52,7 @@ export function RunButton({ status, timestamp }) {
                     size="large"
                     disabled={disabled || isDisabled(status)}
                     onClick={launchTask}
-                    sx={style.exportButtonStyle}
+                    sx={style.runButtonStyle}
                 >
                     <PlayArrow />
                 </Button>

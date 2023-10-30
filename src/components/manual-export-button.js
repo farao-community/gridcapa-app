@@ -21,6 +21,13 @@ function isDisabled(taskStatus) {
     return taskStatus !== 'SUCCESS' && taskStatus !== 'ERROR';
 }
 
+const style = {
+    exportButtonStyle: {
+        marginLeft: '3px',
+        marginRight: '3px',
+    },
+};
+
 export function ManualExportButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
     const [open, setOpen] = useState(false);
@@ -42,13 +49,6 @@ export function ManualExportButton({ status, timestamp }) {
         },
         [timestamp]
     );
-
-    const style = {
-        exportButtonStyle: {
-            marginLeft: '3px',
-            marginRight: '3px',
-        },
-    };
 
     return (
         <>

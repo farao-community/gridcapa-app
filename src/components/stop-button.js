@@ -21,6 +21,13 @@ function isDisabled(taskStatus) {
     return taskStatus !== 'RUNNING';
 }
 
+const style = {
+    stopButtonStyle: {
+        marginLeft: '3px',
+        marginRight: '3px',
+    },
+};
+
 export function StopButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
     const [open, setOpen] = React.useState(false);
@@ -43,13 +50,6 @@ export function StopButton({ status, timestamp }) {
         [timestamp]
     );
 
-    const style = {
-        exportButtonStyle: {
-            marginLeft: '3px',
-            marginRight: '3px',
-        },
-    };
-
     return (
         <>
             <Button
@@ -59,7 +59,7 @@ export function StopButton({ status, timestamp }) {
                 variant="contained"
                 disabled={disabled || isDisabled(status)}
                 onClick={handleClickOpen}
-                sx={style.exportButtonStyle}
+                sx={style.stopButtonStyle}
             >
                 <Stop />
             </Button>

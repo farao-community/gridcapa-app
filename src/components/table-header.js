@@ -62,18 +62,17 @@ const TableHeader = ({
     const currentTime = dateFormat(timestamp, 'HH:MM');
     const outlined = taskStatus === 'RUNNING' ? 'outlined' : 'filled';
     const tableHeaderName = (processName || '') + ' Supervisor';
-    const [manualExportEnabled, setManualExportEnabled] = useState([]);
+    const [manualExportEnabled, setManualExportEnabled] = useState(false);
 
     useEffect(() => {
         async function getManualExportEnabled() {
-            let data = {};
             try {
                 const response = await fetch('process-metadata.json');
-                data = await response.json();
+                const data = await response.json();
+                setManualExportEnabled(data.manualExportEnabled || false);
             } catch (error) {
                 console.error('An error has occurred:', error);
             }
-            setManualExportEnabled(data.manualExportEnabled || false);
         }
         getManualExportEnabled();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
