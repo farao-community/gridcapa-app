@@ -35,8 +35,15 @@ export function RunButton({ status, timestamp }) {
         [timestamp]
     );
 
+    const style = {
+        exportButtonStyle: {
+            marginLeft: '3px',
+            marginRight: '3px',
+        },
+    };
+
     return (
-        <span>
+        <>
             {!isRunning(status) && (
                 <Button
                     color="primary"
@@ -45,7 +52,7 @@ export function RunButton({ status, timestamp }) {
                     size="large"
                     disabled={disabled || isDisabled(status)}
                     onClick={launchTask}
-                    style={{ marginLeft: '3px', marginRight: '3px' }}
+                    sx={style.exportButtonStyle}
                 >
                     <PlayArrow />
                 </Button>
@@ -56,6 +63,6 @@ export function RunButton({ status, timestamp }) {
                     style={{ marginTop: '5px', marginLeft: '22px' }}
                 />
             )}
-        </span>
+        </>
     );
 }

@@ -66,14 +66,14 @@ const TableHeader = ({
 
     useEffect(() => {
         async function getManualExportEnabled() {
-            let filter = await fetch('process-metadata.json')
-                .then((res) => {
-                    return res.json();
-                })
-                .then((res) => {
-                    return res.manualExportEnabled || false;
-                });
-            setManualExportEnabled(filter);
+            let data = {};
+            try {
+                const response = await fetch('process-metadata.json');
+                data = await response.json();
+            } catch (error) {
+                console.error('An error has occurred:', error);
+            }
+            setManualExportEnabled(data.manualExportEnabled || false);
         }
         getManualExportEnabled();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html

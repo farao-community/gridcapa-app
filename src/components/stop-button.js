@@ -36,15 +36,22 @@ export function StopButton({ status, timestamp }) {
     const stopTask = useCallback(
         async function () {
             setDisabled(true);
+            handleClose();
             await fetchJobLauncherToInterruptTask(timestamp);
             setDisabled(false);
-            handleClose();
         },
         [timestamp]
     );
 
+    const style = {
+        exportButtonStyle: {
+            marginLeft: '3px',
+            marginRight: '3px',
+        },
+    };
+
     return (
-        <span>
+        <>
             <Button
                 color="primary"
                 data-test="stop-button"
@@ -52,7 +59,7 @@ export function StopButton({ status, timestamp }) {
                 variant="contained"
                 disabled={disabled || isDisabled(status)}
                 onClick={handleClickOpen}
-                style={{ marginLeft: '3px', marginRight: '3px' }}
+                sx={style.exportButtonStyle}
             >
                 <Stop />
             </Button>
@@ -79,6 +86,6 @@ export function StopButton({ status, timestamp }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </span>
+        </>
     );
 }

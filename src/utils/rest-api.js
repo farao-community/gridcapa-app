@@ -315,7 +315,7 @@ export function fetchTaskManagerManualExport(taskTimestamp) {
     backendFetch(
         getBaseUrl() + PREFIX_TASK_QUERIES + '/' + taskTimestamp + '/export',
         requestOptions
-    ).then();
+    );
 }
 
 export function getBaseUrl() {

@@ -23,7 +23,7 @@ function isDisabled(taskStatus) {
 
 export function ManualExportButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -36,15 +36,22 @@ export function ManualExportButton({ status, timestamp }) {
     const manualExportTask = useCallback(
         async function () {
             setDisabled(true);
+            handleClose();
             await fetchTaskManagerManualExport(timestamp);
             setDisabled(false);
-            handleClose();
         },
         [timestamp]
     );
 
+    const style = {
+        exportButtonStyle: {
+            marginLeft: '3px',
+            marginRight: '3px',
+        },
+    };
+
     return (
-        <span>
+        <>
             <Button
                 color="primary"
                 data-test="mannual-export-button"
@@ -52,7 +59,7 @@ export function ManualExportButton({ status, timestamp }) {
                 variant="contained"
                 disabled={disabled || isDisabled(status)}
                 onClick={handleClickOpen}
-                style={{ marginLeft: '3px', marginRight: '3px' }}
+                sx={style.exportButtonStyle}
             >
                 <ImportExport />
             </Button>
@@ -79,6 +86,6 @@ export function ManualExportButton({ status, timestamp }) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </span>
+        </>
     );
 }
