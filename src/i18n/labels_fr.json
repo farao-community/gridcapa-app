@@ -29,7 +29,7 @@
   "RangeError": "Période maximale de 48h",
   "download": "Télécharger",
   "cancel": "Annuler",
-  "stopButtonLabel": "Oui",
+  "yes": "Oui",
   "upload": "Envoyer",
   "runBusinessDate": "Lancer tous les calculs",
   "minioDiskUsage": "Utilisation Disque Minio "
