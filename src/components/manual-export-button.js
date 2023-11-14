@@ -18,11 +18,7 @@ import { fetchTaskManagerManualExport } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';
 
 function isDisabled(taskStatus) {
-    return (
-        taskStatus !== 'SUCCESS' &&
-        taskStatus !== 'ERROR' &&
-        taskStatus !== 'INTERRUPTED'
-    );
+    return taskStatus !== 'SUCCESS' && taskStatus !== 'ERROR';
 }
 
 const style = {
