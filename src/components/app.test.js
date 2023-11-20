@@ -19,7 +19,7 @@ import {
     ThemeProvider,
     StyledEngineProvider,
 } from '@mui/material/styles';
-import { SnackbarProvider } from '@gridsuite/commons-ui';
+import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
 
 let container = null;
@@ -49,7 +49,9 @@ it('renders', async () => {
                             <ThemeProvider theme={createTheme({})}>
                                 <SnackbarProvider hideIconVariant={false}>
                                     <CssBaseline />
-                                    <App />
+                                    <CardErrorBoundary>
+                                        <App />
+                                    </CardErrorBoundary>
                                 </SnackbarProvider>
                             </ThemeProvider>
                         </StyledEngineProvider>
