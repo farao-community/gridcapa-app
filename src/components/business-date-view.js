@@ -24,7 +24,7 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
             <Grid item>
                 <GlobalViewCore
                     timestampMin={refTimestamp.getTime()}
-                    timestampMax={refTimestamp.getTime() + 24 * 60 * 60 * 1000}
+                    timestampMax={refTimestamp.getTime() + 25 * 60 * 60 * 1000}
                     timestampStep={'01:00'}
                 />
             </Grid>
