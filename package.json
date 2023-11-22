@@ -6,7 +6,7 @@
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
-        "@gridsuite/commons-ui": "^0.35.1",
+        "@gridsuite/commons-ui": "^0.39.0",
         "@mui/icons-material": "^5.11.9",
         "@mui/lab": "^5.0.0-alpha.120",
         "@mui/material": "^5.11.9",
@@ -14,7 +14,7 @@
         "core-js": "^3.6.4",
         "dateformat": "^5.0.1",
         "http-proxy-middleware": "^1.0.3",
-        "notistack": "^2.0.8",
+        "notistack": "^3.0.1",
         "prop-types": "15.7.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -28,6 +28,11 @@
         "redux": "^4.0.5",
         "typeface-roboto": "0.0.75"
     },
+    "overrides": {
+        "react-scripts": {
+          "typescript": "^5"
+        }
+      },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
@@ -39,7 +44,7 @@
             "\\.svg": "<rootDir>/src/__mocks__/svgrMock.js"
         },
         "transformIgnorePatterns": [
-            "node_modules/(?!dateformat)"
+            "node_modules/(?!dateformat|@gridsuite/commons-ui)"
         ]
     },
     "eslintConfig": {
@@ -53,7 +58,7 @@
     },
     "browserslist": {
         "production": [
-            ">0.2%",
+            ">0.2% and supports es6-class",
             "not dead",
             "not op_mini all"
         ],
