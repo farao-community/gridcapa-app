@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { Button, Grid, TableCell, TableRow } from '@mui/material';
-import { gridcapaFormatDate, sha256 } from './commons';
+import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import FileSummary from './file-summary';

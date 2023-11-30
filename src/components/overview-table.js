@@ -16,7 +16,7 @@ import {
     TableRow,
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
-import { gridcapaFormatDate } from './commons';
+import { gridcapaFormatDate } from '../utils/commons';
 import DownloadButton from './download-button';
 import UploadButton from './upload-button';
 

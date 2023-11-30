@@ -6,14 +6,25 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
-import { setTimestampWithDaysIncrement } from './commons';
 import { fetchMinioStorageData } from '../utils/rest-api';
+import {
+    getInitialTimestampToSet,
+    getDateString,
+    getTimeString,
+} from '../utils/date-time-utils';
+import {
+    TIMESTAMP_VIEW,
+    BUSINESSDATE_VIEW,
+    GLOBAL_VIEW,
+    getInitialViewToSet,
+} from '../utils/view-utils';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -31,31 +42,51 @@ function TabPanel(props) {
     );
 }
 
-const TODAY_TIMESTAMP = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate(),
-    0,
-    30
-);
-
 const minioProgressStyle = {
     height: '8px',
 };
 
+function updateUrlWithTimestampAndView(navigate, timestamp, view) {
+    let newUrl = '/';
+
+    if (view !== GLOBAL_VIEW) {
+        const newDate = getDateString(timestamp);
+        newUrl = '/date/' + newDate;
+
+        if (view === TIMESTAMP_VIEW) {
+            const newTime = getTimeString(timestamp);
+            newUrl += '/time/' + newTime;
+        }
+    }
+
+    navigate(newUrl, {
+        state: { timestamp: timestamp, view: view },
+    });
+}
+
 const GridCapaMain = () => {
-    const [view, setView] = useState(1);
+    const { dateParam, timeParam } = useParams();
+    const [view, setView] = useState(BUSINESSDATE_VIEW);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
+    const navigate = useNavigate();
 
-    const onTimestampChange = useCallback((newTimestamp) => {
-        setTimestamp(new Date(newTimestamp));
-    }, []);
+    const onTimestampChange = useCallback(
+        (newTimestamp) => {
+            setTimestamp(new Date(newTimestamp));
+            updateUrlWithTimestampAndView(navigate, newTimestamp, view);
+        },
+        [navigate, view]
+    );
 
-    const handleViewChange = useCallback((_event, newValue) => {
-        setView(newValue);
-    }, []);
+    const handleViewChange = useCallback(
+        (_event, newValue) => {
+            setView(newValue);
+            updateUrlWithTimestampAndView(navigate, timestamp, newValue);
+        },
+        [navigate, timestamp]
+    );
 
     useEffect(() => {
         if (processName === null) {
@@ -64,20 +95,18 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
-                    const daysToIncrement = Number.isInteger(
+
+                    const timestampToSet = getInitialTimestampToSet(
+                        dateParam,
+                        timeParam,
                         res.dayIncrementInDate
-                    )
-                        ? res.dayIncrementInDate
-                        : 0;
-                    setTimestamp(
-                        setTimestampWithDaysIncrement(
-                            TODAY_TIMESTAMP,
-                            daysToIncrement
-                        )
                     );
+                    setTimestamp(timestampToSet);
+
+                    setView(getInitialViewToSet(dateParam, timeParam, view));
                 });
         }
-    }, [processName]);
+    }, [processName, dateParam, timeParam, view]);
 
     useEffect(() => {
         fetchMinioStorageData().then((res) => {
@@ -130,21 +159,21 @@ const GridCapaMain = () => {
                     </div>
                 </Grid>
                 <Grid item xs={10}>
-                    <TabPanel value={view} index={0}>
+                    <TabPanel value={view} index={TIMESTAMP_VIEW}>
                         <ProcessTimestampView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={1}>
+                    <TabPanel value={view} index={BUSINESSDATE_VIEW}>
                         <BusinessDateView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={2}>
+                    <TabPanel value={view} index={GLOBAL_VIEW}>
                         <RunningTasksView processName={processName} />
                     </TabPanel>
                 </Grid>

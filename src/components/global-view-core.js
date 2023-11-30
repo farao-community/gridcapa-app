@@ -33,7 +33,7 @@ import {
     getWebSocketUrl,
 } from '../utils/rest-api';
 import FilterMenu from './filter-menu';
-import { gridcapaFormatDate } from './commons';
+import { gridcapaFormatDate } from '../utils/commons';
 import GlobalViewCoreRow from './global-view-core-row';
 import SockJsClient from 'react-stomp';
 
