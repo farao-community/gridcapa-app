@@ -20,9 +20,9 @@ import {
     getTimeString,
 } from '../utils/date-time-utils';
 import {
-    TIMESTAMP_VIEW,
-    BUSINESSDATE_VIEW,
-    GLOBAL_VIEW,
+    PROCESS_TIMESTAMP_VIEW,
+    BUSINESS_DATE_VIEW,
+    RUNNING_TASKS_VIEW,
     getInitialViewToSet,
 } from '../utils/view-utils';
 
@@ -49,13 +49,11 @@ const minioProgressStyle = {
 function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     let newUrl = '/';
 
-    if (view !== GLOBAL_VIEW) {
-        const newDate = getDateString(timestamp);
-        newUrl = '/date/' + newDate;
+    if (view !== RUNNING_TASKS_VIEW) {
+        newUrl = '/date/' + getDateString(timestamp);
 
-        if (view === TIMESTAMP_VIEW) {
-            const newTime = getTimeString(timestamp);
-            newUrl += '/time/' + newTime;
+        if (view === PROCESS_TIMESTAMP_VIEW) {
+            newUrl += '/time/' + getTimeString(timestamp);
         }
     }
 
@@ -66,7 +64,7 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
 
 const GridCapaMain = () => {
     const { dateParam, timeParam } = useParams();
-    const [view, setView] = useState(BUSINESSDATE_VIEW);
+    const [view, setView] = useState(BUSINESS_DATE_VIEW);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
@@ -159,21 +157,21 @@ const GridCapaMain = () => {
                     </div>
                 </Grid>
                 <Grid item xs={10}>
-                    <TabPanel value={view} index={TIMESTAMP_VIEW}>
+                    <TabPanel value={view} index={PROCESS_TIMESTAMP_VIEW}>
                         <ProcessTimestampView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={BUSINESSDATE_VIEW}>
+                    <TabPanel value={view} index={BUSINESS_DATE_VIEW}>
                         <BusinessDateView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={GLOBAL_VIEW}>
+                    <TabPanel value={view} index={RUNNING_TASKS_VIEW}>
                         <RunningTasksView processName={processName} />
                     </TabPanel>
                 </Grid>

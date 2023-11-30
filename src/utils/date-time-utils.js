@@ -21,7 +21,7 @@ const TODAY_TIMESTAMP = new Date(
 function getTimeFromTimeParam(timeParam) {
     if (timeParam) {
         const timeMatch = timeParam.match(TIME_REGEX);
-        if (timeMatch !== null) {
+        if (timeMatch) {
             return timeMatch[0];
         }
     }
@@ -31,7 +31,7 @@ function getTimeFromTimeParam(timeParam) {
 export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
     if (dateParam) {
         const dateMatch = dateParam.match(DATE_REGEX);
-        if (dateMatch !== null) {
+        if (dateMatch) {
             let dateToSet = dateMatch[0];
             let timeToSet = getTimeFromTimeParam(timeParam);
             return new Date(dateToSet + 'T' + timeToSet + 'Z');
