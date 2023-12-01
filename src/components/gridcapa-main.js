@@ -58,7 +58,7 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     }
 
     navigate(newUrl, {
-        state: { timestamp: timestamp, view: view },
+        replace: true,
     });
 }
 
