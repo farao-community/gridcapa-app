@@ -7,16 +7,16 @@
 
 import { DATE_REGEX, TIME_REGEX } from '../utils/date-time-utils';
 
-export const TIMESTAMP_VIEW = 0;
-export const BUSINESSDATE_VIEW = 1;
-export const GLOBAL_VIEW = 2;
+export const PROCESS_TIMESTAMP_VIEW = 0;
+export const BUSINESS_DATE_VIEW = 1;
+export const RUNNING_TASKS_VIEW = 2;
 
 export function getInitialViewToSet(dateParam, timeParam, defaultView) {
     if (dateParam?.match(DATE_REGEX)) {
         if (timeParam?.match(TIME_REGEX)) {
-            return TIMESTAMP_VIEW;
+            return PROCESS_TIMESTAMP_VIEW;
         }
-        return BUSINESSDATE_VIEW;
+        return BUSINESS_DATE_VIEW;
     }
     return defaultView;
 }
