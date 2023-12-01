@@ -49,12 +49,16 @@ const minioProgressStyle = {
 function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     let newUrl = '/';
 
-    if (view !== RUNNING_TASKS_VIEW) {
-        newUrl = '/date/' + getDateString(timestamp);
-
-        if (view === PROCESS_TIMESTAMP_VIEW) {
-            newUrl += '/time/' + getTimeString(timestamp);
-        }
+    if (view === BUSINESS_DATE_VIEW) {
+        const noonTimestamp = new Date(timestamp);
+        noonTimestamp.setHours(12);
+        newUrl = '/date/' + getDateString(noonTimestamp);
+    } else if (view === PROCESS_TIMESTAMP_VIEW) {
+        newUrl =
+            '/utcDate/' +
+            getDateString(timestamp) +
+            '/utcTime/' +
+            getTimeString(timestamp);
     }
 
     navigate(newUrl, {

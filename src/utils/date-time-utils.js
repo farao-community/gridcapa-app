@@ -25,16 +25,25 @@ function getTimeFromTimeParam(timeParam) {
             return timeMatch[0];
         }
     }
-    return '00:30';
+    return null;
 }
 
 export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
     if (dateParam) {
         const dateMatch = dateParam.match(DATE_REGEX);
         if (dateMatch) {
-            let dateToSet = dateMatch[0];
             let timeToSet = getTimeFromTimeParam(timeParam);
-            return new Date(dateToSet + 'T' + timeToSet + 'Z');
+            if (timeToSet) {
+                return new Date(dateMatch[0] + 'T' + timeToSet + 'Z');
+            } else {
+                let dateToSet = new Date(
+                    dateMatch[1],
+                    dateMatch[2],
+                    dateMatch[3]
+                );
+                dateToSet.setMinutes(30);
+                return dateToSet;
+            }
         }
     }
 

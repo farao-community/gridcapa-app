@@ -203,7 +203,7 @@ const App = () => {
                             }
                         />
                         <Route
-                            path="/date/:dateParam/time/:timeParam"
+                            path="/utcDate/:dateParam/utcTime/:timeParam"
                             element={
                                 <Box mt={1}>
                                     <GridCapaMain />
