@@ -50,6 +50,9 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     let newUrl = '/';
 
     if (view === BUSINESS_DATE_VIEW) {
+        // Because the `timestamp` parameter is in UTC timezone and the HMI is in local timezone,
+        // we need to set time to noon instead of midnight in order to be sure that the date displayed
+        // in the Business View is the same as the one given in parameter.
         const noonTimestamp = new Date(timestamp);
         noonTimestamp.setHours(12);
         newUrl = '/date/' + getDateString(noonTimestamp);
