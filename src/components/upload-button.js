@@ -7,43 +7,22 @@
 
 import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
-import { fetchFileToBackend, getBaseUrl } from '../utils/rest-api';
+import { fetchFileToBackend } from '../utils/rest-api';
 
-// File types to upload files on FTP
-const type = {
-    CGM: 'cgms',
-    CRAC: 'cracs',
-    GLSK: 'glsks',
-    'NTC-RED': 'ntcreds',
-    NTC: 'ntc',
-    'TARGET-CH': 'targetchs',
-    'USER-CONFIG': 'user-configs',
-    CBCORA: 'cbcoras',
-    REFPROG: 'refprogs',
-    'STUDY-POINTS': 'studypoints',
-    'NTC2-AT': 'ntc2-at',
-    'NTC2-CH': 'ntc2-ch',
-    'NTC2-FR': 'ntc2-fr',
-    'NTC2-SI': 'ntc2-si',
-    VULCANUS: 'vulcanus',
-};
-
-function sendFileToback(event, processEvent) {
-    const url = new URL(getBaseUrl());
-    const file = event.path[0].files[0];
+function sendFileToback(event, processEvent, timestamp) {
+    const file = event.target.files[0];
     const formData = new FormData();
-    let dest = url.pathname + '/' + type[processEvent.fileType];
     formData.append('file', file);
     formData.append('fileName', file.name);
-    formData.append('directory', dest);
-    fetchFileToBackend(formData);
+    formData.append('fileType', processEvent.fileType);
+    fetchFileToBackend(timestamp, formData);
 }
 
-function downloadFile(processFile) {
+function downloadFile(processFile, timestamp) {
     const chooseFile = document.createElement('input');
     chooseFile.type = 'file';
     chooseFile.addEventListener('change', (event) => {
-        sendFileToback(event, processFile);
+        sendFileToback(event, processFile, timestamp);
     });
     chooseFile.click();
     console.log(chooseFile);
@@ -55,7 +34,7 @@ const UploadButton = ({ processFile, timestamp }) => {
             data-test={
                 'upload-' + processFile.fileType + '-' + Date.parse(timestamp)
             }
-            onClick={() => downloadFile(processFile)}
+            onClick={() => downloadFile(processFile, timestamp)}
         >
             <Publish />
         </Button>
