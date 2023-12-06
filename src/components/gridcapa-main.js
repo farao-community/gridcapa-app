@@ -19,12 +19,7 @@ import {
     getDateString,
     getTimeString,
 } from '../utils/date-time-utils';
-import {
-    PROCESS_TIMESTAMP_VIEW,
-    BUSINESS_DATE_VIEW,
-    RUNNING_TASKS_VIEW,
-    getInitialViewToSet,
-} from '../utils/view-utils';
+import { Views, getInitialViewToSet } from '../utils/view-utils';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -48,20 +43,23 @@ const minioProgressStyle = {
 
 function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     let newUrl = '/';
-
-    if (view === BUSINESS_DATE_VIEW) {
-        // Because the `timestamp` parameter is in UTC timezone and the HMI is in local timezone,
-        // we need to set time to noon instead of midnight in order to be sure that the date displayed
-        // in the Business View is the same as the one given in parameter.
-        const noonTimestamp = new Date(timestamp);
-        noonTimestamp.setHours(12);
-        newUrl = '/date/' + getDateString(noonTimestamp);
-    } else if (view === PROCESS_TIMESTAMP_VIEW) {
-        newUrl =
-            '/utcDate/' +
-            getDateString(timestamp) +
-            '/utcTime/' +
-            getTimeString(timestamp);
+    switch (view) {
+        case Views.BUSINESS_DATE_VIEW:
+            // Because the `timestamp` parameter is in UTC timezone and the HMI is in local timezone,
+            // we need to set time to noon instead of midnight in order to be sure that the date displayed
+            // in the Business View is the same as the one given in parameter.
+            const noonTimestamp = new Date(timestamp);
+            noonTimestamp.setHours(12);
+            const date = getDateString(noonTimestamp);
+            newUrl = `/date/${date}`;
+            break;
+        case Views.PROCESS_TIMESTAMP_VIEW:
+            const utcDate = getDateString(timestamp);
+            const utcTime = getTimeString(timestamp);
+            newUrl = `/utcDate/${utcDate}/utcTime/${utcTime}`;
+            break;
+        default:
+            break;
     }
 
     navigate(newUrl, {
@@ -71,7 +69,7 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
 
 const GridCapaMain = () => {
     const { dateParam, timeParam } = useParams();
-    const [view, setView] = useState(BUSINESS_DATE_VIEW);
+    const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
@@ -164,21 +162,21 @@ const GridCapaMain = () => {
                     </div>
                 </Grid>
                 <Grid item xs={10}>
-                    <TabPanel value={view} index={PROCESS_TIMESTAMP_VIEW}>
+                    <TabPanel value={view} index={Views.PROCESS_TIMESTAMP_VIEW}>
                         <ProcessTimestampView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={BUSINESS_DATE_VIEW}>
+                    <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
                         <BusinessDateView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={RUNNING_TASKS_VIEW}>
+                    <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
                         <RunningTasksView processName={processName} />
                     </TabPanel>
                 </Grid>

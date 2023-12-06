@@ -19,13 +19,8 @@ const TODAY_TIMESTAMP = new Date(
 );
 
 function getTimeFromTimeParam(timeParam) {
-    if (timeParam) {
-        const timeMatch = timeParam.match(TIME_REGEX);
-        if (timeMatch) {
-            return timeMatch[0];
-        }
-    }
-    return null;
+    const timeMatch = timeParam?.match(TIME_REGEX);
+    return timeMatch ? timeMatch[0] : null;
 }
 
 export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
@@ -52,27 +47,28 @@ export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
 }
 
 function twoDigits(value) {
+    // For ISO 8601 Date format, the date and month should be two-digit values.
+    // As JS Date methods return single-digit date and month (for values <10),
+    // we need to add a '0' if the value is single digit.
     return ('0' + value).slice(-2);
 }
 
-function twoDigitsMonth(value) {
+function getISO8610Month(value) {
+    // For ISO 8601 Date format, the month should be a two-digit value between 1 (Jan) and 12 (Dec).
+    // As JS' Date methods return single-digit months indexed from 0 (Jan) to 11 (Dec),
+    // we need to increment the month value and add a '0' if the value is single digit.
     return twoDigits(Number.parseInt(value) + 1);
 }
 
 export function getDateString(timestamp) {
-    return (
-        timestamp.getUTCFullYear() +
-        '-' +
-        twoDigitsMonth(timestamp.getUTCMonth()) +
-        '-' +
-        twoDigits(timestamp.getUTCDate())
-    );
+    const year = timestamp.getUTCFullYear();
+    const month = getISO8610Month(timestamp.getUTCMonth());
+    const date = twoDigits(timestamp.getUTCDate());
+    return `${year}-${month}-${date}`;
 }
 
 export function getTimeString(timestamp) {
-    return (
-        twoDigits(timestamp.getUTCHours()) +
-        ':' +
-        twoDigits(timestamp.getUTCMinutes())
-    );
+    const hours = twoDigits(timestamp.getUTCHours());
+    const minutes = twoDigits(timestamp.getUTCMinutes());
+    return `${hours}:${minutes}`;
 }
