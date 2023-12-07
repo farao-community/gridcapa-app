@@ -211,6 +211,14 @@ const App = () => {
                             }
                         />
                         <Route
+                            path="/global"
+                            element={
+                                <Box mt={1}>
+                                    <GridCapaMain displayGlobal={true} />
+                                </Box>
+                            }
+                        />
+                        <Route
                             path="sign-in-callback"
                             element={
                                 <Navigate
