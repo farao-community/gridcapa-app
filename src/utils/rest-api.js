@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {APP_NAME, getAppName} from './config-params';
-import {store} from '../redux/store';
+import { APP_NAME, getAppName } from './config-params';
+import { store } from '../redux/store';
 import ReconnectingWebSocket from 'reconnecting-websocket';
-import {displayErrorMessageWithSnackbar} from './messages';
+import { displayErrorMessageWithSnackbar } from './messages';
 
 const PREFIX_CONFIG_QUERIES = '/config';
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
@@ -109,7 +109,7 @@ export function fetchAppsAndUrls() {
         .then((res) => {
             return backendFetch(
                 removeTrailingSlash(res.appsMetadataServerUrl) +
-                '/apps-metadata.json'
+                    '/apps-metadata.json'
             ).then((response) => {
                 return response.json();
             });
@@ -122,7 +122,7 @@ export function fetchVersionAndEnvironnement() {
         .then((res) => res.json())
         .then((res) => {
             console.log(res);
-            return removeTrailingSlash(res.appVersionAndEnvironnement)
+            return removeTrailingSlash(res.appVersionAndEnvironnement);
         });
 }
 
@@ -284,7 +284,7 @@ export function updateConfigParameter(name, value) {
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters/${name}?value=` +
         encodeURIComponent(value);
-    return backendFetch(updateParams, {method: 'put'}).then((response) =>
+    return backendFetch(updateParams, { method: 'put' }).then((response) =>
         response.ok
             ? response
             : response.text().then((text) => Promise.reject(text))
@@ -295,7 +295,7 @@ export function fetchJobLauncherPost(taskTimestamp) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
     };
     backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
@@ -307,7 +307,7 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
     };
 
     backendFetch(
