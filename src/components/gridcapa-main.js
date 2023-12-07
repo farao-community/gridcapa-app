@@ -58,6 +58,9 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
             const utcTime = getTimeString(timestamp);
             newUrl = `/utcDate/${utcDate}/utcTime/${utcTime}`;
             break;
+        case Views.RUNNING_TASKS_VIEW:
+            newUrl = `/global`;
+            break;
         default:
             break;
     }
@@ -67,7 +70,7 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     });
 }
 
-const GridCapaMain = () => {
+const GridCapaMain = ({ displayGlobal }) => {
     const { dateParam, timeParam } = useParams();
     const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
     const [processName, setProcessName] = useState(null);
@@ -106,10 +109,13 @@ const GridCapaMain = () => {
                     );
                     setTimestamp(timestampToSet);
 
-                    setView(getInitialViewToSet(dateParam, timeParam, view));
+                    const viewToDisplay = displayGlobal
+                        ? Views.RUNNING_TASKS_VIEW
+                        : getInitialViewToSet(dateParam, timeParam, view);
+                    setView(viewToDisplay);
                 });
         }
-    }, [processName, dateParam, timeParam, view]);
+    }, [processName, displayGlobal, dateParam, timeParam, view]);
 
     useEffect(() => {
         fetchMinioStorageData().then((res) => {
