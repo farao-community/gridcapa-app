@@ -33,7 +33,7 @@ export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
             } else {
                 let dateToSet = new Date(
                     dateMatch[1],
-                    dateMatch[2],
+                    convertMonthFromIsoToJs(dateMatch[2]),
                     dateMatch[3]
                 );
                 dateToSet.setMinutes(30);
@@ -53,16 +53,23 @@ function twoDigits(value) {
     return ('0' + value).slice(-2);
 }
 
-function getISO8610Month(value) {
-    // For ISO 8601 Date format, the month should be a two-digit value between 1 (Jan) and 12 (Dec).
+function convertMonthFromJsToIso(jsMonth) {
+    // For ISO 8601 Date format, the month should be a two-digit value between 01 (Jan) and 12 (Dec).
     // As JS' Date methods return single-digit months indexed from 0 (Jan) to 11 (Dec),
     // we need to increment the month value and add a '0' if the value is single digit.
-    return twoDigits(Number.parseInt(value) + 1);
+    return twoDigits(Number.parseInt(jsMonth) + 1);
+}
+
+function convertMonthFromIsoToJs(isoMonth) {
+    // For JS' Date, the month value should be an Integer from 0 (Jan) to 11 (Dec).
+    // As ISO 8601 Date format represents the month as a two-digit value between 01 (Jan) and 12 (Dec).
+    // we need to decrement the month value and make it an Integer.
+    return Number.parseInt(isoMonth) - 1;
 }
 
 export function getDateString(timestamp) {
     const year = timestamp.getUTCFullYear();
-    const month = getISO8610Month(timestamp.getUTCMonth());
+    const month = convertMonthFromJsToIso(timestamp.getUTCMonth());
     const date = twoDigits(timestamp.getUTCDate());
     return `${year}-${month}-${date}`;
 }
