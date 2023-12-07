@@ -13,24 +13,24 @@ import {
     DialogContent,
     DialogContentText,
 } from '@mui/material';
-import { Stop } from '@mui/icons-material';
-import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
+import { ImportExport } from '@mui/icons-material';
+import { fetchTaskManagerManualExport } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';
 
 function isDisabled(taskStatus) {
-    return taskStatus !== 'RUNNING';
+    return taskStatus !== 'SUCCESS' && taskStatus !== 'ERROR';
 }
 
 const style = {
-    stopButtonStyle: {
+    exportButtonStyle: {
         marginLeft: '3px',
         marginRight: '3px',
     },
 };
 
-export function StopButton({ status, timestamp }) {
+export function ManualExportButton({ status, timestamp }) {
     const [disabled, setDisabled] = useState(false);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -40,11 +40,11 @@ export function StopButton({ status, timestamp }) {
         setOpen(false);
     };
 
-    const stopTask = useCallback(
+    const manualExportTask = useCallback(
         async function () {
             setDisabled(true);
             handleClose();
-            await fetchJobLauncherToInterruptTask(timestamp);
+            await fetchTaskManagerManualExport(timestamp);
             setDisabled(false);
         },
         [timestamp]
@@ -54,24 +54,24 @@ export function StopButton({ status, timestamp }) {
         <>
             <Button
                 color="primary"
-                data-test="stop-button"
+                data-test="mannual-export-button"
                 size="large"
                 variant="contained"
                 disabled={disabled || isDisabled(status)}
                 onClick={handleClickOpen}
-                sx={style.stopButtonStyle}
+                sx={style.exportButtonStyle}
             >
-                <Stop />
+                <ImportExport />
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogContent>
                     <DialogContentText>
-                        <FormattedMessage id="interruptionProcessAlertMessage" />
+                        <FormattedMessage id="manualExportAlertMessage" />
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button
-                        onClick={stopTask}
+                        onClick={manualExportTask}
                         color="primary"
                         data-test="yes-button"
                     >

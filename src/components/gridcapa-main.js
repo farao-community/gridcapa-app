@@ -44,7 +44,7 @@ const minioProgressStyle = {
 };
 
 const GridCapaMain = () => {
-    const [view, setView] = useState(0);
+    const [view, setView] = useState(1);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);

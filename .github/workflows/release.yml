@@ -6,39 +6,22 @@ on:
       releaseVersion:
         description: 'Release version'
         required: true
+      nextVersion:
+        description: 'Next version'
+        required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref_name, 'hotfix')
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Create release branch
-        uses: peterjgrainger/action-create-branch@v2.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-
-      - name: Setup Git config
-        run: |
-          git config --global user.email "joris.mancini@rte-france.com"
-          git config --global user.name "Joris Mancini"
 
       - name: Change version to release version
         uses: reedyuk/npm-version@1.1.1
         with:
           version: ${{ github.event.inputs.releaseVersion }}
-          git-tag-version: 'true'
-
-      - name: Create release pull request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          base: master
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          delete-branch: true
 
       - name: Install dependencies
         run: npm install
@@ -54,13 +37,21 @@ jobs:
       - name: Run post build tests
         run: npm run-script test
 
+      - name: Commit and tag release version
+        uses: stefanzweifel/git-auto-commit-action@master
+        with:
+          branch: release-v${{ github.event.inputs.releaseVersion }}
+          create_branch: true
+          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
+          tagging_message: v${{ github.event.inputs.releaseVersion }}
+
       - name: Build and publish Docker image without authentication
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: farao/gridcapa-app
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "v${{ github.event.inputs.releaseVersion }}"
+          tags: v${{ github.event.inputs.releaseVersion }}
 
       - name: Build with authentication
         run: npm run-script build
@@ -68,9 +59,38 @@ jobs:
           REACT_APP_USE_AUTHENTICATION: true
 
       - name: Build and publish Docker image with authentication
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: farao/gridcapa-app-auth
           username: farao
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: "v${{ github.event.inputs.releaseVersion }}"
+          tags: v${{ github.event.inputs.releaseVersion }}
+
+      - name: Change version to next version
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ github.event.inputs.nextVersion }}-snapshot.0
+
+      - name: Commit next version
+        uses: stefanzweifel/git-auto-commit-action@master
+        with:
+          branch: next-release-v${{ github.event.inputs.nextVersion }}
+          create_branch: true
+          commit_message: Prepare next release ${{ github.event.inputs.nextVersion }}
+          skip_fetch: true
+          skip_checkout: true
+
+      - name: Merge automatically into source branch
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: next-release-v${{ github.event.inputs.nextVersion }}
+          target_branch: ${{ github.ref_name }}
+          message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Delete merged branch
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: next-release-v${{ github.event.inputs.nextVersion }}
