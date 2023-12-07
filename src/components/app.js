@@ -195,6 +195,22 @@ const App = () => {
                             }
                         />
                         <Route
+                            path="/date/:dateParam"
+                            element={
+                                <Box mt={1}>
+                                    <GridCapaMain />
+                                </Box>
+                            }
+                        />
+                        <Route
+                            path="/utcDate/:dateParam/utcTime/:timeParam"
+                            element={
+                                <Box mt={1}>
+                                    <GridCapaMain />
+                                </Box>
+                            }
+                        />
+                        <Route
                             path="sign-in-callback"
                             element={
                                 <Navigate

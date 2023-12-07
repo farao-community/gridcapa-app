@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { gridcapaFormatDate, sha256 } from './commons';
+import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import FilterMenu from './filter-menu';
 
 const processEventLevelStyles = {
