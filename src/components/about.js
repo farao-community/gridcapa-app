@@ -5,17 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, {useEffect, useState} from 'react';
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import {FormattedMessage} from "react-intl";
-import DialogContent from "@mui/material/DialogContent";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import {fetchVersionAndEnvironnement} from "../utils/rest-api";
+import React, { useEffect, useState } from 'react';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import { FormattedMessage } from 'react-intl';
+import DialogContent from '@mui/material/DialogContent';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import { fetchVersionAndEnvironnement } from '../utils/rest-api';
 
 const styles = {
     title: (theme) => ({
@@ -23,21 +23,21 @@ const styles = {
     }),
     grid: (theme) => ({
         padding: theme.spacing(2),
-    })
+    }),
 };
 
-const About = ({showAbout, hideAbout}) => {
+const About = ({ showAbout, hideAbout }) => {
     const [tabIndex, setTabIndex] = useState(0);
     const [appVersion, setAppVersion] = useState(0);
 
     useEffect(() => {
         fetchVersionAndEnvironnement().then((res) => {
-            setAppVersion(res)
+            setAppVersion(res);
         });
     }, []);
 
     function TabPanel(props) {
-        const {children, value, index, ...other} = props;
+        const { children, value, index, ...other } = props;
 
         return (
             <Typography
@@ -63,12 +63,11 @@ const About = ({showAbout, hideAbout}) => {
         >
             <DialogTitle id="form-dialog-title">
                 <Typography component="span" variant="h5" sx={styles.title}>
-                    <FormattedMessage id="About"/>
+                    <FormattedMessage id="About" />
                 </Typography>
             </DialogTitle>
             <DialogContent>
                 <Container maxWidth="md">
-
                     <TabPanel value={tabIndex} index={0}>
                         {appVersion}
                     </TabPanel>
@@ -80,7 +79,7 @@ const About = ({showAbout, hideAbout}) => {
                             color="primary"
                             sx={styles.button}
                         >
-                            <FormattedMessage id="close"/>
+                            <FormattedMessage id="close" />
                         </Button>
                     </Grid>
                 </Container>

@@ -4,18 +4,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-import React, {useEffect, useState} from 'react';
-import {logout, TopBar} from '@gridsuite/commons-ui';
-import Parameters, {useParameterState} from './parameters';
-import {APP_NAME, PARAM_LANGUAGE, PARAM_THEME} from '../utils/config-params';
-import {useDispatch} from 'react-redux';
-import {fetchAppsAndUrls} from '../utils/rest-api';
+import React, { useEffect, useState } from 'react';
+import { logout, TopBar } from '@gridsuite/commons-ui';
+import Parameters, { useParameterState } from './parameters';
+import { APP_NAME, PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
+import { useDispatch } from 'react-redux';
+import { fetchAppsAndUrls } from '../utils/rest-api';
 import PropTypes from 'prop-types';
-import {ReactComponent as FaraoLogo} from '../images/farao-logo.svg';
-import {useNavigate} from 'react-router-dom';
-import About from "./about";
+import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
+import { useNavigate } from 'react-router-dom';
+import About from './about';
 
-const AppTopBar = ({user, userManager}) => {
+const AppTopBar = ({ user, userManager }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ const AppTopBar = ({user, userManager}) => {
     }
 
     function onLogoClicked() {
-        navigate('/', {replace: true});
+        navigate('/', { replace: true });
     }
 
     return (
@@ -53,7 +53,7 @@ const AppTopBar = ({user, userManager}) => {
             <TopBar
                 appName={APP_NAME}
                 appColor="grey"
-                appLogo={<FaraoLogo/>}
+                appLogo={<FaraoLogo />}
                 onParametersClick={() => setShowParameters(true)}
                 onLogoutClick={() => logout(dispatch, userManager.instance)}
                 onLogoClick={() => onLogoClicked()}
@@ -69,10 +69,7 @@ const AppTopBar = ({user, userManager}) => {
                 showParameters={showParameters}
                 hideParameters={hideParameters}
             />
-            <About
-                showAbout={showAbout}
-                hideAbout={hideAbout}
-            />
+            <About showAbout={showAbout} hideAbout={hideAbout} />
         </>
     );
 };
