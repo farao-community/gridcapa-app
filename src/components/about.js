@@ -27,7 +27,7 @@ const styles = {
 };
 
 const About = ({ showAbout, hideAbout }) => {
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex] = useState(0);
     const [appVersion, setAppVersion] = useState(0);
 
     useEffect(() => {
