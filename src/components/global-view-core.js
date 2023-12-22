@@ -52,6 +52,22 @@ const modalStyle = {
     p: 4,
 };
 
+const modalNoOverflowStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70vw',
+    maxHeight: '82vh',
+    minHeight: '82vh',
+    overflow: 'initial',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    padding: '0px',
+};
+
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
     let array = timestampStep.split(':');
@@ -388,28 +404,41 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
+                <Box sx={modalNoOverflowStyle}>
+                    <Box
+                        style={{
+                            position: 'sticky',
+                            zIndex: '1',
+                            paddingLeft: '32px',
+                            paddingTop: '15px',
+                            marginRight: '10px',
+                            backgroundColor: 'inherit',
+                        }}
                     >
-                        <FormattedMessage id="events" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleEventClose}
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
                         >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    {isLoadingEvent ? (
-                        <LinearProgress />
-                    ) : (
-                        <EventsTable
-                            id="modal-modal-description"
-                            taskData={getEventsData()}
-                        />
-                    )}
+                            <FormattedMessage id="events" />
+                            <Button
+                                style={{ float: 'right' }}
+                                onClick={handleEventClose}
+                            >
+                                <Close />
+                            </Button>
+                        </Typography>
+                    </Box>
+                    <Box sx={modalStyle}>
+                        {isLoadingEvent ? (
+                            <LinearProgress />
+                        ) : (
+                            <EventsTable
+                                id="modal-modal-description"
+                                taskData={getEventsData()}
+                            />
+                        )}
+                    </Box>
                 </Box>
             </Modal>
             <Modal

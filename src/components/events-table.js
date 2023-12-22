@@ -154,9 +154,9 @@ const EventsTable = ({ taskData }) => {
     };
 
     return (
-        <TableContainer component={Paper}>
-            <Table className="table">
-                <TableHead>
+        <TableContainer component={Paper} style={{ overflowX: 'initial' }}>
+            <Table className="table" stickyHeader>
+                <TableHead style={{ position: 'sticky' }}>
                     <TableRow>
                         <TableCell style={{ width: '12%' }}>
                             <FormattedMessage id="level" />
