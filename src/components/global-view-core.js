@@ -45,27 +45,10 @@ const modalStyle = {
     width: '70vw',
     maxHeight: '80vh',
     minHeight: '80vh',
-    overflow: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-};
-
-const modalNoOverflowStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '70vw',
-    maxHeight: '82vh',
-    minHeight: '82vh',
-    overflow: 'initial',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    padding: '0px',
 };
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
@@ -404,7 +387,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalNoOverflowStyle}>
+                <Box sx={modalStyle}>
                     <Box
                         style={{
                             position: 'sticky',
@@ -429,7 +412,12 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             </Button>
                         </Typography>
                     </Box>
-                    <Box sx={modalStyle}>
+                    <Box
+                        sx={{
+                            overflow: 'auto',
+                            maxHeight: '70vh',
+                        }}
+                    >
                         {isLoadingEvent ? (
                             <LinearProgress />
                         ) : (
@@ -448,25 +436,43 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
+                    <Box
+                        style={{
+                            position: 'sticky',
+                            zIndex: '1',
+                            paddingLeft: '32px',
+                            paddingTop: '15px',
+                            marginRight: '10px',
+                            backgroundColor: 'inherit',
+                        }}
                     >
-                        <FormattedMessage id="globalViewCoreFiles" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleFileClose}
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
                         >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    <OverviewTable
-                        id="modal-modal-description"
-                        inputs={getFilesData('inputs') || []}
-                        outputs={getFilesData('outputs') || []}
-                        timestamp={getTimestamp()}
-                    />
+                            <FormattedMessage id="globalViewCoreFiles" />
+                            <Button
+                                style={{ float: 'right' }}
+                                onClick={handleFileClose}
+                            >
+                                <Close />
+                            </Button>
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={{
+                            overflow: 'auto',
+                            maxHeight: '70vh',
+                        }}
+                    >
+                        <OverviewTable
+                            id="modal-modal-description"
+                            inputs={getFilesData('inputs') || []}
+                            outputs={getFilesData('outputs') || []}
+                            timestamp={getTimestamp()}
+                        />
+                    </Box>
                 </Box>
             </Modal>
         </div>
