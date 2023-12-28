@@ -45,11 +45,15 @@ const modalStyle = {
     width: '70vw',
     maxHeight: '80vh',
     minHeight: '80vh',
-    overflow: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+};
+
+const overflowAutoStyle = {
+    overflow: 'auto',
+    maxHeight: '70vh',
 };
 
 const RunningTasksViewCore = () => {
@@ -320,27 +324,31 @@ const RunningTasksViewCore = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                    >
-                        <FormattedMessage id="events" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleEventClose}
+                    <Box>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
                         >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    {isLoadingEvent ? (
-                        <LinearProgress />
-                    ) : (
-                        <EventsTable
-                            id="modal-modal-description"
-                            taskData={getEventsData()}
-                        />
-                    )}
+                            <FormattedMessage id="events" />
+                            <Button
+                                style={{ float: 'right' }}
+                                onClick={handleEventClose}
+                            >
+                                <Close />
+                            </Button>
+                        </Typography>
+                    </Box>
+                    <Box sx={overflowAutoStyle}>
+                        {isLoadingEvent ? (
+                            <LinearProgress />
+                        ) : (
+                            <EventsTable
+                                id="modal-modal-description"
+                                taskData={getEventsData()}
+                            />
+                        )}
+                    </Box>
                 </Box>
             </Modal>
             <Modal
@@ -350,25 +358,29 @@ const RunningTasksViewCore = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                    >
-                        <FormattedMessage id="globalViewCoreFiles" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleFileClose}
+                    <Box>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
                         >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    <OverviewTable
-                        id="modal-modal-description"
-                        inputs={getFilesData('inputs') || []}
-                        outputs={getFilesData('outputs') || []}
-                        timestamp={getTimestamp()}
-                    />
+                            <FormattedMessage id="globalViewCoreFiles" />
+                            <Button
+                                style={{ float: 'right' }}
+                                onClick={handleFileClose}
+                            >
+                                <Close />
+                            </Button>
+                        </Typography>
+                    </Box>
+                    <Box sx={overflowAutoStyle}>
+                        <OverviewTable
+                            id="modal-modal-description"
+                            inputs={getFilesData('inputs') || []}
+                            outputs={getFilesData('outputs') || []}
+                            timestamp={getTimestamp()}
+                        />
+                    </Box>
                 </Box>
             </Modal>
         </div>
