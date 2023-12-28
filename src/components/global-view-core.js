@@ -51,6 +51,11 @@ const modalStyle = {
     p: 4,
 };
 
+const overflowAutoStyle = {
+    overflow: 'auto',
+    maxHeight: '70vh',
+};
+
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
     let array = timestampStep.split(':');
@@ -388,16 +393,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Box
-                        style={{
-                            position: 'sticky',
-                            zIndex: '1',
-                            paddingLeft: '32px',
-                            paddingTop: '15px',
-                            marginRight: '10px',
-                            backgroundColor: 'inherit',
-                        }}
-                    >
+                    <Box>
                         <Typography
                             id="modal-modal-title"
                             variant="h6"
@@ -412,12 +408,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             </Button>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            overflow: 'auto',
-                            maxHeight: '70vh',
-                        }}
-                    >
+                    <Box sx={overflowAutoStyle}>
                         {isLoadingEvent ? (
                             <LinearProgress />
                         ) : (
@@ -436,16 +427,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Box
-                        style={{
-                            position: 'sticky',
-                            zIndex: '1',
-                            paddingLeft: '32px',
-                            paddingTop: '15px',
-                            marginRight: '10px',
-                            backgroundColor: 'inherit',
-                        }}
-                    >
+                    <Box>
                         <Typography
                             id="modal-modal-title"
                             variant="h6"
@@ -460,12 +442,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                             </Button>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            overflow: 'auto',
-                            maxHeight: '70vh',
-                        }}
-                    >
+                    <Box sx={overflowAutoStyle}>
                         <OverviewTable
                             id="modal-modal-description"
                             inputs={getFilesData('inputs') || []}

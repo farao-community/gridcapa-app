@@ -51,6 +51,11 @@ const modalStyle = {
     p: 4,
 };
 
+const overflowAutoStyle = {
+    overflow: 'auto',
+    maxHeight: '70vh',
+};
+
 const RunningTasksViewCore = () => {
     const [openEvent, setOpenEvent] = React.useState([]);
     const [tasks, setTasks] = React.useState([]);
@@ -319,16 +324,7 @@ const RunningTasksViewCore = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Box
-                        style={{
-                            position: 'sticky',
-                            zIndex: '1',
-                            paddingLeft: '32px',
-                            paddingTop: '15px',
-                            marginRight: '10px',
-                            backgroundColor: 'inherit',
-                        }}
-                    >
+                    <Box>
                         <Typography
                             id="modal-modal-title"
                             variant="h6"
@@ -343,12 +339,7 @@ const RunningTasksViewCore = () => {
                             </Button>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            overflow: 'auto',
-                            maxHeight: '70vh',
-                        }}
-                    >
+                    <Box sx={overflowAutoStyle}>
                         {isLoadingEvent ? (
                             <LinearProgress />
                         ) : (
@@ -367,16 +358,7 @@ const RunningTasksViewCore = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={modalStyle}>
-                    <Box
-                        style={{
-                            position: 'sticky',
-                            zIndex: '1',
-                            paddingLeft: '32px',
-                            paddingTop: '15px',
-                            marginRight: '10px',
-                            backgroundColor: 'inherit',
-                        }}
-                    >
+                    <Box>
                         <Typography
                             id="modal-modal-title"
                             variant="h6"
@@ -391,12 +373,7 @@ const RunningTasksViewCore = () => {
                             </Button>
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            overflow: 'auto',
-                            maxHeight: '70vh',
-                        }}
-                    >
+                    <Box sx={overflowAutoStyle}>
                         <OverviewTable
                             id="modal-modal-description"
                             inputs={getFilesData('inputs') || []}
