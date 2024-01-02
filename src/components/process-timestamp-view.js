@@ -12,7 +12,7 @@ import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
-import { gridcapaFormatDate } from './commons';
+import { gridcapaFormatDate } from '../utils/commons';
 import SockJsClient from 'react-stomp';
 
 function timestampEquals(t1, t2) {

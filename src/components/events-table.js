@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import { gridcapaFormatDate, sha256 } from './commons';
+import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import FilterMenu from './filter-menu';
 
 const processEventLevelStyles = {
@@ -54,7 +54,9 @@ function inputDataRow(processEvent) {
                 {formattedTimestamp}
             </TableCell>
             <TableCell data-test={encryptedMessage + '-process-event-message'}>
-                {message}
+                {message.split('\n').map((line) => (
+                    <p>{line}</p>
+                ))}
             </TableCell>
         </TableRow>
     );
@@ -154,8 +156,8 @@ const EventsTable = ({ taskData }) => {
     };
 
     return (
-        <TableContainer component={Paper}>
-            <Table className="table">
+        <TableContainer component={Paper} sx={{ overflowX: 'initial' }}>
+            <Table className="table" stickyHeader>
                 <TableHead>
                     <TableRow>
                         <TableCell style={{ width: '12%' }}>

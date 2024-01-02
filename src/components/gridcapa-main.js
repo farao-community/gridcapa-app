@@ -6,14 +6,20 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
-import { setTimestampWithDaysIncrement } from './commons';
 import { fetchMinioStorageData } from '../utils/rest-api';
+import {
+    getInitialTimestampToSet,
+    getDateString,
+    getTimeString,
+} from '../utils/date-time-utils';
+import { Views, getInitialViewToSet } from '../utils/view-utils';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -31,31 +37,62 @@ function TabPanel(props) {
     );
 }
 
-const TODAY_TIMESTAMP = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate(),
-    0,
-    30
-);
-
 const minioProgressStyle = {
     height: '8px',
 };
 
-const GridCapaMain = () => {
-    const [view, setView] = useState(1);
+function updateUrlWithTimestampAndView(navigate, timestamp, view) {
+    let newUrl = '/';
+    switch (view) {
+        case Views.BUSINESS_DATE_VIEW:
+            // Because the `timestamp` parameter is in UTC timezone and the HMI is in local timezone,
+            // we need to set time to noon instead of midnight in order to be sure that the date displayed
+            // in the Business View is the same as the one given in parameter.
+            const noonTimestamp = new Date(timestamp);
+            noonTimestamp.setHours(12);
+            const date = getDateString(noonTimestamp);
+            newUrl = `/date/${date}`;
+            break;
+        case Views.PROCESS_TIMESTAMP_VIEW:
+            const utcDate = getDateString(timestamp);
+            const utcTime = getTimeString(timestamp);
+            newUrl = `/utcDate/${utcDate}/utcTime/${utcTime}`;
+            break;
+        case Views.RUNNING_TASKS_VIEW:
+            newUrl = `/global`;
+            break;
+        default:
+            break;
+    }
+
+    navigate(newUrl, {
+        replace: true,
+    });
+}
+
+const GridCapaMain = ({ displayGlobal }) => {
+    const { dateParam, timeParam } = useParams();
+    const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
     const [processName, setProcessName] = useState(null);
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
+    const navigate = useNavigate();
 
-    const onTimestampChange = useCallback((newTimestamp) => {
-        setTimestamp(new Date(newTimestamp));
-    }, []);
+    const onTimestampChange = useCallback(
+        (newTimestamp) => {
+            setTimestamp(new Date(newTimestamp));
+            updateUrlWithTimestampAndView(navigate, newTimestamp, view);
+        },
+        [navigate, view]
+    );
 
-    const handleViewChange = useCallback((_event, newValue) => {
-        setView(newValue);
-    }, []);
+    const handleViewChange = useCallback(
+        (_event, newValue) => {
+            setView(newValue);
+            updateUrlWithTimestampAndView(navigate, timestamp, newValue);
+        },
+        [navigate, timestamp]
+    );
 
     useEffect(() => {
         if (processName === null) {
@@ -64,20 +101,21 @@ const GridCapaMain = () => {
                 .then((res) => res.json())
                 .then((res) => {
                     setProcessName(res.processName);
-                    const daysToIncrement = Number.isInteger(
+
+                    const timestampToSet = getInitialTimestampToSet(
+                        dateParam,
+                        timeParam,
                         res.dayIncrementInDate
-                    )
-                        ? res.dayIncrementInDate
-                        : 0;
-                    setTimestamp(
-                        setTimestampWithDaysIncrement(
-                            TODAY_TIMESTAMP,
-                            daysToIncrement
-                        )
                     );
+                    setTimestamp(timestampToSet);
+
+                    const viewToDisplay = displayGlobal
+                        ? Views.RUNNING_TASKS_VIEW
+                        : getInitialViewToSet(dateParam, timeParam, view);
+                    setView(viewToDisplay);
                 });
         }
-    }, [processName]);
+    }, [processName, displayGlobal, dateParam, timeParam, view]);
 
     useEffect(() => {
         fetchMinioStorageData().then((res) => {
@@ -130,21 +168,21 @@ const GridCapaMain = () => {
                     </div>
                 </Grid>
                 <Grid item xs={10}>
-                    <TabPanel value={view} index={0}>
+                    <TabPanel value={view} index={Views.PROCESS_TIMESTAMP_VIEW}>
                         <ProcessTimestampView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={1}>
+                    <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
                         <BusinessDateView
                             processName={processName}
                             timestamp={timestamp}
                             onTimestampChange={onTimestampChange}
                         />
                     </TabPanel>
-                    <TabPanel value={view} index={2}>
+                    <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
                         <RunningTasksView processName={processName} />
                     </TabPanel>
                 </Grid>

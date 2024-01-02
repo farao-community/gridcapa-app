@@ -5,12 +5,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
+
+import SockJsClient from 'react-stomp';
+import { FormattedMessage } from 'react-intl';
+import { useSnackbar } from 'notistack';
+import { useIntlRef } from '../utils/messages';
+
+import FilterMenu from './filter-menu';
+import { gridcapaFormatDate } from '../utils/commons';
+import GlobalViewCoreRow from './global-view-core-row';
+import EventModal from './modal/event-modal';
+import FileModal from './modal/file-modal';
+
 import {
-    Button,
-    Modal,
-    Typography,
-    Box,
     Paper,
     Table,
     TableBody,
@@ -21,36 +29,12 @@ import {
     TablePagination,
     LinearProgress,
 } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
-import { Close } from '@mui/icons-material';
-import EventsTable from './events-table';
-import OverviewTable from './overview-table';
-import { useSnackbar } from 'notistack';
-import { useIntlRef } from '../utils/messages';
+
 import {
     fetchBusinessDateData,
     fetchTimestampData,
     getWebSocketUrl,
 } from '../utils/rest-api';
-import FilterMenu from './filter-menu';
-import { gridcapaFormatDate } from './commons';
-import GlobalViewCoreRow from './global-view-core-row';
-import SockJsClient from 'react-stomp';
-
-const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '70vw',
-    maxHeight: '80vh',
-    minHeight: '80vh',
-    overflow: 'auto',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -68,21 +52,23 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
 };
 
 const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
-    const [openEvent, setOpenEvent] = React.useState([]);
-    const [steps, setSteps] = React.useState(
-        createAllSteps(timestampMin, timestampMax, timestampStep)
-    );
-    const [modalEventOpen, setModalEventOpen] = React.useState(false);
-    const [modalFileOpen, setModalFileOpen] = React.useState(false);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [isLoadingEvent, setIsLoadingEvent] = React.useState(false);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(12);
-    const [statusFilter, setStatusFilter] = React.useState([]);
-    const [timestampFilter, setTimestampFilter] = React.useState([]);
-    const [timestampFilterRef, setTimestampFilterRef] = React.useState([]);
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
+
+    const [openEvent, setOpenEvent] = useState([]);
+    const [steps, setSteps] = useState(
+        createAllSteps(timestampMin, timestampMax, timestampStep)
+    );
+    const [modalEventOpen, setModalEventOpen] = useState(false);
+    const [modalFileOpen, setModalFileOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingEvent, setIsLoadingEvent] = useState(false);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(12);
+    const [statusFilter, setStatusFilter] = useState([]);
+    const [timestampFilter, setTimestampFilter] = useState([]);
+    const [timestampFilterRef, setTimestampFilterRef] = useState([]);
+
     useEffect(() => {
         async function getTimestampFilter() {
             let filter = await fetch('process-metadata.json')
@@ -288,7 +274,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
-        return index >= 0 ? steps[index].taskData : [];
+        return index >= 0 ? steps[index].taskData : {};
     };
 
     const getFilesData = (field) => {
@@ -382,64 +368,19 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
             />
-            <Modal
+            <EventModal
                 open={modalEventOpen}
                 onClose={handleEventClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                    >
-                        <FormattedMessage id="events" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleEventClose}
-                        >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    {isLoadingEvent ? (
-                        <LinearProgress />
-                    ) : (
-                        <EventsTable
-                            id="modal-modal-description"
-                            taskData={getEventsData()}
-                        />
-                    )}
-                </Box>
-            </Modal>
-            <Modal
+                isLoadingEvent={isLoadingEvent}
+                taskData={getEventsData()}
+            />
+            <FileModal
                 open={modalFileOpen}
                 onClose={handleFileClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                    >
-                        <FormattedMessage id="globalViewCoreFiles" />
-                        <Button
-                            style={{ float: 'right' }}
-                            onClick={handleFileClose}
-                        >
-                            <Close />
-                        </Button>
-                    </Typography>
-                    <OverviewTable
-                        id="modal-modal-description"
-                        inputs={getFilesData('inputs') || []}
-                        outputs={getFilesData('outputs') || []}
-                        timestamp={getTimestamp()}
-                    />
-                </Box>
-            </Modal>
+                inputs={getFilesData('inputs') || []}
+                outputs={getFilesData('outputs') || []}
+                timestamp={getTimestamp()}
+            />
         </div>
     );
 };
