@@ -32,5 +32,7 @@
   "yes": "Yes",
   "upload": "Upload",
   "runBusinessDate": "Run business date",
-  "minioDiskUsage": "Minio Disk Usage "
+  "minioDiskUsage": "Minio Disk Usage ",
+  "about": "About",
+  "close": "Close"
 }
