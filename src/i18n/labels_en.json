@@ -36,5 +36,8 @@
   "about-dialog-title": "About",
   "close": "Close",
   "versionMessage": "Current version: ",
-  "parameters-dialog-title": "Parameters"
+  "parameters-dialog-title": "Parameters",
+  "processParameters": "Process parameters",
+  "parameters": "Parameters",
+  "defaultValue": "Default value:"
 }

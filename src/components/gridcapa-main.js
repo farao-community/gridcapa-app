@@ -7,12 +7,13 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, Tab, Tabs, LinearProgress } from '@mui/material';
+import { Button, Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
+import ProcessParametersModal from './modal/process-parameters-modal';
 import { fetchMinioStorageData } from '../utils/rest-api';
 import {
     getInitialTimestampToSet,
@@ -78,6 +79,8 @@ const GridCapaMain = ({ displayGlobal }) => {
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
     const navigate = useNavigate();
 
+    const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+
     const onTimestampChange = useCallback(
         (newTimestamp) => {
             setTimestamp(new Date(newTimestamp));
@@ -137,56 +140,80 @@ const GridCapaMain = ({ displayGlobal }) => {
 
     return (
         timestamp && (
-            <Grid container>
-                <Grid item xs={2}>
-                    <Tabs
-                        value={view}
-                        onChange={handleViewChange}
-                        orientation="vertical"
-                    >
-                        <Tab
-                            label={<FormattedMessage id="timestampView" />}
-                            data-test="timestamp-view"
-                        />
-                        <Tab
-                            label={<FormattedMessage id="businessDateView" />}
-                            data-test="business-view"
-                        />
-                        <Tab
-                            label={<FormattedMessage id="runningTasksView" />}
-                            data-test="global-view"
-                        />
-                    </Tabs>
-                    <div class="center">
-                        <FormattedMessage id="minioDiskUsage" />
-                        {usedDiskSpacePercentage}%
-                        <LinearProgress
-                            sx={minioProgressStyle}
-                            variant="determinate"
-                            value={usedDiskSpacePercentage}
-                        />
-                    </div>
+            <div>
+                <Grid container>
+                    <Grid item xs={2}>
+                        <Tabs
+                            value={view}
+                            onChange={handleViewChange}
+                            orientation="vertical"
+                        >
+                            <Tab
+                                label={<FormattedMessage id="timestampView" />}
+                                data-test="timestamp-view"
+                            />
+                            <Tab
+                                label={
+                                    <FormattedMessage id="businessDateView" />
+                                }
+                                data-test="business-view"
+                            />
+                            <Tab
+                                label={
+                                    <FormattedMessage id="runningTasksView" />
+                                }
+                                data-test="global-view"
+                            />
+                        </Tabs>
+                        <div class="center">
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                size="large"
+                                onClick={() => setParmetersModalOpen(true)}
+                            >
+                                <FormattedMessage id="parameters" />
+                            </Button>
+                        </div>
+                        <div class="center">
+                            <FormattedMessage id="minioDiskUsage" />
+                            {usedDiskSpacePercentage}%
+                            <LinearProgress
+                                sx={minioProgressStyle}
+                                variant="determinate"
+                                value={usedDiskSpacePercentage}
+                            />
+                        </div>
+                    </Grid>
+                    <Grid item xs={10}>
+                        <TabPanel
+                            value={view}
+                            index={Views.PROCESS_TIMESTAMP_VIEW}
+                        >
+                            <ProcessTimestampView
+                                processName={processName}
+                                timestamp={timestamp}
+                                onTimestampChange={onTimestampChange}
+                            />
+                        </TabPanel>
+                        <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
+                            <BusinessDateView
+                                processName={processName}
+                                timestamp={timestamp}
+                                onTimestampChange={onTimestampChange}
+                            />
+                        </TabPanel>
+                        <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
+                            <RunningTasksView processName={processName} />
+                        </TabPanel>
+                    </Grid>
                 </Grid>
-                <Grid item xs={10}>
-                    <TabPanel value={view} index={Views.PROCESS_TIMESTAMP_VIEW}>
-                        <ProcessTimestampView
-                            processName={processName}
-                            timestamp={timestamp}
-                            onTimestampChange={onTimestampChange}
-                        />
-                    </TabPanel>
-                    <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
-                        <BusinessDateView
-                            processName={processName}
-                            timestamp={timestamp}
-                            onTimestampChange={onTimestampChange}
-                        />
-                    </TabPanel>
-                    <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
-                        <RunningTasksView processName={processName} />
-                    </TabPanel>
-                </Grid>
-            </Grid>
+                <ProcessParametersModal
+                    open={parametersModalOpen}
+                    onClose={() => setParmetersModalOpen(false)}
+                    parameters
+                />
+            </div>
         )
     );
 };
