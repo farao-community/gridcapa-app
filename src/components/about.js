@@ -28,7 +28,7 @@ const About = ({ showAbout, hideAbout }) => {
                 setAppVersion(res);
             })
             .catch((error) => {
-                console.log('Could not retrieve version and environment');
+                console.error('Could not retrieve version and environment ', error);
             });
     }, []);
 
