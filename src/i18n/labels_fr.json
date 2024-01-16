@@ -39,5 +39,6 @@
   "parameters-dialog-title": "Paramètres",
   "processParameters": "Paramètres de processus",
   "parameters": "Paramètres",
-  "defaultValue": "Valeur par défaut :"
+  "defaultValue": "Valeur par défaut :",
+  "save": "Enregistrer"
 }

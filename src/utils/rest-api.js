@@ -346,6 +346,26 @@ export function fetchProcessParameters() {
     return parameters;
 }
 
+export function updateProcessParameters(parameters) {
+    console.log('Updating process parameters');
+    const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parameters),
+    };
+
+    const updatedParameters = backendFetch(
+        getBaseUrl() + PREFIX_PARAMETERS_QUERIES,
+        requestOptions
+    ).then((response) =>
+        response.ok
+            ? response.json()
+            : response.text().then((text) => Promise.reject(text))
+    );
+
+    return updatedParameters;
+}
+
 export function getBaseUrl() {
     let baseUrl = document.baseURI;
     if (process.env.REACT_APP_PROFILE === 'development') {

@@ -17,6 +17,7 @@ import ProcessParametersModal from './modal/process-parameters-modal';
 import {
     fetchMinioStorageData,
     fetchProcessParameters,
+    updateProcessParameters,
 } from '../utils/rest-api';
 import {
     getInitialTimestampToSet,
@@ -148,6 +149,15 @@ const GridCapaMain = ({ displayGlobal }) => {
             .then(() => setParmetersModalOpen(true));
     }
 
+    function handleParametersUpdate() {
+        console.log('Parameters to update:', processParameters);
+        return updateProcessParameters(
+            processParameters
+        ).then((updatedParameters) =>
+            console.log('Updated parameters: ', updatedParameters)
+        );
+    }
+
     return (
         timestamp && (
             <div>
@@ -221,6 +231,7 @@ const GridCapaMain = ({ displayGlobal }) => {
                 <ProcessParametersModal
                     open={parametersModalOpen}
                     onClose={() => setParmetersModalOpen(false)}
+                    onSave={handleParametersUpdate}
                     parameters={processParameters}
                 />
             </div>

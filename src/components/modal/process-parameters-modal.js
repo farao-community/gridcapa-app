@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import ModalHeader from './modal-header';
 
-import { Box, Checkbox, Modal, TextField } from '@mui/material';
+import { Box, Button, Checkbox, Modal, TextField } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 const style = {
@@ -33,12 +33,15 @@ const style = {
     },
 };
 
-function ProcessParametersModal({ open, onClose, parameters }) {
+function ProcessParametersModal({ open, onClose, parameters, onSave }) {
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style.modalStyle}>
                 <ModalHeader titleId="processParameters" onClose={onClose} />
-                <ProcessParametersModalContent parameters={parameters} />
+                <ProcessParametersModalContent
+                    parameters={parameters}
+                    onSave={onSave}
+                />
             </Box>
         </Modal>
     );
@@ -51,10 +54,29 @@ ProcessParametersModal.propTypes = {
 
 export default ProcessParametersModal;
 
-function ProcessParametersModalContent({ parameters }) {
+function ProcessParametersModalContent({ parameters, onSave }) {
+    const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+
+    const handleSave = () => {
+        onSave()
+            .then(() => setSaveButtonDisabled(true))
+            .catch((errorMessage) => console.error(errorMessage));
+    };
+
     return (
         <Box sx={style.modalContentStyle}>
-            <ParametersList parameters={parameters} />
+            <ParametersList
+                parameters={parameters}
+                enableSaveButton={() => setSaveButtonDisabled(false)}
+            />
+            <Button
+                color="primary"
+                variant="contained"
+                disabled={saveButtonDisabled}
+                onClick={handleSave}
+            >
+                <FormattedMessage id="save" />
+            </Button>
         </Box>
     );
 }
@@ -63,7 +85,7 @@ ProcessParametersModalContent.propTypes = {
     parameters: PropTypes.array.isRequired,
 };
 
-function ParametersList({ parameters }) {
+function ParametersList({ parameters, enableSaveButton }) {
     let parametersBySection = new Map();
     parameters.forEach((p) => {
         if (!parametersBySection.get(p.sectionTitle)) {
@@ -77,6 +99,7 @@ function ParametersList({ parameters }) {
     const handleChange = (id) => {
         return (newValue) => {
             parameters.find((p) => p.id === id).value = newValue;
+            enableSaveButton();
         };
     };
 
@@ -137,7 +160,7 @@ function ParameterElement({
                         name={name}
                         displayValue={displayValue}
                         handleChange={(event) =>
-                            localHandleChange(event.target.checked)
+                            localHandleChange(event.target.checked.toString())
                         }
                     />
                     (<FormattedMessage id="defaultValue" /> {defaultValue})
