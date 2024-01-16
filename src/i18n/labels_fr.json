@@ -32,5 +32,8 @@
   "yes": "Oui",
   "upload": "Envoyer",
   "runBusinessDate": "Lancer tous les calculs",
-  "minioDiskUsage": "Utilisation Disque Minio "
+  "minioDiskUsage": "Utilisation Disque Minio ",
+  "about": "A propos",
+  "close": "Fermer",
+  "versionMessage": "Version actuelle : "
 }

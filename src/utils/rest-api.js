@@ -119,6 +119,16 @@ export function fetchAppsAndUrls() {
         });
 }
 
+export function fetchVersionAndEnvironnement() {
+    console.info(`Fetching env vars...`);
+    return fetch('env.json')
+        .then((res) => res.json())
+        .then((res) => {
+            console.log(res);
+            return removeTrailingSlash(res.appVersionAndEnvironnement);
+        });
+}
+
 export function fetchMinioStorageData() {
     console.info(`Fetching minio storage data...`);
     return fetch('env.json')

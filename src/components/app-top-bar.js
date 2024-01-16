@@ -13,6 +13,7 @@ import { fetchAppsAndUrls } from '../utils/rest-api';
 import PropTypes from 'prop-types';
 import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
 import { useNavigate } from 'react-router-dom';
+import About from './about';
 
 const AppTopBar = ({ user, userManager }) => {
     const navigate = useNavigate();
@@ -25,6 +26,7 @@ const AppTopBar = ({ user, userManager }) => {
 
     const [appsAndUrls, setAppsAndUrls] = useState([]);
     const [showParameters, setShowParameters] = useState(false);
+    const [showAbout, setShowAbout] = useState(false);
 
     useEffect(() => {
         if (user !== null) {
@@ -36,6 +38,10 @@ const AppTopBar = ({ user, userManager }) => {
 
     function hideParameters() {
         setShowParameters(false);
+    }
+
+    function hideAbout() {
+        setShowAbout(false);
     }
 
     function onLogoClicked() {
@@ -53,7 +59,7 @@ const AppTopBar = ({ user, userManager }) => {
                 onLogoClick={() => onLogoClicked()}
                 user={user}
                 appsAndUrls={appsAndUrls}
-                onAboutClick={() => console.debug('about')}
+                onAboutClick={() => setShowAbout(true)}
                 onThemeClick={handleChangeTheme}
                 theme={themeLocal}
                 onLanguageClick={handleChangeLanguage}
@@ -63,6 +69,7 @@ const AppTopBar = ({ user, userManager }) => {
                 showParameters={showParameters}
                 hideParameters={hideParameters}
             />
+            <About showAbout={showAbout} hideAbout={hideAbout} />
         </>
     );
 };
