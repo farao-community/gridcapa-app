@@ -5,14 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FormattedMessage} from 'react-intl';
-import {Button, DialogActions, DialogContent} from '@mui/material';
-import {fetchVersionAndEnvironnement} from '../utils/rest-api';
+import { FormattedMessage } from 'react-intl';
+import { Button, DialogActions, DialogContent } from '@mui/material';
+import { fetchVersionAndEnvironnement } from '../utils/rest-api';
 
 const styles = {
     title: (theme) => ({
@@ -23,7 +22,7 @@ const styles = {
     }),
 };
 
-const About = ({showAbout, hideAbout}) => {
+const About = ({ showAbout, hideAbout }) => {
     const [appVersion, setAppVersion] = useState(0);
 
     useEffect(() => {
@@ -42,19 +41,13 @@ const About = ({showAbout, hideAbout}) => {
         >
             <DialogTitle id="form-dialog-title">
                 <Typography component="span" variant="h5" sx={styles.title}>
-                    <FormattedMessage id="about"/>
+                    <FormattedMessage id="about" />
                 </Typography>
             </DialogTitle>
-            <DialogContent>
-                {appVersion}
-            </DialogContent>
+            <DialogContent>`{appVersion}`</DialogContent>
             <DialogActions>
-                <Button
-                    onClick={hideAbout}
-                    variant="contained"
-                    color="primary"
-                >
-                    <FormattedMessage id="close"/>
+                <Button onClick={hideAbout} variant="contained" color="primary">
+                    <FormattedMessage id="close" />
                 </Button>
             </DialogActions>
         </Dialog>
