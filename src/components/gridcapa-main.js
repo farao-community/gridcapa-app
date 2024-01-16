@@ -14,7 +14,10 @@ import Box from '@mui/material/Box';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
 import ProcessParametersModal from './modal/process-parameters-modal';
-import { fetchMinioStorageData } from '../utils/rest-api';
+import {
+    fetchMinioStorageData,
+    fetchProcessParameters,
+} from '../utils/rest-api';
 import {
     getInitialTimestampToSet,
     getDateString,
@@ -80,6 +83,7 @@ const GridCapaMain = ({ displayGlobal }) => {
     const navigate = useNavigate();
 
     const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+    const [processParameters, setProcessParameters] = useState([]);
 
     const onTimestampChange = useCallback(
         (newTimestamp) => {
@@ -138,6 +142,12 @@ const GridCapaMain = ({ displayGlobal }) => {
         });
     }, []);
 
+    function handleParametersModalOpening() {
+        return fetchProcessParameters()
+            .then(setProcessParameters)
+            .then(() => setParmetersModalOpen(true));
+    }
+
     return (
         timestamp && (
             <div>
@@ -170,7 +180,7 @@ const GridCapaMain = ({ displayGlobal }) => {
                                 color="primary"
                                 variant="contained"
                                 size="large"
-                                onClick={() => setParmetersModalOpen(true)}
+                                onClick={handleParametersModalOpening}
                             >
                                 <FormattedMessage id="parameters" />
                             </Button>
@@ -211,7 +221,7 @@ const GridCapaMain = ({ displayGlobal }) => {
                 <ProcessParametersModal
                     open={parametersModalOpen}
                     onClose={() => setParmetersModalOpen(false)}
-                    parameters
+                    parameters={processParameters}
                 />
             </div>
         )

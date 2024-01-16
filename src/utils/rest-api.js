@@ -16,6 +16,7 @@ const PREFIX_TASK_QUERIES = '/task-manager/tasks';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification/tasks/notify';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 const PREFIX_INTERRUPT_PROCESS_QUERIES = '/gridcapa-job-launcher/stop/';
+const PREFIX_PARAMETERS_QUERIES = '/task-manager/parameters';
 
 function getToken() {
     const state = store.getState();
@@ -329,6 +330,20 @@ export function fetchTaskManagerManualExport(taskTimestamp) {
         getBaseUrl() + PREFIX_TASK_QUERIES + '/' + taskTimestamp + '/export',
         requestOptions
     );
+}
+
+export function fetchProcessParameters() {
+    console.log('Requesting process parameters');
+    const requestOptions = {
+        method: 'GET',
+    };
+
+    const parameters = backendFetch(
+        getBaseUrl() + PREFIX_PARAMETERS_QUERIES,
+        requestOptions
+    ).then((response) => response.json());
+
+    return parameters;
 }
 
 export function getBaseUrl() {

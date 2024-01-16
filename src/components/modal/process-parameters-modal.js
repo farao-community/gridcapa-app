@@ -64,34 +64,6 @@ ProcessParametersModalContent.propTypes = {
 };
 
 function ParametersList({ parameters }) {
-    parameters = [
-        {
-            id: 'TEST_ID_1',
-            name: 'TestName1',
-            parameterType: 'INT',
-            value: '25',
-            defaultValue: '33',
-            sectionTitle: 'First section',
-            displayOrder: '1',
-        },
-        {
-            id: 'TEST_ID_2',
-            name: 'TestName2',
-            parameterType: 'BOOLEAN',
-            defaultValue: 'false',
-            sectionTitle: 'First section',
-            displayOrder: '3',
-        },
-        {
-            id: 'TEST_ID_3',
-            name: 'TestName3',
-            parameterType: 'STRING',
-            value: 'disponibilité',
-            defaultValue: 'écoute',
-            sectionTitle: 'Second section',
-            displayOrder: '12',
-        },
-    ];
     let parametersBySection = new Map();
     parameters.forEach((p) => {
         if (!parametersBySection.get(p.sectionTitle)) {
@@ -152,7 +124,7 @@ function ParameterElement({
     value,
     defaultValue,
     handleChange,
-    }) {
+}) {
     const displayValue = value ? value : defaultValue;
     const localHandleChange = handleChange(id);
 
