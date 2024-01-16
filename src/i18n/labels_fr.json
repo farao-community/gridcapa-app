@@ -34,5 +34,6 @@
   "runBusinessDate": "Lancer tous les calculs",
   "minioDiskUsage": "Utilisation Disque Minio ",
   "about": "A propos",
-  "close": "Fermer"
+  "close": "Fermer",
+  "versionMessage": "Version actuelle : "
 }

@@ -34,5 +34,6 @@
   "runBusinessDate": "Run business date",
   "minioDiskUsage": "Minio Disk Usage ",
   "about": "About",
-  "close": "Close"
+  "close": "Close",
+  "versionMessage": "Current version: "
 }
