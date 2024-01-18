@@ -75,6 +75,24 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     });
 }
 
+function displayParametersButton(
+    parametersEnabled,
+    handleParametersModalOpening
+) {
+    return parametersEnabled ? (
+        <div class="center">
+            <Button
+                color="primary"
+                variant="contained"
+                size="large"
+                onClick={handleParametersModalOpening}
+            >
+                <FormattedMessage id="parameters" />
+            </Button>
+        </div>
+    ) : null;
+}
+
 const GridCapaMain = ({ displayGlobal }) => {
     const { dateParam, timeParam } = useParams();
     const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
@@ -84,6 +102,7 @@ const GridCapaMain = ({ displayGlobal }) => {
     const navigate = useNavigate();
 
     const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+    const [parametersEnabled, setParametersEnabled] = useState(false);
     const [processParameters, setProcessParameters] = useState([]);
 
     const onTimestampChange = useCallback(
@@ -121,6 +140,8 @@ const GridCapaMain = ({ displayGlobal }) => {
                         ? Views.RUNNING_TASKS_VIEW
                         : getInitialViewToSet(dateParam, timeParam, view);
                     setView(viewToDisplay);
+
+                    setParametersEnabled(res.parametersEnabled || false);
                 });
         }
     }, [processName, displayGlobal, dateParam, timeParam, view]);
@@ -185,16 +206,10 @@ const GridCapaMain = ({ displayGlobal }) => {
                                 data-test="global-view"
                             />
                         </Tabs>
-                        <div class="center">
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                size="large"
-                                onClick={handleParametersModalOpening}
-                            >
-                                <FormattedMessage id="parameters" />
-                            </Button>
-                        </div>
+                        {displayParametersButton(
+                            parametersEnabled,
+                            handleParametersModalOpening
+                        )}
                         <div class="center">
                             <FormattedMessage id="minioDiskUsage" />
                             {usedDiskSpacePercentage}%
