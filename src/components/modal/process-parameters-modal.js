@@ -34,13 +34,20 @@ const style = {
 };
 
 function ProcessParametersModal({ open, onClose, parameters, onSave }) {
+    const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style.modalStyle}>
                 <ModalHeader titleId="processParameters" onClose={onClose} />
                 <ProcessParametersModalContent
                     parameters={parameters}
+                    setSaveButtonDisabled={setSaveButtonDisabled}
+                />
+                <ModalFooter
+                    disabled={saveButtonDisabled}
                     onSave={onSave}
+                    setSaveButtonDisabled={setSaveButtonDisabled}
                 />
             </Box>
         </Modal>
@@ -54,9 +61,11 @@ ProcessParametersModal.propTypes = {
 
 export default ProcessParametersModal;
 
-function ProcessParametersModalContent({ parameters, onSave }) {
-    const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+const modalFooterStyle = {
+    marginTop: '25px',
+};
 
+function ModalFooter({ disabled, onSave, setSaveButtonDisabled }) {
     const handleSave = () => {
         onSave()
             .then(() => setSaveButtonDisabled(true))
@@ -64,19 +73,31 @@ function ProcessParametersModalContent({ parameters, onSave }) {
     };
 
     return (
+        <Box sx={modalFooterStyle}>
+            <Button
+                color="primary"
+                variant="contained"
+                disabled={disabled}
+                onClick={handleSave}
+            >
+                <FormattedMessage id="save" />
+            </Button>
+        </Box>
+    );
+}
+
+ModalFooter.propTypes = {
+    titleId: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
+
+function ProcessParametersModalContent({ parameters, setSaveButtonDisabled }) {
+    return (
         <Box sx={style.modalContentStyle}>
             <ParametersList
                 parameters={parameters}
                 enableSaveButton={() => setSaveButtonDisabled(false)}
             />
-            <Button
-                color="primary"
-                variant="contained"
-                disabled={saveButtonDisabled}
-                onClick={handleSave}
-            >
-                <FormattedMessage id="save" />
-            </Button>
         </Box>
     );
 }
@@ -87,6 +108,7 @@ ProcessParametersModalContent.propTypes = {
 
 function ParametersList({ parameters, enableSaveButton }) {
     let parametersBySection = new Map();
+    parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
     parameters.forEach((p) => {
         if (!parametersBySection.get(p.sectionTitle)) {
             parametersBySection.set(p.sectionTitle, []);
@@ -208,16 +230,22 @@ function BooleanParameter({ id, name, displayValue, handleChange }) {
     );
 }
 
+const textInputStyle = {
+    verticalAlign: 'middle',
+    margin: '5px 15px',
+};
+
 function IntParameter({ id, name, displayValue, handleChange }) {
     return (
         <span>
             {name}:
             <TextField
                 type="number"
-                variant="outlined"
+                variant="standard"
                 size="small"
                 defaultValue={displayValue}
                 onChange={handleChange}
+                sx={textInputStyle}
             />
         </span>
     );
@@ -228,10 +256,11 @@ function DefaultParameter({ id, name, displayValue, handleChange }) {
         <span>
             {name}:
             <TextField
-                variant="outlined"
+                variant="standard"
                 size="small"
                 defaultValue={displayValue}
                 onChange={handleChange}
+                sx={textInputStyle}
             />
         </span>
     );
