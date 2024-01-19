@@ -246,7 +246,7 @@ const GridCapaMain = ({ displayGlobal }) => {
                 <ProcessParametersModal
                     open={parametersModalOpen}
                     onClose={() => setParmetersModalOpen(false)}
-                    onSave={handleParametersUpdate}
+                    buttonAction={handleParametersUpdate}
                     parameters={processParameters}
                 />
             </div>

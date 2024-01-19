@@ -10,8 +10,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ModalHeader from './modal-header';
+import ParametersModalContent from './parameters-modal-content';
 
-import { Box, Button, Checkbox, Modal, TextField } from '@mui/material';
+import { Box, Button, Modal } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 const style = {
@@ -27,27 +28,24 @@ const style = {
         boxShadow: 24,
         p: 4,
     },
-    modalContentStyle: {
-        overflow: 'auto',
-        maxHeight: '70vh',
-    },
 };
 
-function ProcessParametersModal({ open, onClose, parameters, onSave }) {
-    const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+function ProcessParametersModal({ open, onClose, parameters, buttonAction }) {
+    const [buttonDisabled, setButtonDisabled] = useState(true);
 
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style.modalStyle}>
                 <ModalHeader titleId="processParameters" onClose={onClose} />
-                <ProcessParametersModalContent
+                <ParametersModalContent
                     parameters={parameters}
-                    setSaveButtonDisabled={setSaveButtonDisabled}
+                    setButtonDisabled={setButtonDisabled}
                 />
                 <ModalFooter
-                    disabled={saveButtonDisabled}
-                    onSave={onSave}
-                    setSaveButtonDisabled={setSaveButtonDisabled}
+                    buttonDisabled={buttonDisabled}
+                    buttonAction={buttonAction}
+                    setButtonDisabled={setButtonDisabled}
+                    buttonLabel="save"
                 />
             </Box>
         </Modal>
@@ -65,10 +63,15 @@ const modalFooterStyle = {
     marginTop: '25px',
 };
 
-function ModalFooter({ disabled, onSave, setSaveButtonDisabled }) {
-    const handleSave = () => {
-        onSave()
-            .then(() => setSaveButtonDisabled(true))
+function ModalFooter({
+    buttonDisabled,
+    buttonAction,
+    setButtonDisabled,
+    buttonLabel
+}) {
+    const handleButtonAction = () => {
+        buttonAction()
+            .then(() => setButtonDisabled(true))
             .catch((errorMessage) => console.error(errorMessage));
     };
 
@@ -77,191 +80,18 @@ function ModalFooter({ disabled, onSave, setSaveButtonDisabled }) {
             <Button
                 color="primary"
                 variant="contained"
-                disabled={disabled}
-                onClick={handleSave}
+                disabled={buttonDisabled}
+                onClick={handleButtonAction}
             >
-                <FormattedMessage id="save" />
+                <FormattedMessage id={buttonLabel} />
             </Button>
         </Box>
     );
 }
 
 ModalFooter.propTypes = {
-    titleId: PropTypes.string.isRequired,
-    onClose: PropTypes.func.isRequired,
+    buttonDisabled: PropTypes.bool.isRequired,
+    buttonAction: PropTypes.func.isRequired,
+    setButtonDisabled: PropTypes.func.isRequired,
+    buttonLabel: PropTypes.string.isRequired,
 };
-
-function ProcessParametersModalContent({ parameters, setSaveButtonDisabled }) {
-    return (
-        <Box sx={style.modalContentStyle}>
-            <ParametersList
-                parameters={parameters}
-                enableSaveButton={() => setSaveButtonDisabled(false)}
-            />
-        </Box>
-    );
-}
-
-ProcessParametersModalContent.propTypes = {
-    parameters: PropTypes.array.isRequired,
-};
-
-function ParametersList({ parameters, enableSaveButton }) {
-    let parametersBySection = new Map();
-    parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
-    parameters.forEach((p) => {
-        if (!parametersBySection.get(p.sectionTitle)) {
-            parametersBySection.set(p.sectionTitle, []);
-        }
-        parametersBySection.get(p.sectionTitle).push(p);
-    });
-
-    parametersBySection = Array.from(parametersBySection.entries());
-
-    const handleChange = (id) => {
-        return (newValue) => {
-            parameters.find((p) => p.id === id).value = newValue;
-            enableSaveButton();
-        };
-    };
-
-    return (
-        <div>
-            {parametersBySection.map((p) => (
-                <ParametersSection
-                    sectionTitle={p[0]}
-                    sectionParameters={p[1]}
-                    handleChange={handleChange}
-                />
-            ))}
-        </div>
-    );
-}
-
-ParametersList.propTypes = {
-    parameters: PropTypes.array.isRequired,
-};
-
-function ParametersSection({ sectionTitle, sectionParameters, handleChange }) {
-    sectionParameters.sort((p1, p2) => p1.displayOrder - p2.displayOrder);
-
-    return (
-        <div>
-            <h3>{sectionTitle}</h3>
-            {sectionParameters.map((p) => (
-                <ParameterElement
-                    id={p.id}
-                    name={p.name}
-                    parameterType={p.parameterType}
-                    value={p.value}
-                    defaultValue={p.defaultValue}
-                    handleChange={handleChange}
-                />
-            ))}
-        </div>
-    );
-}
-
-function ParameterElement({
-    id,
-    name,
-    parameterType,
-    value,
-    defaultValue,
-    handleChange,
-}) {
-    const displayValue = value ? value : defaultValue;
-    const localHandleChange = handleChange(id);
-
-    switch (parameterType) {
-        case 'BOOLEAN':
-            return (
-                <div>
-                    <BooleanParameter
-                        id={id}
-                        name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
-                            localHandleChange(event.target.checked.toString())
-                        }
-                    />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
-            );
-        case 'INT':
-            return (
-                <div>
-                    <IntParameter
-                        id={id}
-                        name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
-                            localHandleChange(event.target.value)
-                        }
-                    />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
-            );
-        case 'STRING':
-        default:
-            return (
-                <div>
-                    <DefaultParameter
-                        id={id}
-                        name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
-                            localHandleChange(event.target.value)
-                        }
-                    />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
-            );
-    }
-}
-
-function BooleanParameter({ id, name, displayValue, handleChange }) {
-    const checked = displayValue === 'true';
-    return (
-        <span>
-            {name}:
-            <Checkbox defaultChecked={checked} onChange={handleChange} />
-        </span>
-    );
-}
-
-const textInputStyle = {
-    verticalAlign: 'middle',
-    margin: '5px 15px',
-};
-
-function IntParameter({ id, name, displayValue, handleChange }) {
-    return (
-        <span>
-            {name}:
-            <TextField
-                type="number"
-                variant="standard"
-                size="small"
-                defaultValue={displayValue}
-                onChange={handleChange}
-                sx={textInputStyle}
-            />
-        </span>
-    );
-}
-
-function DefaultParameter({ id, name, displayValue, handleChange }) {
-    return (
-        <span>
-            {name}:
-            <TextField
-                variant="standard"
-                size="small"
-                defaultValue={displayValue}
-                onChange={handleChange}
-                sx={textInputStyle}
-            />
-        </span>
-    );
-}
