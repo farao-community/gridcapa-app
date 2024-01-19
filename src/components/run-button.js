@@ -46,10 +46,13 @@ export function RunButton({ status, timestamp }) {
             .then(() => setParmetersModalOpen(true));
     }, []);
 
-    const launchTaskWithoutParameters = useCallback(async function () {
-        await fetchJobLauncherPost(timestamp, []);
-        setRunButtonDisabled(false);
-    }, [timestamp]);
+    const launchTaskWithoutParameters = useCallback(
+        async function () {
+            await fetchJobLauncherPost(timestamp, []);
+            setRunButtonDisabled(false);
+        },
+        [timestamp]
+    );
 
     const onRunButtonClick = useCallback(
         async function () {
