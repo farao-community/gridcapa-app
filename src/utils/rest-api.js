@@ -295,11 +295,12 @@ export function updateConfigParameter(name, value) {
     );
 }
 
-export function fetchJobLauncherPost(taskTimestamp) {
+export function fetchJobLauncherPost(taskTimestamp, parameters) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parameters),
     };
     backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,

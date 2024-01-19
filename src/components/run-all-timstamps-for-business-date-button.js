@@ -79,7 +79,7 @@ export function RunAllButton({ timestamp }) {
             fetchTasks();
             tasks.forEach(async (task) => {
                 if (!isDisabledTask(task.status))
-                    await fetchJobLauncherPost(task.timestamp);
+                    await fetchJobLauncherPost(task.timestamp, []);
             });
             fetchTasks();
             setDisabled(false);

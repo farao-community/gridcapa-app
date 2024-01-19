@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -30,31 +30,29 @@ const style = {
     },
 };
 
-function ProcessParametersModal({ open, onClose, parameters, buttonAction }) {
-    const [buttonDisabled, setButtonDisabled] = useState(true);
-
+function TimestampParametersModal({ open, onClose, parameters, buttonAction }) {
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style.modalStyle}>
-                <ModalHeader titleId="processParameters" onClose={onClose} />
+                <ModalHeader titleId="timestampParameters" onClose={onClose} />
                 <ParametersModalContent
                     parameters={parameters}
-                    setButtonDisabled={setButtonDisabled}
+                    setButtonDisabled={() => {}}
                 />
                 <ModalFooter
-                    buttonDisabled={buttonDisabled}
+                    buttonDisabled={false}
                     buttonAction={buttonAction}
-                    setButtonDisabled={setButtonDisabled}
-                    buttonLabel="save"
+                    setButtonDisabled={() => {}}
+                    buttonLabel="runButtonLabel"
                 />
             </Box>
         </Modal>
     );
 }
 
-ProcessParametersModal.propTypes = {
+TimestampParametersModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 };
 
-export default ProcessParametersModal;
+export default TimestampParametersModal;

@@ -38,6 +38,7 @@
   "versionMessage": "Version actuelle : ",
   "parameters-dialog-title": "Paramètres",
   "processParameters": "Paramètres de processus",
+  "timestampParameters": "Paramètres de timestamp",
   "parameters": "Paramètres",
   "defaultValue": "Valeur par défaut :",
   "save": "Enregistrer"
