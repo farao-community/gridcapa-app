@@ -39,6 +39,10 @@ function ParametersList({ parameters, enableButton }) {
     let parametersBySection = new Map();
     parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
     parameters.forEach((p) => {
+        if (p.value == null) {
+            p.value = p.defaultValue;
+        }
+
         if (!parametersBySection.get(p.sectionTitle)) {
             parametersBySection.set(p.sectionTitle, []);
         }
