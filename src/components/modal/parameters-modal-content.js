@@ -59,7 +59,7 @@ function ParametersList({ parameters, enableButton }) {
     };
 
     return (
-        <div>
+        <>
             {parametersBySection.map((p) => (
                 <ParametersSection
                     sectionTitle={p[0]}
@@ -67,7 +67,7 @@ function ParametersList({ parameters, enableButton }) {
                     handleChange={handleChange}
                 />
             ))}
-        </div>
+        </>
     );
 }
 
@@ -76,23 +76,38 @@ ParametersList.propTypes = {
     enableButton: PropTypes.func.isRequired,
 };
 
+const parameterSectionStyle = {
+    fieldsetStyle: {
+        margin: '20px 0',
+    },
+    legendStyle: {
+        margin: '0 5px',
+    },
+};
+
 function ParametersSection({ sectionTitle, sectionParameters, handleChange }) {
     sectionParameters.sort((p1, p2) => p1.displayOrder - p2.displayOrder);
 
     return (
-        <div>
-            <h3>{sectionTitle}</h3>
+        <fieldset style={parameterSectionStyle.fieldsetStyle}>
+            <legend>
+                <h3 style={parameterSectionStyle.legendStyle}>
+                    {sectionTitle}
+                </h3>
+            </legend>
             {sectionParameters.map((p) => (
-                <ParameterElement
-                    id={p.id}
-                    name={p.name}
-                    parameterType={p.parameterType}
-                    value={p.value}
-                    defaultValue={p.defaultValue}
-                    handleChange={handleChange}
-                />
+                <div>
+                    <ParameterElement
+                        id={p.id}
+                        name={p.name}
+                        parameterType={p.parameterType}
+                        value={p.value}
+                        defaultValue={p.defaultValue}
+                        handleChange={handleChange}
+                    />
+                </div>
             ))}
-        </div>
+        </fieldset>
     );
 }
 
@@ -116,7 +131,7 @@ function ParameterElement({
     switch (parameterType) {
         case 'BOOLEAN':
             return (
-                <div>
+                <>
                     <BooleanParameter
                         id={id}
                         name={name}
@@ -128,11 +143,11 @@ function ParameterElement({
                         }
                     />
                     (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
+                </>
             );
         case 'INT':
             return (
-                <div>
+                <>
                     <IntParameter
                         id={id}
                         name={name}
@@ -142,12 +157,12 @@ function ParameterElement({
                         }
                     />
                     (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
+                </>
             );
         case 'STRING':
         default:
             return (
-                <div>
+                <>
                     <DefaultParameter
                         id={id}
                         name={name}
@@ -157,7 +172,7 @@ function ParameterElement({
                         }
                     />
                     (<FormattedMessage id="defaultValue" /> {defaultValue})
-                </div>
+                </>
             );
     }
 }
@@ -174,10 +189,10 @@ ParameterElement.propTypes = {
 function BooleanParameter({ id, name, displayValue, handleChange }) {
     const checked = displayValue === 'true';
     return (
-        <span>
+        <>
             {name}:
             <Checkbox defaultChecked={checked} onChange={handleChange} />
-        </span>
+        </>
     );
 }
 
