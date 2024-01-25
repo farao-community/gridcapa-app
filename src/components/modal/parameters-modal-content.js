@@ -5,24 +5,28 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
 import { Box, Checkbox, TextField } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
+export const REFERENCE_DEFAULT = 'defaultValue';
+export const REFERENCE_PROCESS = 'processValue';
+
 const modalContentStyle = {
     overflow: 'auto',
     maxHeight: '70vh',
 };
 
-function ParametersModalContent({ parameters, setButtonDisabled }) {
+function ParametersModalContent({ parameters, setButtonDisabled, reference }) {
     return (
         <Box sx={modalContentStyle}>
             <ParametersList
                 parameters={parameters}
                 enableButton={() => setButtonDisabled(false)}
+                reference={reference}
             />
         </Box>
     );
@@ -31,11 +35,12 @@ function ParametersModalContent({ parameters, setButtonDisabled }) {
 ParametersModalContent.propTypes = {
     parameters: PropTypes.array.isRequired,
     setButtonDisabled: PropTypes.func.isRequired,
+    reference: PropTypes.string.isRequired,
 };
 
 export default ParametersModalContent;
 
-function ParametersList({ parameters, enableButton }) {
+function ParametersList({ parameters, enableButton, reference }) {
     let parametersBySection = new Map();
     parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
     parameters.forEach((p) => {
@@ -65,6 +70,7 @@ function ParametersList({ parameters, enableButton }) {
                     sectionTitle={p[0]}
                     sectionParameters={p[1]}
                     handleChange={handleChange}
+                    reference={reference}
                 />
             ))}
         </>
@@ -85,7 +91,12 @@ const parameterSectionStyle = {
     },
 };
 
-function ParametersSection({ sectionTitle, sectionParameters, handleChange }) {
+function ParametersSection({
+    sectionTitle,
+    sectionParameters,
+    handleChange,
+    reference,
+}) {
     sectionParameters.sort((p1, p2) => p1.displayOrder - p2.displayOrder);
 
     return (
@@ -103,6 +114,7 @@ function ParametersSection({ sectionTitle, sectionParameters, handleChange }) {
                         parameterType={p.parameterType}
                         value={p.value}
                         defaultValue={p.defaultValue}
+                        reference={reference}
                         handleChange={handleChange}
                     />
                 </div>
@@ -115,6 +127,11 @@ ParametersSection.propTypes = {
     sectionTitle: PropTypes.string.isRequired,
     sectionParameters: PropTypes.array.isRequired,
     handleChange: PropTypes.func.isRequired,
+    reference: PropTypes.string.isRequired,
+};
+
+const changedStyle = {
+    color: 'red',
 };
 
 function ParameterElement({
@@ -123,10 +140,13 @@ function ParameterElement({
     parameterType,
     value,
     defaultValue,
+    reference,
     handleChange,
 }) {
-    const displayValue = value ? value : defaultValue;
     const handleParameterValueChange = handleChange(id);
+    const referenceValue =
+        reference === REFERENCE_PROCESS ? value : defaultValue;
+    const [changed, setChanged] = useState(referenceValue !== value);
 
     switch (parameterType) {
         case 'BOOLEAN':
@@ -135,14 +155,20 @@ function ParameterElement({
                     <BooleanParameter
                         id={id}
                         name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
+                        displayValue={value}
+                        handleChange={(event) => {
+                            setChanged(
+                                referenceValue !==
+                                    event.target.checked.toString()
+                            );
                             handleParameterValueChange(
                                 event.target.checked.toString()
-                            )
-                        }
+                            );
+                        }}
                     />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
+                    <span style={changed ? changedStyle : {}}>
+                        (<FormattedMessage id={reference} /> {referenceValue})
+                    </span>
                 </>
             );
         case 'INT':
@@ -151,12 +177,15 @@ function ParameterElement({
                     <IntParameter
                         id={id}
                         name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
-                            handleParameterValueChange(event.target.value)
-                        }
+                        displayValue={value}
+                        handleChange={(event) => {
+                            setChanged(referenceValue !== event.target.value);
+                            handleParameterValueChange(event.target.value);
+                        }}
                     />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
+                    <span style={changed ? changedStyle : {}}>
+                        (<FormattedMessage id={reference} /> {referenceValue})
+                    </span>
                 </>
             );
         case 'STRING':
@@ -166,12 +195,15 @@ function ParameterElement({
                     <DefaultParameter
                         id={id}
                         name={name}
-                        displayValue={displayValue}
-                        handleChange={(event) =>
-                            handleParameterValueChange(event.target.value)
-                        }
+                        displayValue={value}
+                        handleChange={(event) => {
+                            setChanged(referenceValue !== event.target.value);
+                            handleParameterValueChange(event.target.value);
+                        }}
                     />
-                    (<FormattedMessage id="defaultValue" /> {defaultValue})
+                    <span style={changed ? changedStyle : {}}>
+                        (<FormattedMessage id={reference} /> {referenceValue})
+                    </span>
                 </>
             );
     }
@@ -183,6 +215,7 @@ ParameterElement.propTypes = {
     parameterType: PropTypes.string.isRequired,
     value: PropTypes.string,
     defaultValue: PropTypes.string.isRequired,
+    reference: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
 };
 

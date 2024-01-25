@@ -10,7 +10,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ModalHeader from './modal-header';
-import ParametersModalContent from './parameters-modal-content';
+import ParametersModalContent, {
+    REFERENCE_DEFAULT,
+} from './parameters-modal-content';
 import ModalFooter from './modal-footer';
 
 import { Box, Modal } from '@mui/material';
@@ -40,6 +42,7 @@ function ProcessParametersModal({ open, onClose, parameters, buttonAction }) {
                 <ParametersModalContent
                     parameters={parameters}
                     setButtonDisabled={setButtonDisabled}
+                    reference={REFERENCE_DEFAULT}
                 />
                 <ModalFooter
                     buttonDisabled={buttonDisabled}

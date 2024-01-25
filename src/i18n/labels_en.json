@@ -41,5 +41,6 @@
   "timestampParameters": "Timestamp parameters",
   "parameters": "Parameters",
   "defaultValue": "Default value:",
+  "processValue": "Process configuration value:",
   "save": "Save"
 }
