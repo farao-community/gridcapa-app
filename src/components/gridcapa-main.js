@@ -9,8 +9,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { useIntlRef } from '../utils/messages';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
+import { useSnackbar } from 'notistack';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
 import ProcessParametersModal from './modal/process-parameters-modal';
@@ -100,6 +102,8 @@ const GridCapaMain = ({ displayGlobal }) => {
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
     const navigate = useNavigate();
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [parametersModalOpen, setParmetersModalOpen] = useState(false);
     const [parametersEnabled, setParametersEnabled] = useState(false);
@@ -173,7 +177,9 @@ const GridCapaMain = ({ displayGlobal }) => {
     function handleParametersUpdate() {
         console.log('Parameters to update:', processParameters);
         return updateProcessParameters(
-            processParameters
+            processParameters,
+            intlRef,
+            enqueueSnackbar
         ).then((updatedParameters) =>
             console.log('Updated parameters: ', updatedParameters)
         );

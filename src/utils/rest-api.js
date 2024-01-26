@@ -347,7 +347,7 @@ export function fetchProcessParameters() {
     return parameters;
 }
 
-export function updateProcessParameters(parameters) {
+export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
     console.log('Updating process parameters');
     const requestOptions = {
         method: 'PATCH',
@@ -362,7 +362,17 @@ export function updateProcessParameters(parameters) {
         response.ok
             ? response.json()
             : response.text().then((text) => Promise.reject(text))
-    );
+    ).catch((errorMessage) => {
+        displayErrorMessageWithSnackbar({
+            errorMessage: errorMessage,
+            enqueueSnackbar: enqueueSnackbar,
+            headerMessage: {
+                headerMessageId: 'parametersUpdateError',
+                intlRef: intlRef,
+            },
+        });
+        return Promise.reject(errorMessage);
+    });
 
     return updatedParameters;
 }

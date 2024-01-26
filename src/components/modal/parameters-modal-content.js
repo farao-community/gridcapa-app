@@ -131,7 +131,7 @@ ParametersSection.propTypes = {
 };
 
 const changedStyle = {
-    color: 'red',
+    color: 'orange',
 };
 
 function ParameterElement({
@@ -246,7 +246,6 @@ function IntParameter({ id, name, displayValue, handleChange }) {
         <span>
             {name}:
             <TextField
-                type="number"
                 variant="standard"
                 size="small"
                 defaultValue={displayValue}
