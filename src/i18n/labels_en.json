@@ -30,6 +30,7 @@
   "download": "Download",
   "cancel": "Cancel",
   "yes": "Yes",
+  "no": "No",
   "upload": "Upload",
   "runBusinessDate": "Run business date",
   "minioDiskUsage": "Minio Disk Usage ",
@@ -42,5 +43,7 @@
   "parameters": "Parameters",
   "defaultValue": "Default value:",
   "processValue": "Process configuration value:",
-  "save": "Save"
+  "save": "Save",
+  "quit": "Quit",
+  "warning": "Warning"
 }

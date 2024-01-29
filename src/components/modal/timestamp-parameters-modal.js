@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -13,6 +13,7 @@ import ModalHeader from './modal-header';
 import ParametersModalContent, {
     REFERENCE_PROCESS,
 } from './parameters-modal-content';
+import ParametersModalCloseDialog from './parameters-modal-close-dialog';
 import ModalFooter from './modal-footer';
 
 import { Box, Modal } from '@mui/material';
@@ -33,23 +34,44 @@ const style = {
 };
 
 function TimestampParametersModal({ open, onClose, parameters, buttonAction }) {
+    const [parametersChanged, setParametersChanged] = useState(false);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+
+    const checkBeforeClose = () =>
+        parametersChanged ? setDialogOpen(true) : onClose();
+
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={style.modalStyle}>
-                <ModalHeader titleId="timestampParameters" onClose={onClose} />
-                <ParametersModalContent
-                    parameters={parameters}
-                    setButtonDisabled={() => {}}
-                    reference={REFERENCE_PROCESS}
-                />
-                <ModalFooter
-                    buttonDisabled={false}
-                    buttonAction={buttonAction}
-                    setButtonDisabled={() => {}}
-                    buttonLabel="runButtonLabel"
-                />
-            </Box>
-        </Modal>
+        <>
+            <Modal open={open} onClose={checkBeforeClose}>
+                <Box sx={style.modalStyle}>
+                    <ModalHeader
+                        titleId="timestampParameters"
+                        onClose={checkBeforeClose}
+                    />
+                    <ParametersModalContent
+                        parameters={parameters}
+                        setParametersChanged={setParametersChanged}
+                        reference={REFERENCE_PROCESS}
+                    />
+                    <ModalFooter
+                        buttonDisabled={false}
+                        buttonAction={buttonAction}
+                        setButtonDisabled={(v) => setParametersChanged(!v)}
+                        buttonLabel="runButtonLabel"
+                    />
+                </Box>
+            </Modal>
+
+            <ParametersModalCloseDialog
+                open={dialogOpen}
+                onClickYes={() => {
+                    onClose();
+                    setParametersChanged(false);
+                }}
+                onClickNo={() => {}}
+                closeDialog={() => setDialogOpen(false)}
+            ></ParametersModalCloseDialog>
+        </>
     );
 }
 

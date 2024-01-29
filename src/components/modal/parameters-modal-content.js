@@ -20,12 +20,16 @@ const modalContentStyle = {
     maxHeight: '70vh',
 };
 
-function ParametersModalContent({ parameters, setButtonDisabled, reference }) {
+function ParametersModalContent({
+    parameters,
+    setParametersChanged,
+    reference,
+}) {
     return (
         <Box sx={modalContentStyle}>
             <ParametersList
                 parameters={parameters}
-                enableButton={() => setButtonDisabled(false)}
+                setParametersChanged={setParametersChanged}
                 reference={reference}
             />
         </Box>
@@ -34,18 +38,23 @@ function ParametersModalContent({ parameters, setButtonDisabled, reference }) {
 
 ParametersModalContent.propTypes = {
     parameters: PropTypes.array.isRequired,
-    setButtonDisabled: PropTypes.func.isRequired,
+    setParametersChanged: PropTypes.func.isRequired,
     reference: PropTypes.string.isRequired,
 };
 
 export default ParametersModalContent;
 
-function ParametersList({ parameters, enableButton, reference }) {
+function ParametersList({ parameters, setParametersChanged, reference }) {
     let parametersBySection = new Map();
     parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
     parameters.forEach((p) => {
         if (p.value == null) {
             p.value = p.defaultValue;
+        }
+        if (!p.processValue) {
+            // reference value for Timestamp parameter modal must not change as fields are edited or modal re-rendered
+            // therefore we define a new field and set the value only once at modal initialization
+            p.processValue = p.value;
         }
 
         if (!parametersBySection.get(p.sectionTitle)) {
@@ -59,7 +68,7 @@ function ParametersList({ parameters, enableButton, reference }) {
     const handleChange = (id) => {
         return (newValue) => {
             parameters.find((p) => p.id === id).value = newValue;
-            enableButton();
+            setParametersChanged(true);
         };
     };
 
@@ -79,7 +88,7 @@ function ParametersList({ parameters, enableButton, reference }) {
 
 ParametersList.propTypes = {
     parameters: PropTypes.array.isRequired,
-    enableButton: PropTypes.func.isRequired,
+    setParametersChanged: PropTypes.func.isRequired,
 };
 
 const parameterSectionStyle = {
@@ -114,6 +123,7 @@ function ParametersSection({
                         parameterType={p.parameterType}
                         value={p.value}
                         defaultValue={p.defaultValue}
+                        processValue={p.processValue}
                         reference={reference}
                         handleChange={handleChange}
                     />
@@ -140,12 +150,13 @@ function ParameterElement({
     parameterType,
     value,
     defaultValue,
+    processValue,
     reference,
     handleChange,
 }) {
     const handleParameterValueChange = handleChange(id);
     const referenceValue =
-        reference === REFERENCE_PROCESS ? value : defaultValue;
+        reference === REFERENCE_PROCESS ? processValue : defaultValue;
     const [changed, setChanged] = useState(referenceValue !== value);
 
     switch (parameterType) {

@@ -13,6 +13,7 @@ import ModalHeader from './modal-header';
 import ParametersModalContent, {
     REFERENCE_DEFAULT,
 } from './parameters-modal-content';
+import ParametersModalCloseDialog from './parameters-modal-close-dialog';
 import ModalFooter from './modal-footer';
 
 import { Box, Modal } from '@mui/material';
@@ -33,25 +34,44 @@ const style = {
 };
 
 function ProcessParametersModal({ open, onClose, parameters, buttonAction }) {
-    const [buttonDisabled, setButtonDisabled] = useState(true);
+    const [parametersChanged, setParametersChanged] = useState(false);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+
+    const checkBeforeClose = () =>
+        parametersChanged ? setDialogOpen(true) : onClose();
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={style.modalStyle}>
-                <ModalHeader titleId="processParameters" onClose={onClose} />
-                <ParametersModalContent
-                    parameters={parameters}
-                    setButtonDisabled={setButtonDisabled}
-                    reference={REFERENCE_DEFAULT}
-                />
-                <ModalFooter
-                    buttonDisabled={buttonDisabled}
-                    buttonAction={buttonAction}
-                    setButtonDisabled={setButtonDisabled}
-                    buttonLabel="save"
-                />
-            </Box>
-        </Modal>
+        <>
+            <Modal open={open} onClose={checkBeforeClose}>
+                <Box sx={style.modalStyle}>
+                    <ModalHeader
+                        titleId="processParameters"
+                        onClose={checkBeforeClose}
+                    />
+                    <ParametersModalContent
+                        parameters={parameters}
+                        setParametersChanged={setParametersChanged}
+                        reference={REFERENCE_DEFAULT}
+                    />
+                    <ModalFooter
+                        buttonDisabled={!parametersChanged}
+                        buttonAction={buttonAction}
+                        setButtonDisabled={(v) => setParametersChanged(!v)}
+                        buttonLabel="save"
+                    />
+                </Box>
+            </Modal>
+
+            <ParametersModalCloseDialog
+                open={dialogOpen}
+                onClickYes={() => {
+                    onClose();
+                    setParametersChanged(false);
+                }}
+                onClickNo={() => {}}
+                closeDialog={() => setDialogOpen(false)}
+            ></ParametersModalCloseDialog>
+        </>
     );
 }
 
