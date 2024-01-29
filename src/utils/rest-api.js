@@ -358,21 +358,23 @@ export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
     const updatedParameters = backendFetch(
         getBaseUrl() + PREFIX_PARAMETERS_QUERIES,
         requestOptions
-    ).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(text))
-    ).catch((errorMessage) => {
-        displayErrorMessageWithSnackbar({
-            errorMessage: errorMessage,
-            enqueueSnackbar: enqueueSnackbar,
-            headerMessage: {
-                headerMessageId: 'parametersUpdateError',
-                intlRef: intlRef,
-            },
+    )
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) => {
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'parametersUpdateError',
+                    intlRef: intlRef,
+                },
+            });
+            return Promise.reject(errorMessage);
         });
-        return Promise.reject(errorMessage);
-    });
 
     return updatedParameters;
 }

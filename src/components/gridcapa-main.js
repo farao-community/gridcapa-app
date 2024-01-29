@@ -180,9 +180,10 @@ const GridCapaMain = ({ displayGlobal }) => {
             processParameters,
             intlRef,
             enqueueSnackbar
-        ).then((updatedParameters) =>
-            console.log('Updated parameters: ', updatedParameters)
-        );
+        ).then((updatedParameters) => {
+            console.log('Updated parameters: ', updatedParameters);
+            setParmetersModalOpen(false);
+        });
     }
 
     return (
