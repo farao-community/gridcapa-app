@@ -18,7 +18,6 @@ import {
     DialogContent,
     DialogTitle,
     LinearProgress,
-    Typography,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
@@ -37,9 +36,7 @@ function EventDialog({ open, onClose, isLoadingEvent, taskData }) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
             <DialogTitle sx={style.dialogTitleStyle}>
-                <Typography variant="h6" component="h2">
-                    <FormattedMessage id="events" />
-                </Typography>
+                <FormattedMessage id="events" />
                 <Button onClick={onClose}>
                     <Close />
                 </Button>

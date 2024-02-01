@@ -12,13 +12,7 @@ import PropTypes from 'prop-types';
 import OverviewTable from '../overview-table';
 import { FormattedMessage } from 'react-intl';
 
-import {
-    Button,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Typography,
-} from '@mui/material';
+import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 const style = {
@@ -33,9 +27,7 @@ function FileDialog({ open, onClose, inputs, outputs, timestamp }) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
             <DialogTitle sx={style.dialogTitleStyle}>
-                <Typography variant="h6" component="h2">
-                    <FormattedMessage id="globalViewCoreFiles" />
-                </Typography>
+                <FormattedMessage id="globalViewCoreFiles" />
                 <Button onClick={onClose}>
                     <Close />
                 </Button>
