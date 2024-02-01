@@ -9,40 +9,33 @@ import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 
-import { Box, Checkbox, TextField } from '@mui/material';
+import { Checkbox, TextField } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 export const REFERENCE_DEFAULT = 'defaultValue';
 export const REFERENCE_PROCESS = 'processValue';
 
-const modalContentStyle = {
-    overflow: 'auto',
-    maxHeight: '70vh',
-};
-
-function ParametersModalContent({
+function ParametersDialogContent({
     parameters,
     setParametersChanged,
     reference,
 }) {
     return (
-        <Box sx={modalContentStyle}>
-            <ParametersList
-                parameters={parameters}
-                setParametersChanged={setParametersChanged}
-                reference={reference}
-            />
-        </Box>
+        <ParametersList
+            parameters={parameters}
+            setParametersChanged={setParametersChanged}
+            reference={reference}
+        />
     );
 }
 
-ParametersModalContent.propTypes = {
+ParametersDialogContent.propTypes = {
     parameters: PropTypes.array.isRequired,
     setParametersChanged: PropTypes.func.isRequired,
     reference: PropTypes.string.isRequired,
 };
 
-export default ParametersModalContent;
+export default ParametersDialogContent;
 
 function ParametersList({ parameters, setParametersChanged, reference }) {
     let parametersBySection = new Map();

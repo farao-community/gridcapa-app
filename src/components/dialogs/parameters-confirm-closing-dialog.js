@@ -13,46 +13,40 @@ import PropTypes from 'prop-types';
 import {
     Button,
     Dialog,
-    DialogTitle,
     DialogContent,
     DialogContentText,
     DialogActions,
 } from '@mui/material';
 
-function ParametersModalCloseDialog({
+function ParametersConfirmClosingDialog({
     open,
     onClickYes,
     onClickNo,
     closeDialog,
 }) {
+    const handleClickYes = () => {
+        onClickYes();
+        closeDialog();
+    };
+
+    const handleClickNo = () => {
+        onClickNo();
+        closeDialog();
+    };
+
     return (
         <Dialog open={open} onClose={() => {}}>
-            <DialogTitle>
-                <FormattedMessage id="warning" />
-            </DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     <FormattedMessage id="parametersNotSavedDialog" />
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button
-                    variant="contained"
-                    onClick={() => {
-                        onClickYes();
-                        closeDialog();
-                    }}
-                >
+                <Button variant="contained" onClick={handleClickYes}>
                     <FormattedMessage id="yes" />,{' '}
                     <FormattedMessage id="quit" />
                 </Button>
-                <Button
-                    variant="contained"
-                    onClick={() => {
-                        onClickNo();
-                        closeDialog();
-                    }}
-                >
+                <Button variant="contained" onClick={handleClickNo}>
                     <FormattedMessage id="no" />,{' '}
                     <FormattedMessage id="cancel" />
                 </Button>
@@ -61,11 +55,11 @@ function ParametersModalCloseDialog({
     );
 }
 
-ParametersModalCloseDialog.propTypes = {
+ParametersConfirmClosingDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClickYes: PropTypes.func.isRequired,
     onClickNo: PropTypes.func.isRequired,
     closeDialog: PropTypes.func.isRequired,
 };
 
-export default ParametersModalCloseDialog;
+export default ParametersConfirmClosingDialog;

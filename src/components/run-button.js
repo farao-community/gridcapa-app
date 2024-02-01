@@ -12,7 +12,7 @@ import {
     fetchProcessParameters,
 } from '../utils/rest-api';
 import { PlayArrow } from '@mui/icons-material';
-import TimestampParametersModal from './modal/timestamp-parameters-modal';
+import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 
 function isDisabled(taskStatus) {
     return (
@@ -37,13 +37,13 @@ const style = {
 export function RunButton({ status, timestamp }) {
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [parametersEnabled, setParametersEnabled] = useState(false);
-    const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
 
-    const handleParametersModalOpening = useCallback(async function () {
+    const handleParametersDialogOpening = useCallback(async function () {
         return fetchProcessParameters()
             .then(setParameters)
-            .then(() => setParmetersModalOpen(true));
+            .then(() => setParametersDialogOpen(true));
     }, []);
 
     const launchTaskWithoutParameters = useCallback(
@@ -58,13 +58,13 @@ export function RunButton({ status, timestamp }) {
         async function () {
             setRunButtonDisabled(true);
             if (parametersEnabled) {
-                handleParametersModalOpening();
+                handleParametersDialogOpening();
             } else {
                 await launchTaskWithoutParameters();
             }
         },
         [
-            handleParametersModalOpening,
+            handleParametersDialogOpening,
             launchTaskWithoutParameters,
             parametersEnabled,
         ]
@@ -72,11 +72,11 @@ export function RunButton({ status, timestamp }) {
 
     function launchTaskWithParameters() {
         fetchJobLauncherPost(timestamp, parameters);
-        closeModal();
+        handleParametersDialogClosing();
     }
 
-    function closeModal() {
-        setParmetersModalOpen(false);
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
         setRunButtonDisabled(false);
     }
 
@@ -110,9 +110,9 @@ export function RunButton({ status, timestamp }) {
                     style={{ marginTop: '5px', marginLeft: '22px' }}
                 />
             )}
-            <TimestampParametersModal
-                open={parametersModalOpen}
-                onClose={closeModal}
+            <TimestampParametersDialog
+                open={parametersDialogOpen}
+                onClose={handleParametersDialogClosing}
                 buttonAction={launchTaskWithParameters}
                 parameters={parameters}
             />

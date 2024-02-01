@@ -44,6 +44,5 @@
   "defaultValue": "Valeur par défaut :",
   "processValue": "Valeur de la configuration du processus :",
   "save": "Enregistrer",
-  "quit": "Quitter",
-  "warning": "Attention"
+  "quit": "Quitter"
 }

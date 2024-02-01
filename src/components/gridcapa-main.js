@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 import { useSnackbar } from 'notistack';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
-import ProcessParametersModal from './modal/process-parameters-modal';
+import ProcessParametersDialog from './dialogs/process-parameters-dialog';
 import {
     fetchMinioStorageData,
     fetchProcessParameters,
@@ -79,7 +79,7 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
 
 function displayParametersButton(
     parametersEnabled,
-    handleParametersModalOpening
+    handleParametersDialogOpening
 ) {
     return parametersEnabled ? (
         <div class="center">
@@ -87,7 +87,7 @@ function displayParametersButton(
                 color="primary"
                 variant="contained"
                 size="large"
-                onClick={handleParametersModalOpening}
+                onClick={handleParametersDialogOpening}
             >
                 <FormattedMessage id="parameters" />
             </Button>
@@ -105,7 +105,7 @@ const GridCapaMain = ({ displayGlobal }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
 
-    const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parametersEnabled, setParametersEnabled] = useState(false);
     const [processParameters, setProcessParameters] = useState([]);
 
@@ -168,10 +168,14 @@ const GridCapaMain = ({ displayGlobal }) => {
         });
     }, []);
 
-    function handleParametersModalOpening() {
+    function handleParametersDialogOpening() {
         return fetchProcessParameters()
             .then(setProcessParameters)
-            .then(() => setParmetersModalOpen(true));
+            .then(() => setParametersDialogOpen(true));
+    }
+
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
     }
 
     function handleParametersUpdate() {
@@ -182,7 +186,7 @@ const GridCapaMain = ({ displayGlobal }) => {
             enqueueSnackbar
         ).then((updatedParameters) => {
             console.log('Updated parameters: ', updatedParameters);
-            setParmetersModalOpen(false);
+            handleParametersDialogClosing();
         });
     }
 
@@ -215,7 +219,7 @@ const GridCapaMain = ({ displayGlobal }) => {
                         </Tabs>
                         {displayParametersButton(
                             parametersEnabled,
-                            handleParametersModalOpening
+                            handleParametersDialogOpening
                         )}
                         <div class="center">
                             <FormattedMessage id="minioDiskUsage" />
@@ -250,9 +254,9 @@ const GridCapaMain = ({ displayGlobal }) => {
                         </TabPanel>
                     </Grid>
                 </Grid>
-                <ProcessParametersModal
-                    open={parametersModalOpen}
-                    onClose={() => setParmetersModalOpen(false)}
+                <ProcessParametersDialog
+                    open={parametersDialogOpen}
+                    onClose={handleParametersDialogClosing}
                     buttonAction={handleParametersUpdate}
                     parameters={processParameters}
                 />

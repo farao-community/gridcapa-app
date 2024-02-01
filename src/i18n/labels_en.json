@@ -44,6 +44,5 @@
   "defaultValue": "Default value:",
   "processValue": "Process configuration value:",
   "save": "Save",
-  "quit": "Quit",
-  "warning": "Warning"
+  "quit": "Quit"
 }

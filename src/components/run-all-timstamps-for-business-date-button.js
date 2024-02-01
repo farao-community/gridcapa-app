@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import SockJsClient from 'react-stomp';
 import { FormattedMessage } from 'react-intl';
-import TimestampParametersModal from './modal/timestamp-parameters-modal';
+import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -48,7 +48,7 @@ export function RunAllButton({ timestamp }) {
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);
     const [parametersEnabled, setParametersEnabled] = useState(false);
-    const [parametersModalOpen, setParmetersModalOpen] = useState(false);
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
 
     const fetchTasks = useCallback(async () => {
@@ -96,10 +96,10 @@ export function RunAllButton({ timestamp }) {
         ];
     };
 
-    const handleParametersModalOpening = useCallback(async function () {
+    const handleParametersDialogOpening = useCallback(async function () {
         return fetchProcessParameters()
             .then(setParameters)
-            .then(() => setParmetersModalOpen(true));
+            .then(() => setParametersDialogOpen(true));
     }, []);
 
     const launchTaskWithoutParameters = useCallback(
@@ -119,13 +119,13 @@ export function RunAllButton({ timestamp }) {
         async function () {
             setRunButtonDisabled(true);
             if (parametersEnabled) {
-                handleParametersModalOpening();
+                handleParametersDialogOpening();
             } else {
                 await launchTaskWithoutParameters();
             }
         },
         [
-            handleParametersModalOpening,
+            handleParametersDialogOpening,
             launchTaskWithoutParameters,
             parametersEnabled,
         ]
@@ -134,15 +134,16 @@ export function RunAllButton({ timestamp }) {
     function launchTaskWithParameters() {
         fetchTasks();
         tasks.forEach(async (task) => {
-            if (!isDisabledTask(task.status))
+            if (!isDisabledTask(task.status)) {
                 await fetchJobLauncherPost(task.timestamp, parameters);
+            }
         });
         fetchTasks();
-        closeModal();
+        handleParametersDialogClosing();
     }
 
-    function closeModal() {
-        setParmetersModalOpen(false);
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
         setRunButtonDisabled(false);
     }
 
@@ -165,9 +166,9 @@ export function RunAllButton({ timestamp }) {
                     <FormattedMessage id="runBusinessDate" />
                 </Button>
             </span>
-            <TimestampParametersModal
-                open={parametersModalOpen}
-                onClose={closeModal}
+            <TimestampParametersDialog
+                open={parametersDialogOpen}
+                onClose={handleParametersDialogClosing}
                 buttonAction={launchTaskWithParameters}
                 parameters={parameters}
             />
