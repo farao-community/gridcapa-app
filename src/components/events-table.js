@@ -133,24 +133,28 @@ const EventsTable = ({ taskData }) => {
 
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let isAddErrors = isCurrentLogFilterAddErrors(currentLogFilter);
-        let filtered;
-        filtered = taskData.processEvents.filter(
-            (event) =>
-                (currentEventFilter.length === 0 ||
-                    (currentEventFilter.length > 0 &&
-                        currentEventFilter.some((f) =>
-                            event.level.toUpperCase().includes(f.toUpperCase())
-                        ))) &&
-                (currentLogFilter.length === 0 ||
-                    (currentLogFilter.length > 0 &&
-                        (currentLogFilter.some((f) =>
-                            event.message
-                                .toUpperCase()
-                                .includes(f.toUpperCase())
-                        ) ||
-                            (isAddErrors &&
-                                event.level.toUpperCase() === 'ERROR'))))
-        );
+        let filtered = [];
+        if (taskData?.processEvents) {
+            filtered = taskData.processEvents.filter(
+                (event) =>
+                    (currentEventFilter.length === 0 ||
+                        (currentEventFilter.length > 0 &&
+                            currentEventFilter.some((f) =>
+                                event.level
+                                    .toUpperCase()
+                                    .includes(f.toUpperCase())
+                            ))) &&
+                    (currentLogFilter.length === 0 ||
+                        (currentLogFilter.length > 0 &&
+                            (currentLogFilter.some((f) =>
+                                event.message
+                                    .toUpperCase()
+                                    .includes(f.toUpperCase())
+                            ) ||
+                                (isAddErrors &&
+                                    event.level.toUpperCase() === 'ERROR'))))
+            );
+        }
 
         return filtered;
     };

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -7,24 +7,30 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+
 import { FormattedMessage } from 'react-intl';
-
 import { useSelector } from 'react-redux';
-
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Grid from '@mui/material/Grid';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-
-import { updateConfigParameter } from '../utils/rest-api';
 import { useSnackbar } from 'notistack';
-import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
+import {
+    displayErrorMessageWithSnackbar,
+    useIntlRef,
+} from '../../utils/messages';
+
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Tab,
+    Tabs,
+    Typography,
+} from '@mui/material';
+
+import { updateConfigParameter } from '../../utils/rest-api';
 
 const styles = {
     title: (theme) => ({
@@ -81,7 +87,7 @@ export function useParameterState(paramName) {
     return [paramLocalState, handleChangeParamLocalState];
 }
 
-const Parameters = ({ showParameters, hideParameters }) => {
+const ParametersDialog = ({ open, onClose }) => {
     const [tabIndex, setTabIndex] = useState(0);
 
     function TabPanel(props) {
@@ -106,18 +112,13 @@ const Parameters = ({ showParameters, hideParameters }) => {
     }
 
     return (
-        <Dialog
-            open={showParameters}
-            onClose={hideParameters}
-            aria-labelledby="form-dialog-title"
-            maxWidth={'md'}
-            fullWidth={true}
-        >
-            <DialogTitle id="form-dialog-title">
-                <Typography component="span" variant="h5" sx={styles.title}>
-                    <FormattedMessage id="parameters" />
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+            <DialogTitle>
+                <Typography variant="h5" sx={styles.title}>
+                    <FormattedMessage id="parameters-dialog-title" />
                 </Typography>
             </DialogTitle>
+
             <DialogContent>
                 <Container maxWidth="md">
                     <Tabs
@@ -137,7 +138,7 @@ const Parameters = ({ showParameters, hideParameters }) => {
 
                     <Grid item xs={12}>
                         <Button
-                            onClick={hideParameters}
+                            onClick={onClose}
                             variant="contained"
                             color="primary"
                             sx={styles.button}
@@ -151,4 +152,9 @@ const Parameters = ({ showParameters, hideParameters }) => {
     );
 };
 
-export default Parameters;
+export default ParametersDialog;
+
+ParametersDialog.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+};

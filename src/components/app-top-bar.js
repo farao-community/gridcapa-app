@@ -1,19 +1,23 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 import React, { useEffect, useState } from 'react';
+
 import { logout, TopBar } from '@gridsuite/commons-ui';
-import Parameters, { useParameterState } from './parameters';
+import ParametersDialog, {
+    useParameterState,
+} from './dialogs/parameters-dialog';
 import { APP_NAME, PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
 import { useDispatch } from 'react-redux';
 import { fetchAppsAndUrls } from '../utils/rest-api';
 import PropTypes from 'prop-types';
 import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
 import { useNavigate } from 'react-router-dom';
-import About from './about';
+import AboutDialog from './dialogs/about-dialog';
 
 const AppTopBar = ({ user, userManager }) => {
     const navigate = useNavigate();
@@ -36,17 +40,25 @@ const AppTopBar = ({ user, userManager }) => {
         }
     }, [user]);
 
-    function hideParameters() {
+    const handleShowParameters = () => {
+        setShowParameters(true);
+    };
+
+    const handleHideParameters = () => {
         setShowParameters(false);
-    }
+    };
 
-    function hideAbout() {
+    const handleShowAbout = () => {
+        setShowAbout(true);
+    };
+
+    const handleHideAbout = () => {
         setShowAbout(false);
-    }
+    };
 
-    function onLogoClicked() {
+    const onLogoClicked = () => {
         navigate('/', { replace: true });
-    }
+    };
 
     return (
         <>
@@ -54,22 +66,22 @@ const AppTopBar = ({ user, userManager }) => {
                 appName={APP_NAME}
                 appColor="grey"
                 appLogo={<FaraoLogo />}
-                onParametersClick={() => setShowParameters(true)}
+                onParametersClick={handleShowParameters}
                 onLogoutClick={() => logout(dispatch, userManager.instance)}
-                onLogoClick={() => onLogoClicked()}
+                onLogoClick={onLogoClicked}
                 user={user}
                 appsAndUrls={appsAndUrls}
-                onAboutClick={() => setShowAbout(true)}
+                onAboutClick={handleShowAbout}
                 onThemeClick={handleChangeTheme}
                 theme={themeLocal}
                 onLanguageClick={handleChangeLanguage}
                 language={languageLocal}
             />
-            <Parameters
-                showParameters={showParameters}
-                hideParameters={hideParameters}
+            <ParametersDialog
+                open={showParameters}
+                onClose={handleHideParameters}
             />
-            <About showAbout={showAbout} hideAbout={hideAbout} />
+            <AboutDialog open={showAbout} onClose={handleHideAbout} />
         </>
     );
 };

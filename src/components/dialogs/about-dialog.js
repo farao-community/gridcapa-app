@@ -1,13 +1,16 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 import React, { useEffect, useState } from 'react';
+
 import PropTypes from 'prop-types';
+
 import { FormattedMessage } from 'react-intl';
+
 import {
     Button,
     Dialog,
@@ -17,10 +20,11 @@ import {
     DialogContent,
     DialogContentText,
 } from '@mui/material';
-import { fetchVersionAndEnvironnement } from '../utils/rest-api';
 
-const About = ({ showAbout, hideAbout }) => {
-    const [appVersion, setAppVersion] = useState(0);
+import { fetchVersionAndEnvironnement } from '../../utils/rest-api';
+
+const AboutDialog = ({ open, onClose }) => {
+    const [appVersion, setAppVersion] = useState('');
 
     useEffect(() => {
         fetchVersionAndEnvironnement()
@@ -36,20 +40,22 @@ const About = ({ showAbout, hideAbout }) => {
     }, []);
 
     return (
-        <Dialog open={showAbout} onClose={hideAbout} maxWidth="md" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
             <DialogTitle>
                 <Typography variant="h5" align="center">
-                    <FormattedMessage id="about" />
+                    <FormattedMessage id="about-dialog-title" />
                 </Typography>
             </DialogTitle>
+
             <DialogContent dividers>
                 <DialogContentText>
                     <FormattedMessage id="versionMessage" />
                     {appVersion}
                 </DialogContentText>
             </DialogContent>
+
             <DialogActions>
-                <Button onClick={hideAbout}>
+                <Button onClick={onClose}>
                     <FormattedMessage id="close" />
                 </Button>
             </DialogActions>
@@ -57,9 +63,9 @@ const About = ({ showAbout, hideAbout }) => {
     );
 };
 
-export default About;
+export default AboutDialog;
 
-About.propTypes = {
-    showAbout: PropTypes.bool.isRequired,
-    hideAbout: PropTypes.func.isRequired,
+AboutDialog.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
 };
