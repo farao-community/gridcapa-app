@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from '../utils/commons';
-import DownloadButton from './download-button';
+import DownloadButton from './buttons/download-button';
 import UploadButton from './upload-button';
 
 const INPUT_FILE_GROUP = 'input';
@@ -118,7 +118,10 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
             >
                 {lastModificationDate}
             </TableCell>
-            <TableCell data-test={fileType + '-' + fileGroup + '-latest-url'}>
+            <TableCell
+                data-test={fileType + '-' + fileGroup + '-latest-url'}
+                align="center"
+            >
                 <DownloadButton
                     processFile={processFile}
                     timestamp={timestamp}
@@ -127,6 +130,7 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
             {fileGroup === INPUT_FILE_GROUP && ( // never use null as false
                 <TableCell
                     data-test={fileType + '-' + fileGroup + '-latest-url'}
+                    align="center"
                 >
                     <UploadButton
                         processFile={processFile}
