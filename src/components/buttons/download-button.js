@@ -17,6 +17,10 @@ import { GetApp } from '@mui/icons-material';
 
 import { fetchFileFromProcess } from '../../utils/rest-api';
 
+function isDisabled(processFileStatus) {
+    return processFileStatus !== 'VALIDATED';
+}
+
 async function downloadFile(processFile, timestamp, intlRef, enqueueSnackbar) {
     const blob = await fetchFileFromProcess(
         timestamp,
@@ -50,6 +54,7 @@ const DownloadButton = ({ processFile, timestamp }) => {
             data-test={
                 'download-' + processFile.fileType + '-' + Date.parse(timestamp)
             }
+            disabled={isDisabled(processFile.processFileStatus)}
             onClick={handleClick}
         >
             <GetApp />
