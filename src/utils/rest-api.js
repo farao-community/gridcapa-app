@@ -295,17 +295,17 @@ export function updateConfigParameter(name, value) {
     );
 }
 
-export function fetchJobLauncherPost(taskTimestamp, parameters) {
+export async function fetchJobLauncherPost(taskTimestamp, parameters) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parameters),
     };
-    backendFetch(
+    return backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
         requestOptions
-    ).then();
+    );
 }
 
 export function fetchJobLauncherToInterruptTask(taskTimestamp) {

@@ -15,29 +15,7 @@ import { FormattedMessage } from 'react-intl';
 export const REFERENCE_DEFAULT = 'defaultValue';
 export const REFERENCE_PROCESS = 'processValue';
 
-function ParametersDialogContent({
-    parameters,
-    setParametersChanged,
-    reference,
-}) {
-    return (
-        <ParametersList
-            parameters={parameters}
-            setParametersChanged={setParametersChanged}
-            reference={reference}
-        />
-    );
-}
-
-ParametersDialogContent.propTypes = {
-    parameters: PropTypes.array.isRequired,
-    setParametersChanged: PropTypes.func.isRequired,
-    reference: PropTypes.string.isRequired,
-};
-
-export default ParametersDialogContent;
-
-function ParametersList({ parameters, setParametersChanged, reference }) {
+function getParametersBySection(parameters) {
     let parametersBySection = new Map();
     parameters.sort((a, b) => a.sectionOrder - b.sectionOrder);
     parameters.forEach((p) => {
@@ -56,8 +34,14 @@ function ParametersList({ parameters, setParametersChanged, reference }) {
         parametersBySection.get(p.sectionTitle).push(p);
     });
 
-    parametersBySection = Array.from(parametersBySection.entries());
+    return Array.from(parametersBySection.entries());
+}
 
+function ParametersDialogContent({
+    parameters,
+    setParametersChanged,
+    reference,
+}) {
     const handleChange = (id) => {
         return (newValue) => {
             parameters.find((p) => p.id === id).value = newValue;
@@ -65,24 +49,23 @@ function ParametersList({ parameters, setParametersChanged, reference }) {
         };
     };
 
-    return (
-        <>
-            {parametersBySection.map((p) => (
-                <ParametersSection
-                    sectionTitle={p[0]}
-                    sectionParameters={p[1]}
-                    handleChange={handleChange}
-                    reference={reference}
-                />
-            ))}
-        </>
-    );
+    return getParametersBySection(parameters).map((p) => (
+        <ParametersSection
+            sectionTitle={p[0]}
+            sectionParameters={p[1]}
+            handleChange={handleChange}
+            reference={reference}
+        />
+    ));
 }
 
-ParametersList.propTypes = {
+ParametersDialogContent.propTypes = {
     parameters: PropTypes.array.isRequired,
     setParametersChanged: PropTypes.func.isRequired,
+    reference: PropTypes.string.isRequired,
 };
+
+export default ParametersDialogContent;
 
 const parameterSectionStyle = {
     fieldsetStyle: {
@@ -157,7 +140,6 @@ function ParameterElement({
             return (
                 <>
                     <BooleanParameter
-                        id={id}
                         name={name}
                         displayValue={value}
                         handleChange={(event) => {
@@ -179,7 +161,6 @@ function ParameterElement({
             return (
                 <>
                     <IntParameter
-                        id={id}
                         name={name}
                         displayValue={value}
                         handleChange={(event) => {
@@ -197,7 +178,6 @@ function ParameterElement({
             return (
                 <>
                     <DefaultParameter
-                        id={id}
                         name={name}
                         displayValue={value}
                         handleChange={(event) => {
@@ -223,7 +203,7 @@ ParameterElement.propTypes = {
     handleChange: PropTypes.func.isRequired,
 };
 
-function BooleanParameter({ id, name, displayValue, handleChange }) {
+function BooleanParameter({ name, displayValue, handleChange }) {
     const checked = displayValue === 'true';
     return (
         <>
@@ -234,7 +214,6 @@ function BooleanParameter({ id, name, displayValue, handleChange }) {
 }
 
 BooleanParameter.propTypes = {
-    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     displayValue: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
@@ -245,7 +224,7 @@ const textInputStyle = {
     margin: '5px 15px',
 };
 
-function IntParameter({ id, name, displayValue, handleChange }) {
+function IntParameter({ name, displayValue, handleChange }) {
     return (
         <span>
             {name}:
@@ -261,13 +240,12 @@ function IntParameter({ id, name, displayValue, handleChange }) {
 }
 
 IntParameter.propTypes = {
-    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     displayValue: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
 };
 
-function DefaultParameter({ id, name, displayValue, handleChange }) {
+function DefaultParameter({ name, displayValue, handleChange }) {
     return (
         <span>
             {name}:
@@ -283,7 +261,6 @@ function DefaultParameter({ id, name, displayValue, handleChange }) {
 }
 
 DefaultParameter.propTypes = {
-    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     displayValue: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,

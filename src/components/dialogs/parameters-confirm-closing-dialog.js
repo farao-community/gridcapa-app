@@ -18,19 +18,9 @@ import {
     DialogActions,
 } from '@mui/material';
 
-function ParametersConfirmClosingDialog({
-    open,
-    onClickYes,
-    onClickNo,
-    closeDialog,
-}) {
+function ParametersConfirmClosingDialog({ open, onClickYes, closeDialog }) {
     const handleClickYes = () => {
         onClickYes();
-        closeDialog();
-    };
-
-    const handleClickNo = () => {
-        onClickNo();
         closeDialog();
     };
 
@@ -46,7 +36,7 @@ function ParametersConfirmClosingDialog({
                     <FormattedMessage id="yes" />,{' '}
                     <FormattedMessage id="quit" />
                 </Button>
-                <Button variant="contained" onClick={handleClickNo}>
+                <Button variant="contained" onClick={closeDialog}>
                     <FormattedMessage id="no" />,{' '}
                     <FormattedMessage id="cancel" />
                 </Button>
@@ -58,7 +48,6 @@ function ParametersConfirmClosingDialog({
 ParametersConfirmClosingDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClickYes: PropTypes.func.isRequired,
-    onClickNo: PropTypes.func.isRequired,
     closeDialog: PropTypes.func.isRequired,
 };
 

@@ -82,7 +82,7 @@ function displayParametersButton(
     handleParametersDialogOpening
 ) {
     return parametersEnabled ? (
-        <div class="center">
+        <div className="center">
             <Button
                 color="primary"
                 variant="contained"

@@ -97,9 +97,9 @@ export function RunAllButton({ timestamp }) {
     };
 
     const handleParametersDialogOpening = useCallback(async function () {
-        return fetchProcessParameters()
-            .then(setParameters)
-            .then(() => setParametersDialogOpen(true));
+        const parameters = await fetchProcessParameters();
+        setParameters(parameters);
+        setParametersDialogOpen(true);
     }, []);
 
     const launchTaskWithoutParameters = useCallback(
@@ -115,21 +115,14 @@ export function RunAllButton({ timestamp }) {
         [tasks, fetchTasks]
     );
 
-    const onRunButtonClick = useCallback(
-        async function () {
-            setRunButtonDisabled(true);
-            if (parametersEnabled) {
-                handleParametersDialogOpening();
-            } else {
-                await launchTaskWithoutParameters();
-            }
-        },
-        [
-            handleParametersDialogOpening,
-            launchTaskWithoutParameters,
-            parametersEnabled,
-        ]
-    );
+    async function onRunButtonClick() {
+        setRunButtonDisabled(true);
+        if (parametersEnabled) {
+            handleParametersDialogOpening();
+        } else {
+            await launchTaskWithoutParameters();
+        }
+    }
 
     function launchTaskWithParameters() {
         fetchTasks();
@@ -149,23 +142,21 @@ export function RunAllButton({ timestamp }) {
 
     return (
         <>
-            <span>
-                <SockJsClient
-                    url={getWebSocketUrl('task')}
-                    topics={getListOfTopics()}
-                    onMessage={fetchTasks}
-                />
-                <Button
-                    data-test={'run-all-button-' + timestamp}
-                    variant="contained"
-                    size="large"
-                    disabled={runButtonDisabled || isDisabled(tasks)}
-                    onClick={onRunButtonClick}
-                    style={{ marginRight: '5px' }}
-                >
-                    <FormattedMessage id="runBusinessDate" />
-                </Button>
-            </span>
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopics()}
+                onMessage={fetchTasks}
+            />
+            <Button
+                data-test={'run-all-button-' + timestamp}
+                variant="contained"
+                size="large"
+                disabled={runButtonDisabled || isDisabled(tasks)}
+                onClick={onRunButtonClick}
+                style={{ marginRight: '5px' }}
+            >
+                <FormattedMessage id="runBusinessDate" />
+            </Button>
             <TimestampParametersDialog
                 open={parametersDialogOpen}
                 onClose={handleParametersDialogClosing}

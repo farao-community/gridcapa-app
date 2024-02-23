@@ -40,7 +40,7 @@ function TimestampParametersDialog({
     buttonAction,
 }) {
     const [parametersChanged, setParametersChanged] = useState(false);
-    const [innerDialogOpen, setInnerDialogOpen] = React.useState(false);
+    const [innerDialogOpen, setInnerDialogOpen] = useState(false);
 
     function checkBeforeClose() {
         parametersChanged ? setInnerDialogOpen(true) : onClose();
@@ -88,7 +88,6 @@ function TimestampParametersDialog({
                     <Button
                         color="primary"
                         variant="contained"
-                        disabled={false}
                         onClick={handleButtonAction}
                     >
                         <FormattedMessage id="runButtonLabel" />
@@ -99,7 +98,6 @@ function TimestampParametersDialog({
             <ParametersConfirmClosingDialog
                 open={innerDialogOpen}
                 onClickYes={handleConfirmClosing}
-                onClickNo={() => {}}
                 closeDialog={handleInnerDialogClosing}
             ></ParametersConfirmClosingDialog>
         </>

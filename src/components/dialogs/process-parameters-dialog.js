@@ -94,7 +94,6 @@ function ProcessParametersDialog({ open, onClose, parameters, buttonAction }) {
             <ParametersConfirmClosingDialog
                 open={innerDialogOpen}
                 onClickYes={handleConfirmClosing}
-                onClickNo={() => {}}
                 closeDialog={handleInnerDialogClosing}
             ></ParametersConfirmClosingDialog>
         </>

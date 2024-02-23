@@ -6,6 +6,9 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react';
+
+import PropTypes from 'prop-types';
+
 import { Button, CircularProgress } from '@mui/material';
 import {
     fetchJobLauncherPost,
@@ -41,9 +44,9 @@ export function RunButton({ status, timestamp }) {
     const [parameters, setParameters] = useState([]);
 
     const handleParametersDialogOpening = useCallback(async function () {
-        return fetchProcessParameters()
-            .then(setParameters)
-            .then(() => setParametersDialogOpen(true));
+        const parameters = await fetchProcessParameters();
+        setParameters(parameters);
+        setParametersDialogOpen(true);
     }, []);
 
     const launchTaskWithoutParameters = useCallback(
@@ -54,24 +57,17 @@ export function RunButton({ status, timestamp }) {
         [timestamp]
     );
 
-    const onRunButtonClick = useCallback(
-        async function () {
-            setRunButtonDisabled(true);
-            if (parametersEnabled) {
-                handleParametersDialogOpening();
-            } else {
-                await launchTaskWithoutParameters();
-            }
-        },
-        [
-            handleParametersDialogOpening,
-            launchTaskWithoutParameters,
-            parametersEnabled,
-        ]
-    );
+    function onRunButtonClick() {
+        setRunButtonDisabled(true);
+        if (parametersEnabled) {
+            handleParametersDialogOpening();
+        } else {
+            launchTaskWithoutParameters();
+        }
+    }
 
-    function launchTaskWithParameters() {
-        fetchJobLauncherPost(timestamp, parameters);
+    async function launchTaskWithParameters() {
+        await fetchJobLauncherPost(timestamp, parameters);
         handleParametersDialogClosing();
     }
 
@@ -119,3 +115,8 @@ export function RunButton({ status, timestamp }) {
         </>
     );
 }
+
+RunButton.propTypes = {
+    status: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+};
