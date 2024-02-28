@@ -295,7 +295,7 @@ export function updateConfigParameter(name, value) {
     );
 }
 
-export async function fetchJobLauncherPost(taskTimestamp, parameters) {
+export function fetchJobLauncherPost(taskTimestamp, parameters) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',

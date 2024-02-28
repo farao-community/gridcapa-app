@@ -96,11 +96,11 @@ export function RunAllButton({ timestamp }) {
         ];
     };
 
-    const handleParametersDialogOpening = useCallback(async function () {
+    async function handleParametersDialogOpening() {
         const parameters = await fetchProcessParameters();
         setParameters(parameters);
         setParametersDialogOpen(true);
-    }, []);
+    }
 
     const launchTaskWithoutParameters = useCallback(
         async function () {

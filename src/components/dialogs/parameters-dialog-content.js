@@ -120,6 +120,12 @@ const changedStyle = {
     color: 'orange',
 };
 
+const ParameterType = {
+    BOOLEAN: 'BOOLEAN',
+    INT: 'INT',
+    STRING: 'STRING',
+};
+
 function ParameterElement({
     id,
     name,
@@ -136,7 +142,7 @@ function ParameterElement({
     const [changed, setChanged] = useState(referenceValue !== value);
 
     switch (parameterType) {
-        case 'BOOLEAN':
+        case ParameterType.BOOLEAN:
             return (
                 <>
                     <BooleanParameter
@@ -157,7 +163,7 @@ function ParameterElement({
                     </span>
                 </>
             );
-        case 'INT':
+        case ParameterType.INT:
             return (
                 <>
                     <IntParameter
@@ -173,7 +179,7 @@ function ParameterElement({
                     </span>
                 </>
             );
-        case 'STRING':
+        case ParameterType.STRING:
         default:
             return (
                 <>

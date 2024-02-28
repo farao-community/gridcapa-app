@@ -40,10 +40,13 @@ function TimestampParametersDialog({
     buttonAction,
 }) {
     const [parametersChanged, setParametersChanged] = useState(false);
-    const [innerDialogOpen, setInnerDialogOpen] = useState(false);
+    const [
+        showClosingConfirmationDialog,
+        setShowClosingConfirmationDialog,
+    ] = useState(false);
 
     function checkBeforeClose() {
-        parametersChanged ? setInnerDialogOpen(true) : onClose();
+        parametersChanged ? setShowClosingConfirmationDialog(true) : onClose();
     }
 
     function handleButtonAction() {
@@ -58,7 +61,7 @@ function TimestampParametersDialog({
     }
 
     function handleInnerDialogClosing() {
-        setInnerDialogOpen(false);
+        setShowClosingConfirmationDialog(false);
     }
 
     return (
@@ -96,7 +99,7 @@ function TimestampParametersDialog({
             </Dialog>
 
             <ParametersConfirmClosingDialog
-                open={innerDialogOpen}
+                open={showClosingConfirmationDialog}
                 onClickYes={handleConfirmClosing}
                 closeDialog={handleInnerDialogClosing}
             ></ParametersConfirmClosingDialog>
@@ -107,6 +110,8 @@ function TimestampParametersDialog({
 TimestampParametersDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    parameters: PropTypes.array.isRequired,
+    buttonAction: PropTypes.func.isRequired,
 };
 
 export default TimestampParametersDialog;

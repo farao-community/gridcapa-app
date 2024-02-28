@@ -103,6 +103,8 @@ function ProcessParametersDialog({ open, onClose, parameters, buttonAction }) {
 ProcessParametersDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    parameters: PropTypes.array.isRequired,
+    buttonAction: PropTypes.func.isRequired,
 };
 
 export default ProcessParametersDialog;

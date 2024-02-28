@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -43,19 +43,16 @@ export function RunButton({ status, timestamp }) {
     const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
 
-    const handleParametersDialogOpening = useCallback(async function () {
+    async function handleParametersDialogOpening() {
         const parameters = await fetchProcessParameters();
         setParameters(parameters);
         setParametersDialogOpen(true);
-    }, []);
+    }
 
-    const launchTaskWithoutParameters = useCallback(
-        async function () {
-            await fetchJobLauncherPost(timestamp, []);
-            setRunButtonDisabled(false);
-        },
-        [timestamp]
-    );
+    async function launchTaskWithoutParameters() {
+        await fetchJobLauncherPost(timestamp, []);
+        setRunButtonDisabled(false);
+    }
 
     function onRunButtonClick() {
         setRunButtonDisabled(true);
