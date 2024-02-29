@@ -117,7 +117,7 @@ export function RunAllButton({ timestamp }) {
         if (parametersEnabled) {
             handleParametersDialogOpening();
         } else {
-            await launchTaskWithoutParameters();
+            launchTaskWithoutParameters();
         }
     }
 
