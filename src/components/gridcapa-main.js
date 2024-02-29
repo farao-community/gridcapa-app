@@ -168,10 +168,10 @@ const GridCapaMain = ({ displayGlobal }) => {
         });
     }, []);
 
-    function handleParametersDialogOpening() {
-        return fetchProcessParameters()
-            .then(setProcessParameters)
-            .then(() => setParametersDialogOpen(true));
+    async function handleParametersDialogOpening() {
+        const parameters = await fetchProcessParameters();
+        setProcessParameters(parameters);
+        setParametersDialogOpen(true);
     }
 
     function handleParametersDialogClosing() {

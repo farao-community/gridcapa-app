@@ -102,20 +102,17 @@ export function RunAllButton({ timestamp }) {
         setParametersDialogOpen(true);
     }
 
-    const launchTaskWithoutParameters = useCallback(
-        async function () {
-            fetchTasks();
-            tasks.forEach(async (task) => {
-                if (!isDisabledTask(task.status))
-                    await fetchJobLauncherPost(task.timestamp, []);
-            });
-            fetchTasks();
-            setRunButtonDisabled(false);
-        },
-        [tasks, fetchTasks]
-    );
+    async function launchTaskWithoutParameters() {
+        fetchTasks();
+        tasks.forEach(async (task) => {
+            if (!isDisabledTask(task.status))
+                await fetchJobLauncherPost(task.timestamp, []);
+        });
+        fetchTasks();
+        setRunButtonDisabled(false);
+    }
 
-    async function onRunButtonClick() {
+    function onRunButtonClick() {
         setRunButtonDisabled(true);
         if (parametersEnabled) {
             handleParametersDialogOpening();
