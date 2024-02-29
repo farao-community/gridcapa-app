@@ -102,7 +102,7 @@ export function RunAllButton({ timestamp }) {
         setParametersDialogOpen(true);
     }
 
-    async function launchTaskWithoutParameters() {
+    function launchTaskWithoutParameters() {
         fetchTasks();
         tasks.forEach(async (task) => {
             if (!isDisabledTask(task.status))
