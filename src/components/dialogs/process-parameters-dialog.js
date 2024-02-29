@@ -19,7 +19,6 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText,
     DialogActions,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -71,13 +70,11 @@ function ProcessParametersDialog({ open, onClose, parameters, buttonAction }) {
                     </Button>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        <ParametersDialogContent
-                            parameters={parameters}
-                            setParametersChanged={setParametersChanged}
-                            reference={REFERENCE_DEFAULT}
-                        />
-                    </DialogContentText>
+                    <ParametersDialogContent
+                        parameters={parameters}
+                        setParametersChanged={setParametersChanged}
+                        reference={REFERENCE_DEFAULT}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button

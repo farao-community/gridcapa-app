@@ -19,7 +19,6 @@ import {
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText,
     DialogActions,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -79,13 +78,11 @@ function TimestampParametersDialog({
                     </Button>
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        <ParametersDialogContent
-                            parameters={parameters}
-                            setParametersChanged={setParametersChanged}
-                            reference={REFERENCE_PROCESS}
-                        />
-                    </DialogContentText>
+                    <ParametersDialogContent
+                        parameters={parameters}
+                        setParametersChanged={setParametersChanged}
+                        reference={REFERENCE_PROCESS}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button
