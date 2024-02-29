@@ -30,11 +30,19 @@
   "download": "Download",
   "cancel": "Cancel",
   "yes": "Yes",
+  "no": "No",
   "upload": "Upload",
   "runBusinessDate": "Run business date",
   "minioDiskUsage": "Minio Disk Usage ",
   "about-dialog-title": "About",
   "close": "Close",
   "versionMessage": "Current version: ",
-  "parameters-dialog-title": "Parameters"
+  "parameters-dialog-title": "Parameters",
+  "processParameters": "Process parameters",
+  "timestampParameters": "Timestamp parameters",
+  "parameters": "Parameters",
+  "defaultValue": "Default value:",
+  "processValue": "Process configuration value:",
+  "save": "Save",
+  "quit": "Quit"
 }

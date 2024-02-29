@@ -30,11 +30,19 @@
   "download": "Télécharger",
   "cancel": "Annuler",
   "yes": "Oui",
+  "no": "Non",
   "upload": "Envoyer",
   "runBusinessDate": "Lancer tous les calculs",
   "minioDiskUsage": "Utilisation Disque Minio ",
   "about-dialog-title": "À propos",
   "close": "Fermer",
   "versionMessage": "Version actuelle : ",
-  "parameters-dialog-title": "Paramètres"
+  "parameters-dialog-title": "Paramètres",
+  "processParameters": "Paramètres de processus",
+  "timestampParameters": "Paramètres de timestamp",
+  "parameters": "Paramètres",
+  "defaultValue": "Valeur par défaut :",
+  "processValue": "Valeur de la configuration du processus :",
+  "save": "Enregistrer",
+  "quit": "Quitter"
 }

@@ -16,6 +16,7 @@ const PREFIX_TASK_QUERIES = '/task-manager/tasks';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification/tasks/notify';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 const PREFIX_INTERRUPT_PROCESS_QUERIES = '/gridcapa-job-launcher/stop/';
+const PREFIX_PARAMETERS_QUERIES = '/task-manager/parameters';
 
 function getToken() {
     const state = store.getState();
@@ -294,16 +295,17 @@ export function updateConfigParameter(name, value) {
     );
 }
 
-export function fetchJobLauncherPost(taskTimestamp) {
+export function fetchJobLauncherPost(taskTimestamp, parameters) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parameters),
     };
-    backendFetch(
+    return backendFetch(
         getBaseUrl() + PREFIX_JOB_LAUNCHER_QUERIES + taskTimestamp,
         requestOptions
-    ).then();
+    );
 }
 
 export function fetchJobLauncherToInterruptTask(taskTimestamp) {
@@ -329,6 +331,52 @@ export function fetchTaskManagerManualExport(taskTimestamp) {
         getBaseUrl() + PREFIX_TASK_QUERIES + '/' + taskTimestamp + '/export',
         requestOptions
     );
+}
+
+export function fetchProcessParameters() {
+    console.log('Requesting process parameters');
+    const requestOptions = {
+        method: 'GET',
+    };
+
+    const parameters = backendFetch(
+        getBaseUrl() + PREFIX_PARAMETERS_QUERIES,
+        requestOptions
+    ).then((response) => response.json());
+
+    return parameters;
+}
+
+export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
+    console.log('Updating process parameters');
+    const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(parameters),
+    };
+
+    const updatedParameters = backendFetch(
+        getBaseUrl() + PREFIX_PARAMETERS_QUERIES,
+        requestOptions
+    )
+        .then((response) =>
+            response.ok
+                ? response.json()
+                : response.text().then((text) => Promise.reject(text))
+        )
+        .catch((errorMessage) => {
+            displayErrorMessageWithSnackbar({
+                errorMessage: errorMessage,
+                enqueueSnackbar: enqueueSnackbar,
+                headerMessage: {
+                    headerMessageId: 'parametersUpdateError',
+                    intlRef: intlRef,
+                },
+            });
+            return Promise.reject(errorMessage);
+        });
+
+    return updatedParameters;
 }
 
 export function getBaseUrl() {

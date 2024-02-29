@@ -2,6 +2,8 @@
   "paramsChangingError": "Une erreur est survenue lors de la modification des paramètres",
   "paramsRetrievingError": "Une erreur est survenue lors de la récupération des paramètres",
   "taskRetrievingError": "Une erreur est survenue lors de la récupération des données de tâche",
+  "parametersUpdateError": "Une erreur est survenue lors de la mise à jour des paramètres",
+  "parametersNotSavedDialog": "Certaines valeurs de paramètres ont été modifiées et pas enregistrées. Voulez-vous vraiment quitter sans enregistrer ?",
   "interruptionProcessAlertMessage": "Voulez-vous arrêter le calcul ?",
   "manualExportAlertMessage": "Voulez-vous déclencher un export des fichiers de résultat ?"
 }

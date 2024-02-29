@@ -12,11 +12,13 @@ import {
     getWebSocketUrl,
     fetchJobLauncherPost,
     fetchBusinessDateData,
+    fetchProcessParameters,
 } from '../utils/rest-api';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import SockJsClient from 'react-stomp';
 import { FormattedMessage } from 'react-intl';
+import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -43,8 +45,11 @@ export function RunAllButton({ timestamp }) {
     const timestampMin = refTimestamp.getTime();
     const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
     const [tasks, setTasks] = useState([]);
-    const [disabled, setDisabled] = useState(false);
+    const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);
+    const [parametersEnabled, setParametersEnabled] = useState(false);
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
+    const [parameters, setParameters] = useState([]);
 
     const fetchTasks = useCallback(async () => {
         let timestampMid =
@@ -55,6 +60,15 @@ export function RunAllButton({ timestamp }) {
             await fetchBusinessDateData(currentDate, intlRef, enqueueSnackbar)
         );
     }, [enqueueSnackbar, intlRef, currentTimestamp]);
+
+    useEffect(() => {
+        console.log('Fetching process metadata...');
+        fetch('process-metadata.json')
+            .then((res) => res.json())
+            .then((res) => {
+                setParametersEnabled(res.parametersEnabled || false);
+            });
+    }, []);
 
     useEffect(() => {
         setCurrentTimestamp(timestamp);
@@ -73,20 +87,6 @@ export function RunAllButton({ timestamp }) {
         getBackendTasks();
     }, [enqueueSnackbar, intlRef, timestamp, currentTimestamp]);
 
-    const launchTask = useCallback(
-        function () {
-            setDisabled(true);
-            fetchTasks();
-            tasks.forEach(async (task) => {
-                if (!isDisabledTask(task.status))
-                    await fetchJobLauncherPost(task.timestamp);
-            });
-            fetchTasks();
-            setDisabled(false);
-        },
-        [tasks, fetchTasks]
-    );
-
     const getListOfTopics = () => {
         return [
             '/task/update/' +
@@ -96,8 +96,49 @@ export function RunAllButton({ timestamp }) {
         ];
     };
 
+    async function handleParametersDialogOpening() {
+        const parameters = await fetchProcessParameters();
+        setParameters(parameters);
+        setParametersDialogOpen(true);
+    }
+
+    function launchTaskWithoutParameters() {
+        fetchTasks();
+        tasks.forEach(async (task) => {
+            if (!isDisabledTask(task.status))
+                await fetchJobLauncherPost(task.timestamp, []);
+        });
+        fetchTasks();
+        setRunButtonDisabled(false);
+    }
+
+    function onRunButtonClick() {
+        setRunButtonDisabled(true);
+        if (parametersEnabled) {
+            handleParametersDialogOpening();
+        } else {
+            launchTaskWithoutParameters();
+        }
+    }
+
+    function launchTaskWithParameters() {
+        fetchTasks();
+        tasks.forEach(async (task) => {
+            if (!isDisabledTask(task.status)) {
+                await fetchJobLauncherPost(task.timestamp, parameters);
+            }
+        });
+        fetchTasks();
+        handleParametersDialogClosing();
+    }
+
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
+        setRunButtonDisabled(false);
+    }
+
     return (
-        <span>
+        <>
             <SockJsClient
                 url={getWebSocketUrl('task')}
                 topics={getListOfTopics()}
@@ -107,12 +148,18 @@ export function RunAllButton({ timestamp }) {
                 data-test={'run-all-button-' + timestamp}
                 variant="contained"
                 size="large"
-                disabled={disabled || isDisabled(tasks)}
-                onClick={launchTask}
+                disabled={runButtonDisabled || isDisabled(tasks)}
+                onClick={onRunButtonClick}
                 style={{ marginRight: '5px' }}
             >
                 <FormattedMessage id="runBusinessDate" />
             </Button>
-        </span>
+            <TimestampParametersDialog
+                open={parametersDialogOpen}
+                onClose={handleParametersDialogClosing}
+                buttonAction={launchTaskWithParameters}
+                parameters={parameters}
+            />
+        </>
     );
 }

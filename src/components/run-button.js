@@ -5,10 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import PropTypes from 'prop-types';
+
 import { Button, CircularProgress } from '@mui/material';
-import { fetchJobLauncherPost } from '../utils/rest-api';
+import {
+    fetchJobLauncherPost,
+    fetchProcessParameters,
+} from '../utils/rest-api';
 import { PlayArrow } from '@mui/icons-material';
+import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 
 function isDisabled(taskStatus) {
     return (
@@ -31,16 +38,49 @@ const style = {
 };
 
 export function RunButton({ status, timestamp }) {
-    const [disabled, setDisabled] = useState(false);
+    const [runButtonDisabled, setRunButtonDisabled] = useState(false);
+    const [parametersEnabled, setParametersEnabled] = useState(false);
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
+    const [parameters, setParameters] = useState([]);
 
-    const launchTask = useCallback(
-        async function () {
-            setDisabled(true);
-            await fetchJobLauncherPost(timestamp);
-            setDisabled(false);
-        },
-        [timestamp]
-    );
+    async function handleParametersDialogOpening() {
+        const parameters = await fetchProcessParameters();
+        setParameters(parameters);
+        setParametersDialogOpen(true);
+    }
+
+    async function launchTaskWithoutParameters() {
+        await fetchJobLauncherPost(timestamp, []);
+        setRunButtonDisabled(false);
+    }
+
+    function onRunButtonClick() {
+        setRunButtonDisabled(true);
+        if (parametersEnabled) {
+            handleParametersDialogOpening();
+        } else {
+            launchTaskWithoutParameters();
+        }
+    }
+
+    async function launchTaskWithParameters() {
+        await fetchJobLauncherPost(timestamp, parameters);
+        handleParametersDialogClosing();
+    }
+
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
+        setRunButtonDisabled(false);
+    }
+
+    useEffect(() => {
+        console.log('Fetching process metadata...');
+        fetch('process-metadata.json')
+            .then((res) => res.json())
+            .then((res) => {
+                setParametersEnabled(res.parametersEnabled || false);
+            });
+    }, []);
 
     return (
         <>
@@ -50,8 +90,8 @@ export function RunButton({ status, timestamp }) {
                     data-test={'run-button-' + Date.parse(timestamp)}
                     variant="contained"
                     size="large"
-                    disabled={disabled || isDisabled(status)}
-                    onClick={launchTask}
+                    disabled={runButtonDisabled || isDisabled(status)}
+                    onClick={onRunButtonClick}
                     sx={style.runButtonStyle}
                 >
                     <PlayArrow />
@@ -63,6 +103,17 @@ export function RunButton({ status, timestamp }) {
                     style={{ marginTop: '5px', marginLeft: '22px' }}
                 />
             )}
+            <TimestampParametersDialog
+                open={parametersDialogOpen}
+                onClose={handleParametersDialogClosing}
+                buttonAction={launchTaskWithParameters}
+                parameters={parameters}
+            />
         </>
     );
 }
+
+RunButton.propTypes = {
+    status: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+};

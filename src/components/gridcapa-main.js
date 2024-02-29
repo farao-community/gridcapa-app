@@ -7,13 +7,20 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Grid, Tab, Tabs, LinearProgress } from '@mui/material';
+import { Button, Grid, Tab, Tabs, LinearProgress } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import { useIntlRef } from '../utils/messages';
 import ProcessTimestampView from './process-timestamp-view';
 import Box from '@mui/material/Box';
+import { useSnackbar } from 'notistack';
 import BusinessDateView from './business-date-view';
 import RunningTasksView from './running-tasks-view';
-import { fetchMinioStorageData } from '../utils/rest-api';
+import ProcessParametersDialog from './dialogs/process-parameters-dialog';
+import {
+    fetchMinioStorageData,
+    fetchProcessParameters,
+    updateProcessParameters,
+} from '../utils/rest-api';
 import {
     getInitialTimestampToSet,
     getDateString,
@@ -70,6 +77,24 @@ function updateUrlWithTimestampAndView(navigate, timestamp, view) {
     });
 }
 
+function displayParametersButton(
+    parametersEnabled,
+    handleParametersDialogOpening
+) {
+    return parametersEnabled ? (
+        <div className="center">
+            <Button
+                color="primary"
+                variant="contained"
+                size="large"
+                onClick={handleParametersDialogOpening}
+            >
+                <FormattedMessage id="parameters" />
+            </Button>
+        </div>
+    ) : null;
+}
+
 const GridCapaMain = ({ displayGlobal }) => {
     const { dateParam, timeParam } = useParams();
     const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
@@ -77,6 +102,12 @@ const GridCapaMain = ({ displayGlobal }) => {
     const [timestamp, setTimestamp] = useState(null);
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
     const navigate = useNavigate();
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
+    const [parametersEnabled, setParametersEnabled] = useState(false);
+    const [processParameters, setProcessParameters] = useState([]);
 
     const onTimestampChange = useCallback(
         (newTimestamp) => {
@@ -113,6 +144,8 @@ const GridCapaMain = ({ displayGlobal }) => {
                         ? Views.RUNNING_TASKS_VIEW
                         : getInitialViewToSet(dateParam, timeParam, view);
                     setView(viewToDisplay);
+
+                    setParametersEnabled(res.parametersEnabled || false);
                 });
         }
     }, [processName, displayGlobal, dateParam, timeParam, view]);
@@ -135,58 +168,99 @@ const GridCapaMain = ({ displayGlobal }) => {
         });
     }, []);
 
+    async function handleParametersDialogOpening() {
+        const parameters = await fetchProcessParameters();
+        setProcessParameters(parameters);
+        setParametersDialogOpen(true);
+    }
+
+    function handleParametersDialogClosing() {
+        setParametersDialogOpen(false);
+    }
+
+    function handleParametersUpdate() {
+        console.log('Parameters to update:', processParameters);
+        return updateProcessParameters(
+            processParameters,
+            intlRef,
+            enqueueSnackbar
+        ).then((updatedParameters) => {
+            console.log('Updated parameters: ', updatedParameters);
+            handleParametersDialogClosing();
+        });
+    }
+
     return (
         timestamp && (
-            <Grid container>
-                <Grid item xs={2}>
-                    <Tabs
-                        value={view}
-                        onChange={handleViewChange}
-                        orientation="vertical"
-                    >
-                        <Tab
-                            label={<FormattedMessage id="timestampView" />}
-                            data-test="timestamp-view"
-                        />
-                        <Tab
-                            label={<FormattedMessage id="businessDateView" />}
-                            data-test="business-view"
-                        />
-                        <Tab
-                            label={<FormattedMessage id="runningTasksView" />}
-                            data-test="global-view"
-                        />
-                    </Tabs>
-                    <div class="center">
-                        <FormattedMessage id="minioDiskUsage" />
-                        {usedDiskSpacePercentage}%
-                        <LinearProgress
-                            sx={minioProgressStyle}
-                            variant="determinate"
-                            value={usedDiskSpacePercentage}
-                        />
-                    </div>
+            <div>
+                <Grid container>
+                    <Grid item xs={2}>
+                        <Tabs
+                            value={view}
+                            onChange={handleViewChange}
+                            orientation="vertical"
+                        >
+                            <Tab
+                                label={<FormattedMessage id="timestampView" />}
+                                data-test="timestamp-view"
+                            />
+                            <Tab
+                                label={
+                                    <FormattedMessage id="businessDateView" />
+                                }
+                                data-test="business-view"
+                            />
+                            <Tab
+                                label={
+                                    <FormattedMessage id="runningTasksView" />
+                                }
+                                data-test="global-view"
+                            />
+                        </Tabs>
+                        {displayParametersButton(
+                            parametersEnabled,
+                            handleParametersDialogOpening
+                        )}
+                        <div class="center">
+                            <FormattedMessage id="minioDiskUsage" />
+                            {usedDiskSpacePercentage}%
+                            <LinearProgress
+                                sx={minioProgressStyle}
+                                variant="determinate"
+                                value={usedDiskSpacePercentage}
+                            />
+                        </div>
+                    </Grid>
+                    <Grid item xs={10}>
+                        <TabPanel
+                            value={view}
+                            index={Views.PROCESS_TIMESTAMP_VIEW}
+                        >
+                            <ProcessTimestampView
+                                processName={processName}
+                                timestamp={timestamp}
+                                onTimestampChange={onTimestampChange}
+                            />
+                        </TabPanel>
+                        <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
+                            <BusinessDateView
+                                processName={processName}
+                                timestamp={timestamp}
+                                onTimestampChange={onTimestampChange}
+                            />
+                        </TabPanel>
+                        <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
+                            <RunningTasksView processName={processName} />
+                        </TabPanel>
+                    </Grid>
                 </Grid>
-                <Grid item xs={10}>
-                    <TabPanel value={view} index={Views.PROCESS_TIMESTAMP_VIEW}>
-                        <ProcessTimestampView
-                            processName={processName}
-                            timestamp={timestamp}
-                            onTimestampChange={onTimestampChange}
-                        />
-                    </TabPanel>
-                    <TabPanel value={view} index={Views.BUSINESS_DATE_VIEW}>
-                        <BusinessDateView
-                            processName={processName}
-                            timestamp={timestamp}
-                            onTimestampChange={onTimestampChange}
-                        />
-                    </TabPanel>
-                    <TabPanel value={view} index={Views.RUNNING_TASKS_VIEW}>
-                        <RunningTasksView processName={processName} />
-                    </TabPanel>
-                </Grid>
-            </Grid>
+                <ProcessParametersDialog
+                    open={parametersDialogOpen}
+                    onClose={handleParametersDialogClosing}
+                    buttonAction={handleParametersUpdate}
+                    parameters={processParameters}
+                />
+            </div>
         )
     );
 };
