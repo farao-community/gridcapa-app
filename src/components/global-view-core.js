@@ -42,7 +42,7 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let seconds = parseInt(array[0], 10) * 3600 + parseInt(array[1], 10) * 60;
     let result = [];
 
-    while (currentTimeStamp < timestampMax) {
+    while (currentTimeStamp <= timestampMax) {
         let elem = { timestamp: currentTimeStamp };
         result.push(elem);
         currentTimeStamp += seconds * 1000;
