@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeader from './table-header';
 import TableCore from './table-core';
@@ -27,6 +27,7 @@ const ProcessTimestampView = ({
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
+    let eventsUpdateTimer = useRef(undefined);
 
     const updateTimestampData = useCallback(() => {
         console.log('Fetching timestamp data...');
@@ -54,21 +55,26 @@ const ProcessTimestampView = ({
         [timestamp, timestampData]
     );
 
-    const handleEventsUpdate = useCallback(
-        async (eventsUpdate) => {
-            if (eventsUpdate) {
-                let eventsFromTaskManager = await fetchTimestampData(
-                    timestamp.toISOString(),
-                    intlRef,
-                    enqueueSnackbar
-                );
-                let timestampDataCopy = timestampData;
-                timestampDataCopy.processEvents = eventsFromTaskManager.processEvents;
-                setTimestampData(timestampDataCopy);
-            }
-        },
-        [timestamp, intlRef, enqueueSnackbar, timestampData]
-    );
+    const updateEventsAndResetTimer = useCallback(async () => {
+        eventsUpdateTimer.current = undefined;
+        let eventsFromTaskManager = await fetchTimestampData(
+            timestamp.toISOString(),
+            intlRef,
+            enqueueSnackbar
+        );
+        let timestampDataCopy = timestampData;
+        timestampDataCopy.processEvents = eventsFromTaskManager.processEvents;
+        setTimestampData(timestampDataCopy);
+    }, [timestamp, intlRef, enqueueSnackbar, timestampData]);
+
+    const handleEventsUpdate = async (eventsUpdate) => {
+        if (eventsUpdate && eventsUpdateTimer.current === undefined) {
+            eventsUpdateTimer.current = setTimeout(
+                updateEventsAndResetTimer,
+                5000
+            );
+        }
+    };
 
     const getListOfTopicsTasks = (timestampSubscription) => {
         return ['/task/update/' + timestampSubscription.toISOString()];
