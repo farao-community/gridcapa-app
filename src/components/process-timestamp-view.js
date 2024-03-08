@@ -47,14 +47,37 @@ const ProcessTimestampView = ({
     const handleTimestampMessage = useCallback(
         async (event) => {
             if (event && timestampEquals(event.timestamp, timestamp)) {
+                event.processEvents = timestampData.processEvents; // keep existing processEvents since they are not sent through websocket anymore (due to performance issues)
                 setTimestampData(event);
             }
         },
-        [timestamp]
+        [timestamp, timestampData]
     );
 
-    const getListOfTopics = (timestampSubscription) => {
+    const handleEventsUpdate = useCallback(
+        async (eventsUpdate) => {
+            if (eventsUpdate) {
+                let eventsFromTaskManager = await fetchTimestampData(
+                    timestamp.toISOString(),
+                    intlRef,
+                    enqueueSnackbar
+                );
+                let timestampDataCopy = timestampData;
+                timestampDataCopy.processEvents = eventsFromTaskManager.processEvents;
+                setTimestampData(timestampDataCopy);
+            }
+        },
+        [timestamp, intlRef, enqueueSnackbar, timestampData]
+    );
+
+    const getListOfTopicsTasks = (timestampSubscription) => {
         return ['/task/update/' + timestampSubscription.toISOString()];
+    };
+
+    const getListOfTopicsEvents = (timestampSubscription) => {
+        return [
+            '/task/update/' + timestampSubscription.toISOString() + '/events',
+        ];
     };
 
     useEffect(() => {
@@ -65,8 +88,13 @@ const ProcessTimestampView = ({
         <div>
             <SockJsClient
                 url={getWebSocketUrl('task')}
-                topics={getListOfTopics(timestamp)}
+                topics={getListOfTopicsTasks(timestamp)}
                 onMessage={handleTimestampMessage}
+            />
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopicsEvents(timestamp)}
+                onMessage={handleEventsUpdate}
             />
             <Grid container direction="column">
                 <Grid item>
