@@ -32,7 +32,7 @@ const style = {
     },
 };
 
-function EventDialog({ open, onClose, isLoadingEvent, taskData }) {
+function EventDialog({ open, onClose, isLoadingEvent, eventsData }) {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
             <DialogTitle sx={style.dialogTitleStyle}>
@@ -46,7 +46,7 @@ function EventDialog({ open, onClose, isLoadingEvent, taskData }) {
                 {isLoadingEvent ? (
                     <LinearProgress />
                 ) : (
-                    <EventsTable taskData={taskData} />
+                    <EventsTable eventsData={eventsData} />
                 )}
             </DialogContent>
         </Dialog>

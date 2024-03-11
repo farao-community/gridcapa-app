@@ -303,7 +303,7 @@ const RunningTasksViewCore = () => {
                 open={modalEventOpen}
                 onClose={handleEventClose}
                 isLoadingEvent={isLoadingEvent}
-                taskData={getEventsData()}
+                eventsData={getEventsData().processEvents}
             />
             <FileDialog
                 open={modalFileOpen}

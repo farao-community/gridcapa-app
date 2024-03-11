@@ -27,7 +27,8 @@ const ProcessTimestampView = ({
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
-    let eventsUpdateTimer = useRef(undefined);
+    const [eventsData, setEventsData] = useState([]);
+    const eventsUpdateTimer = useRef(undefined);
 
     const updateTimestampData = useCallback(() => {
         console.log('Fetching timestamp data...');
@@ -40,6 +41,7 @@ const ProcessTimestampView = ({
                 // Avoid filling data with null when no data is retrieved. Wrong date for example.
                 if (data) {
                     setTimestampData(data);
+                    setEventsData(data.processEvents);
                 }
             });
         }
@@ -48,24 +50,21 @@ const ProcessTimestampView = ({
     const handleTimestampMessage = useCallback(
         async (event) => {
             if (event && timestampEquals(event.timestamp, timestamp)) {
-                event.processEvents = timestampData.processEvents; // keep existing processEvents since they are not sent through websocket anymore (due to performance issues)
                 setTimestampData(event);
             }
         },
-        [timestamp, timestampData]
+        [timestamp]
     );
 
     const updateEventsAndResetTimer = useCallback(async () => {
         eventsUpdateTimer.current = undefined;
-        let eventsFromTaskManager = await fetchTimestampData(
+        const eventsFromTaskManager = await fetchTimestampData(
             timestamp.toISOString(),
             intlRef,
             enqueueSnackbar
         );
-        let timestampDataCopy = timestampData;
-        timestampDataCopy.processEvents = eventsFromTaskManager.processEvents;
-        setTimestampData(timestampDataCopy);
-    }, [timestamp, intlRef, enqueueSnackbar, timestampData]);
+        setEventsData(eventsFromTaskManager.processEvents);
+    }, [timestamp, intlRef, enqueueSnackbar]);
 
     const handleEventsUpdate = async (eventsUpdate) => {
         if (eventsUpdate && eventsUpdateTimer.current === undefined) {
@@ -113,7 +112,10 @@ const ProcessTimestampView = ({
                 </Grid>
                 <Grid item>
                     {timestampData ? (
-                        <TableCore taskData={timestampData} />
+                        <TableCore
+                            taskData={timestampData}
+                            eventsData={eventsData}
+                        />
                     ) : null}
                 </Grid>
             </Grid>

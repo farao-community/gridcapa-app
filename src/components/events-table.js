@@ -78,7 +78,7 @@ function loadPredefinedFilter(
     setActiveFilter(activePredefinedFilter);
 }
 
-const EventsTable = ({ taskData }) => {
+const EventsTable = ({ eventsData }) => {
     const [
         eventLevelPredefinedFilter,
         setEventLevelPredefinedFilter,
@@ -134,8 +134,8 @@ const EventsTable = ({ taskData }) => {
     const filterProcessEvent = (currentEventFilter, currentLogFilter) => {
         let isAddErrors = isCurrentLogFilterAddErrors(currentLogFilter);
         let filtered = [];
-        if (taskData?.processEvents) {
-            filtered = taskData.processEvents.filter(
+        if (eventsData) {
+            filtered = eventsData.filter(
                 (event) =>
                     (currentEventFilter.length === 0 ||
                         (currentEventFilter.length > 0 &&
