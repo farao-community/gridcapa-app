@@ -38,7 +38,7 @@ function a11yProps(index) {
     };
 }
 
-const TableCore = ({ taskData }) => {
+const TableCore = ({ taskData, eventsData }) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (_event, newValue) => {
         setValue(newValue);
@@ -68,7 +68,7 @@ const TableCore = ({ taskData }) => {
                 />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <EventsTable taskData={taskData} />
+                <EventsTable eventsData={eventsData} />
             </TabPanel>
         </div>
     );

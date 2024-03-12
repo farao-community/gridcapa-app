@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeader from './table-header';
 import TableCore from './table-core';
@@ -27,6 +27,8 @@ const ProcessTimestampView = ({
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
+    const [eventsData, setEventsData] = useState([]);
+    const eventsUpdateTimer = useRef(undefined);
 
     const updateTimestampData = useCallback(() => {
         console.log('Fetching timestamp data...');
@@ -39,6 +41,7 @@ const ProcessTimestampView = ({
                 // Avoid filling data with null when no data is retrieved. Wrong date for example.
                 if (data) {
                     setTimestampData(data);
+                    setEventsData(data.processEvents);
                 }
             });
         }
@@ -53,8 +56,33 @@ const ProcessTimestampView = ({
         [timestamp]
     );
 
-    const getListOfTopics = (timestampSubscription) => {
+    const updateEventsAndResetTimer = useCallback(async () => {
+        eventsUpdateTimer.current = undefined;
+        const eventsFromTaskManager = await fetchTimestampData(
+            timestamp.toISOString(),
+            intlRef,
+            enqueueSnackbar
+        );
+        setEventsData(eventsFromTaskManager.processEvents);
+    }, [timestamp, intlRef, enqueueSnackbar]);
+
+    const handleEventsUpdate = async (eventsUpdate) => {
+        if (eventsUpdate && eventsUpdateTimer.current === undefined) {
+            eventsUpdateTimer.current = setTimeout(
+                updateEventsAndResetTimer,
+                5000
+            );
+        }
+    };
+
+    const getListOfTopicsTasks = (timestampSubscription) => {
         return ['/task/update/' + timestampSubscription.toISOString()];
+    };
+
+    const getListOfTopicsEvents = (timestampSubscription) => {
+        return [
+            '/task/update/' + timestampSubscription.toISOString() + '/events',
+        ];
     };
 
     useEffect(() => {
@@ -65,8 +93,13 @@ const ProcessTimestampView = ({
         <div>
             <SockJsClient
                 url={getWebSocketUrl('task')}
-                topics={getListOfTopics(timestamp)}
+                topics={getListOfTopicsTasks(timestamp)}
                 onMessage={handleTimestampMessage}
+            />
+            <SockJsClient
+                url={getWebSocketUrl('task')}
+                topics={getListOfTopicsEvents(timestamp)}
+                onMessage={handleEventsUpdate}
             />
             <Grid container direction="column">
                 <Grid item>
@@ -79,7 +112,10 @@ const ProcessTimestampView = ({
                 </Grid>
                 <Grid item>
                     {timestampData ? (
-                        <TableCore taskData={timestampData} />
+                        <TableCore
+                            taskData={timestampData}
+                            eventsData={eventsData}
+                        />
                     ) : null}
                 </Grid>
             </Grid>

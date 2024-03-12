@@ -42,6 +42,7 @@ const RunningTasksViewCore = () => {
 
     const [openEvent, setOpenEvent] = useState([]);
     const [tasks, setTasks] = useState([]);
+    const [processEvents, setProcessEvents] = useState([]);
     const [modalEventOpen, setModalEventOpen] = useState(false);
     const [modalFileOpen, setModalFileOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -65,17 +66,22 @@ const RunningTasksViewCore = () => {
             setTimestampFilterRef(filter);
         }
         getTimestampFilter();
-        getAllTasks();
+        initAllTasksAndProcessEvents();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
-    const getAllTasks = async () => {
+    const initAllTasksAndProcessEvents = async () => {
         setIsLoading(true);
         const newTasks = await fetchRunningTasksData();
+        let newProcessEvents;
         if (newTasks && newTasks.length) {
             setTasks(newTasks);
+            newProcessEvents = new Array(newTasks.length);
         } else {
             setTasks([]);
+            newProcessEvents = [];
         }
+        newProcessEvents.fill([]);
+        setProcessEvents(newProcessEvents);
         setIsLoading(false);
     };
 
@@ -126,7 +132,7 @@ const RunningTasksViewCore = () => {
                 intlRef,
                 enqueueSnackbar
             ).then((res) => {
-                tasks[index].processEvents = res.processEvents;
+                processEvents[index] = res.processEvents;
                 setIsLoadingEvent(false);
             });
         }
@@ -205,7 +211,7 @@ const RunningTasksViewCore = () => {
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
-        return index >= 0 ? tasks[index] : {};
+        return index >= 0 ? processEvents[index] : [];
     };
 
     const getFilesData = (field) => {
@@ -303,7 +309,7 @@ const RunningTasksViewCore = () => {
                 open={modalEventOpen}
                 onClose={handleEventClose}
                 isLoadingEvent={isLoadingEvent}
-                taskData={getEventsData()}
+                eventsData={getEventsData()}
             />
             <FileDialog
                 open={modalFileOpen}

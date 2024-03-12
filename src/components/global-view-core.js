@@ -134,7 +134,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 intlRef,
                 enqueueSnackbar
             ).then((res) => {
-                steps[index].taskData.processEvents = res.processEvents;
+                steps[index].eventsData = res.processEvents;
                 setIsLoadingEvent(false);
             });
         }
@@ -274,7 +274,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getEventsData = () => {
         let index = openEvent.indexOf(true);
-        return index >= 0 ? steps[index].taskData : {};
+        return index >= 0 ? steps[index].eventsData : [];
     };
 
     const getFilesData = (field) => {
@@ -372,7 +372,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 open={modalEventOpen}
                 onClose={handleEventClose}
                 isLoadingEvent={isLoadingEvent}
-                taskData={getEventsData()}
+                eventsData={getEventsData()}
             />
             <FileDialog
                 open={modalFileOpen}
