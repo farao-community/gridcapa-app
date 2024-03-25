@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -51,6 +51,7 @@ import { displayErrorMessageWithSnackbar, useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import AppTopBar from './app-top-bar';
 import GridCapaMain from './gridcapa-main';
+import { Views, getUrlWithTimestampAndView } from '../utils/view-utils';
 
 const noUserManager = { instance: null, error: null };
 
@@ -79,6 +80,9 @@ const App = () => {
             path: '/silent-renew-callback',
         })
     );
+    const [timestamp, setTimestamp] = useState(null);
+    const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
+    const [parametersEnabled, setParametersEnabled] = useState(false);
 
     const initialize = useCallback(() => {
         if (process.env.REACT_APP_USE_AUTHENTICATION === 'true') {
@@ -180,44 +184,61 @@ const App = () => {
         }
     }, [connectNotificationsUpdateConfig, displayError, updateParams, user]);
 
+    const handleViewChange = (newValue) => {
+        setView(newValue);
+        const newUrl = getUrlWithTimestampAndView(timestamp, newValue);
+        navigate(newUrl, {
+            replace: true,
+        });
+    };
+
+    const handleTimestampChange = (newTimestamp) => {
+        setTimestamp(new Date(newTimestamp));
+        const newUrl = getUrlWithTimestampAndView(newTimestamp, view);
+        navigate(newUrl, {
+            replace: true,
+        });
+    };
+
     return (
         <>
-            <AppTopBar user={user} userManager={userManager} />
+            <AppTopBar
+                user={user}
+                userManager={userManager}
+                view={view}
+                onViewChange={handleViewChange}
+                parametersEnabled={parametersEnabled}
+            />
             <CardErrorBoundary>
                 {user !== null ? (
                     <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <Box mt={1}>
-                                    <GridCapaMain />
-                                </Box>
-                            }
-                        />
-                        <Route
-                            path="/date/:dateParam"
-                            element={
-                                <Box mt={1}>
-                                    <GridCapaMain />
-                                </Box>
-                            }
-                        />
-                        <Route
-                            path="/utcDate/:dateParam/utcTime/:timeParam"
-                            element={
-                                <Box mt={1}>
-                                    <GridCapaMain />
-                                </Box>
-                            }
-                        />
-                        <Route
-                            path="/global"
-                            element={
-                                <Box mt={1}>
-                                    <GridCapaMain displayGlobal={true} />
-                                </Box>
-                            }
-                        />
+                        {[
+                            '/',
+                            '/date/:dateParam',
+                            '/utcDate/:dateParam/utcTime/:timeParam',
+                            '/global',
+                        ].map((path) => (
+                            <Route
+                                key={path}
+                                path={path}
+                                element={
+                                    <Box mt={1}>
+                                        <GridCapaMain
+                                            view={view}
+                                            setView={setView}
+                                            timestamp={timestamp}
+                                            setTimestamp={setTimestamp}
+                                            onTimestampChange={
+                                                handleTimestampChange
+                                            }
+                                            setParametersEnabled={
+                                                setParametersEnabled
+                                            }
+                                        />
+                                    </Box>
+                                }
+                            />
+                        ))}
                         <Route
                             path="sign-in-callback"
                             element={

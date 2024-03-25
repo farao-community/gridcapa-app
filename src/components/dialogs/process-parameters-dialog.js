@@ -61,7 +61,7 @@ function ProcessParametersDialog({ open, onClose, parameters, buttonAction }) {
                 open={open}
                 onClose={checkBeforeClose}
                 maxWidth="md"
-                fullWidth="true"
+                fullWidth
             >
                 <DialogTitle sx={style.dialogTitleStyle}>
                     <FormattedMessage id="processParameters" />

@@ -6,20 +6,32 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import { fetchAppsAndUrls } from '../utils/rest-api';
 
 import { logout, TopBar } from '@gridsuite/commons-ui';
 import ParametersDialog, {
     useParameterState,
 } from './dialogs/parameters-dialog';
 import { APP_NAME, PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
-import { useDispatch } from 'react-redux';
-import { fetchAppsAndUrls } from '../utils/rest-api';
-import PropTypes from 'prop-types';
 import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
-import { useNavigate } from 'react-router-dom';
 import AboutDialog from './dialogs/about-dialog';
+import ViewTabs from './tabs/view-tabs';
+import ParametersButton from './buttons/parameters-button';
+import MinioDiskUsage from './minio-disk-usage';
+import { Box } from '@mui/material';
 
-const AppTopBar = ({ user, userManager }) => {
+const AppTopBar = ({
+    user,
+    userManager,
+    view,
+    onViewChange,
+    parametersEnabled,
+}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -75,7 +87,22 @@ const AppTopBar = ({ user, userManager }) => {
                 theme={themeLocal}
                 onLanguageClick={handleChangeLanguage}
                 language={languageLocal}
-            />
+            >
+                {user && (
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        width="100%"
+                    >
+                        <ViewTabs view={view} onViewChange={onViewChange} />
+                        <Box margin="0 50px">
+                            <MinioDiskUsage />
+                        </Box>
+                        {parametersEnabled && <ParametersButton />}
+                    </Box>
+                )}
+            </TopBar>
             <ParametersDialog
                 open={showParameters}
                 onClose={handleHideParameters}
@@ -88,6 +115,9 @@ const AppTopBar = ({ user, userManager }) => {
 AppTopBar.propTypes = {
     user: PropTypes.object,
     userManager: PropTypes.object.isRequired,
+    view: PropTypes.number.isRequired,
+    onViewChange: PropTypes.func.isRequired,
+    parametersEnabled: PropTypes.bool.isRequired,
 };
 
 export default AppTopBar;
