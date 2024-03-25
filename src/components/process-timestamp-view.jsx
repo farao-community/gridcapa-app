@@ -8,7 +8,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeader from './table-header';
-import TableCore from './table-core';
+import TableCore from './tables/table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
@@ -113,6 +113,7 @@ const ProcessTimestampView = ({
                 <Grid item>
                     {timestampData ? (
                         <TableCore
+                            processName={processName}
                             taskData={timestampData}
                             eventsData={eventsData}
                         />

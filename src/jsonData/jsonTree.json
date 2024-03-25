@@ -1,0 +1,828 @@
+{
+    "version": "2.0",
+    "reportRoot": {
+      "messageKey": "root",
+      "children": [
+        {
+          "messageKey": "angleMonitoringStart",
+          "values": {
+            "reportSeverity": {
+              "value": "INFO",
+              "type": "SEVERITY"
+            }
+          },
+          "children": [
+            {
+              "messageKey": "monitoringAnglesAtState",
+              "values": {
+                "state": {
+                  "value": "preventive"
+                },
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              },
+              "children": [
+                {
+                  "messageKey": "loadflowComputationStart",
+                  "values": {
+                    "reportSeverity": {
+                      "value": "DEBUG",
+                      "type": "SEVERITY"
+                    }
+                  },
+                  "children": [
+                    {
+                      "messageKey": "loadFlow",
+                      "values": {
+                        "networkId": {
+                          "value": "phaseShifter"
+                        }
+                      },
+                      "children": [
+                        {
+                          "messageKey": "lfNetwork",
+                          "values": {
+                            "networkNumCc": {
+                              "value": 0
+                            },
+                            "networkNumSc": {
+                              "value": 0
+                            }
+                          },
+                          "children": [
+                            {
+                              "messageKey": "networkInfo",
+                              "children": [
+                                {
+                                  "messageKey": "networkSize",
+                                  "values": {
+                                    "busCount": {
+                                      "value": 3
+                                    },
+                                    "branchCount": {
+                                      "value": 4
+                                    },
+                                    "reportSeverity": {
+                                      "value": "INFO",
+                                      "type": "SEVERITY"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "networkBalance",
+                                  "values": {
+                                    "activeGeneration": {
+                                      "value": 100.0
+                                    },
+                                    "activeLoad": {
+                                      "value": 100.0
+                                    },
+                                    "reactiveGeneration": {
+                                      "value": 0.0
+                                    },
+                                    "reactiveLoad": {
+                                      "value": 50.0
+                                    },
+                                    "reportSeverity": {
+                                      "value": "INFO",
+                                      "type": "SEVERITY"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "messageKey": "OuterLoop",
+                              "values": {
+                                "outerLoopType": {
+                                  "value": "DistributedSlack"
+                                }
+                              }
+                            },
+                            {
+                              "messageKey": "OuterLoop",
+                              "values": {
+                                "outerLoopType": {
+                                  "value": "VoltageMonitoring"
+                                }
+                              }
+                            },
+                            {
+                              "messageKey": "OuterLoop",
+                              "values": {
+                                "outerLoopType": {
+                                  "value": "ReactiveLimits"
+                                }
+                              }
+                            },
+                            {
+                              "messageKey": "acLfComplete",
+                              "values": {
+                                "successText": {
+                                  "value": "successfully"
+                                },
+                                "solverStatus": {
+                                  "value": "CONVERGED"
+                                },
+                                "outerloopStatus": {
+                                  "value": "STABLE"
+                                },
+                                "reportSeverity": {
+                                  "value": "INFO",
+                                  "type": "SEVERITY"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "messageKey": "loadflowComputationEnd",
+                      "values": {
+                        "reportSeverity": {
+                          "value": "DEBUG",
+                          "type": "SEVERITY"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "messageKey": "noRaAvailable",
+                  "values": {
+                    "cnecId": {
+                      "value": "acPrev"
+                    },
+                    "stateId": {
+                      "value": "preventive"
+                    },
+                    "reportSeverity": {
+                      "value": "WARN",
+                      "type": "SEVERITY"
+                    }
+                  }
+                },
+                {
+                  "messageKey": "appliedNetworkActions",
+                  "values": {
+                    "cnecId": {
+                      "value": "acPrev"
+                    },
+                    "appliedRasList": {
+                      "value": ""
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "messageKey": "someConstrainedElements",
+              "values": {
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "constrainedElement",
+              "values": {
+                "angleCnecId": {
+                  "value": "acPrev"
+                },
+                "importingNetworkElementId": {
+                  "value": "VL1"
+                },
+                "exportingNetworkElementId": {
+                  "value": "VL2"
+                },
+                "stateId": {
+                  "value": "preventive"
+                },
+                "angle": {
+                  "value": "-4"
+                },
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "monitoringAnglesAtStateEnd",
+              "values": {
+                "state": {
+                  "value": "preventive"
+                },
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "postContingencyScenarioAngleMonitoring",
+              "values": {
+                "contingencyId": {
+                  "value": "coL1"
+                },
+                "reportSeverity": {
+                  "value": "DEBUG",
+                  "type": "SEVERITY"
+                }
+              },
+              "children": [
+                {
+                  "messageKey": "monitoringAnglesAtState",
+                  "values": {
+                    "state": {
+                      "value": "coL1 - curative"
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  },
+                  "children": [
+                    {
+                      "messageKey": "loadflowComputationStart",
+                      "values": {
+                        "reportSeverity": {
+                          "value": "DEBUG",
+                          "type": "SEVERITY"
+                        }
+                      },
+                      "children": [
+                        {
+                          "messageKey": "loadFlow",
+                          "values": {
+                            "networkId": {
+                              "value": "phaseShifter"
+                            }
+                          },
+                          "children": [
+                            {
+                              "messageKey": "lfNetwork",
+                              "values": {
+                                "networkNumCc": {
+                                  "value": 0
+                                },
+                                "networkNumSc": {
+                                  "value": 0
+                                }
+                              },
+                              "children": [
+                                {
+                                  "messageKey": "networkInfo",
+                                  "children": [
+                                    {
+                                      "messageKey": "networkSize",
+                                      "values": {
+                                        "busCount": {
+                                          "value": 3
+                                        },
+                                        "branchCount": {
+                                          "value": 3
+                                        },
+                                        "reportSeverity": {
+                                          "value": "INFO",
+                                          "type": "SEVERITY"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "messageKey": "networkBalance",
+                                      "values": {
+                                        "activeGeneration": {
+                                          "value": 100.0
+                                        },
+                                        "activeLoad": {
+                                          "value": 100.0
+                                        },
+                                        "reactiveGeneration": {
+                                          "value": 0.0
+                                        },
+                                        "reactiveLoad": {
+                                          "value": 50.0
+                                        },
+                                        "reportSeverity": {
+                                          "value": "INFO",
+                                          "type": "SEVERITY"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "DistributedSlack"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "VoltageMonitoring"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "ReactiveLimits"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "acLfComplete",
+                                  "values": {
+                                    "successText": {
+                                      "value": "successfully"
+                                    },
+                                    "solverStatus": {
+                                      "value": "CONVERGED"
+                                    },
+                                    "outerloopStatus": {
+                                      "value": "STABLE"
+                                    },
+                                    "reportSeverity": {
+                                      "value": "INFO",
+                                      "type": "SEVERITY"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "messageKey": "loadflowComputationEnd",
+                          "values": {
+                            "reportSeverity": {
+                              "value": "DEBUG",
+                              "type": "SEVERITY"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "messageKey": "noRaAvailable",
+                      "values": {
+                        "cnecId": {
+                          "value": "acCur1"
+                        },
+                        "stateId": {
+                          "value": "coL1 - curative"
+                        },
+                        "reportSeverity": {
+                          "value": "WARN",
+                          "type": "SEVERITY"
+                        }
+                      }
+                    },
+                    {
+                      "messageKey": "appliedNetworkActions",
+                      "values": {
+                        "cnecId": {
+                          "value": "acCur1"
+                        },
+                        "appliedRasList": {
+                          "value": ""
+                        },
+                        "reportSeverity": {
+                          "value": "INFO",
+                          "type": "SEVERITY"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "messageKey": "someConstrainedElements",
+                  "values": {
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                },
+                {
+                  "messageKey": "constrainedElement",
+                  "values": {
+                    "angleCnecId": {
+                      "value": "acCur1"
+                    },
+                    "importingNetworkElementId": {
+                      "value": "VL1"
+                    },
+                    "exportingNetworkElementId": {
+                      "value": "VL2"
+                    },
+                    "stateId": {
+                      "value": "coL1 - curative"
+                    },
+                    "angle": {
+                      "value": "-8"
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                },
+                {
+                  "messageKey": "monitoringAnglesAtStateEnd",
+                  "values": {
+                    "state": {
+                      "value": "coL1 - curative"
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "messageKey": "postContingencyScenarioAngleMonitoring",
+              "values": {
+                "contingencyId": {
+                  "value": "coL1L2"
+                },
+                "reportSeverity": {
+                  "value": "DEBUG",
+                  "type": "SEVERITY"
+                }
+              },
+              "children": [
+                {
+                  "messageKey": "monitoringAnglesAtState",
+                  "values": {
+                    "state": {
+                      "value": "coL1L2 - curative"
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  },
+                  "children": [
+                    {
+                      "messageKey": "loadflowComputationStart",
+                      "values": {
+                        "reportSeverity": {
+                          "value": "DEBUG",
+                          "type": "SEVERITY"
+                        }
+                      },
+                      "children": [
+                        {
+                          "messageKey": "loadFlow",
+                          "values": {
+                            "networkId": {
+                              "value": "phaseShifter"
+                            }
+                          },
+                          "children": [
+                            {
+                              "messageKey": "lfNetwork",
+                              "values": {
+                                "networkNumCc": {
+                                  "value": 0
+                                },
+                                "networkNumSc": {
+                                  "value": 0
+                                }
+                              },
+                              "children": [
+                                {
+                                  "messageKey": "networkInfo",
+                                  "children": [
+                                    {
+                                      "messageKey": "networkSize",
+                                      "values": {
+                                        "busCount": {
+                                          "value": 2
+                                        },
+                                        "branchCount": {
+                                          "value": 2
+                                        },
+                                        "reportSeverity": {
+                                          "value": "INFO",
+                                          "type": "SEVERITY"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "messageKey": "networkBalance",
+                                      "values": {
+                                        "activeGeneration": {
+                                          "value": 100.0
+                                        },
+                                        "activeLoad": {
+                                          "value": 0.0
+                                        },
+                                        "reactiveGeneration": {
+                                          "value": 0.0
+                                        },
+                                        "reactiveLoad": {
+                                          "value": 0.0
+                                        },
+                                        "reportSeverity": {
+                                          "value": "INFO",
+                                          "type": "SEVERITY"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "DistributedSlack"
+                                    }
+                                  },
+                                  "children": [
+                                    {
+                                      "messageKey": "OuterLoopIteration",
+                                      "values": {
+                                        "outerLoopIteration": {
+                                          "value": 1
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "messageKey": "mismatchDistributionFailure",
+                                          "values": {
+                                            "mismatch": {
+                                              "value": -50.0,
+                                              "type": "Mismatch"
+                                            },
+                                            "reportSeverity": {
+                                              "value": "ERROR",
+                                              "type": "SEVERITY"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "messageKey": "OuterLoopIteration",
+                                      "values": {
+                                        "outerLoopIteration": {
+                                          "value": 2
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "messageKey": "mismatchDistributionFailure",
+                                          "values": {
+                                            "mismatch": {
+                                              "value": -50.0,
+                                              "type": "Mismatch"
+                                            },
+                                            "reportSeverity": {
+                                              "value": "ERROR",
+                                              "type": "SEVERITY"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "VoltageMonitoring"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "ReactiveLimits"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "DistributedSlack"
+                                    }
+                                  },
+                                  "children": [
+                                    {
+                                      "messageKey": "OuterLoopIteration",
+                                      "values": {
+                                        "outerLoopIteration": {
+                                          "value": 2
+                                        }
+                                      },
+                                      "children": [
+                                        {
+                                          "messageKey": "mismatchDistributionFailure",
+                                          "values": {
+                                            "mismatch": {
+                                              "value": -50.0,
+                                              "type": "Mismatch"
+                                            },
+                                            "reportSeverity": {
+                                              "value": "ERROR",
+                                              "type": "SEVERITY"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "VoltageMonitoring"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "OuterLoop",
+                                  "values": {
+                                    "outerLoopType": {
+                                      "value": "ReactiveLimits"
+                                    }
+                                  }
+                                },
+                                {
+                                  "messageKey": "acLfComplete",
+                                  "values": {
+                                    "successText": {
+                                      "value": "successfully"
+                                    },
+                                    "solverStatus": {
+                                      "value": "CONVERGED"
+                                    },
+                                    "outerloopStatus": {
+                                      "value": "STABLE"
+                                    },
+                                    "reportSeverity": {
+                                      "value": "INFO",
+                                      "type": "SEVERITY"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "messageKey": "loadflowComputationEnd",
+                          "values": {
+                            "reportSeverity": {
+                              "value": "DEBUG",
+                              "type": "SEVERITY"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "messageKey": "noConstrainedElements",
+                  "values": {
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                },
+                {
+                  "messageKey": "monitoringAnglesAtStateEnd",
+                  "values": {
+                    "state": {
+                      "value": "coL1L2 - curative"
+                    },
+                    "reportSeverity": {
+                      "value": "INFO",
+                      "type": "SEVERITY"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "messageKey": "someConstrainedElements",
+              "values": {
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "constrainedElement",
+              "values": {
+                "angleCnecId": {
+                  "value": "acCur1"
+                },
+                "importingNetworkElementId": {
+                  "value": "VL1"
+                },
+                "exportingNetworkElementId": {
+                  "value": "VL2"
+                },
+                "stateId": {
+                  "value": "coL1 - curative"
+                },
+                "angle": {
+                  "value": "-8"
+                },
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "constrainedElement",
+              "values": {
+                "angleCnecId": {
+                  "value": "acPrev"
+                },
+                "importingNetworkElementId": {
+                  "value": "VL1"
+                },
+                "exportingNetworkElementId": {
+                  "value": "VL2"
+                },
+                "stateId": {
+                  "value": "preventive"
+                },
+                "angle": {
+                  "value": "-4"
+                },
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            },
+            {
+              "messageKey": "angleMonitoringEnd",
+              "values": {
+                "reportSeverity": {
+                  "value": "INFO",
+                  "type": "SEVERITY"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "dictionaries": {
+        "default": {
+          "OuterLoop": "Outer loop ${outerLoopType}",
+          "OuterLoopIteration": "Outer loop iteration ${outerLoopIteration}",
+          "acLfComplete": "AC load flow completed ${successText} (solverStatus=${solverStatus}, outerloopStatus=${outerloopStatus})",
+          "angleMonitoringEnd": "End of angle monitoring",
+          "angleMonitoringStart": "Angle monitoring",
+          "appliedNetworkActions": "Applying the following remedial action(s) in order to reduce constraints on CNEC '${cnecId}': ${appliedRasList}",
+          "constrainedElement": "AngleCnec ${angleCnecId} (with importing network element ${importingNetworkElementId} and exporting network element ${exportingNetworkElementId}) at state ${stateId} has an angle of ${angle}°.",
+          "lfNetwork": "Network CC${networkNumCc} SC${networkNumSc}",
+          "loadFlow": "Load flow on network '${networkId}'",
+          "loadflowComputationEnd": "End of load-flow computation",
+          "loadflowComputationStart": "Load-flow computation",
+          "mismatchDistributionFailure": "Failed to distribute slack bus active power mismatch, ${mismatch} MW remains",
+          "monitoringAnglesAtState": "Monitoring angles at state '${state}'",
+          "monitoringAnglesAtStateEnd": "End of monitoring angles at state '${state}'",
+          "networkBalance": "Network balance: active generation=${activeGeneration} MW, active load=${activeLoad} MW, reactive generation=${reactiveGeneration} MVar, reactive load=${reactiveLoad} MVar",
+          "networkInfo": "Network info",
+          "networkSize": "Network has ${busCount} buses and ${branchCount} branches",
+          "noConstrainedElements": "All AngleCnecs are secure.",
+          "noRaAvailable": "AngleCnec ${cnecId} in state ${stateId} has no associated RA. Angle constraint cannot be secured.",
+          "postContingencyAngleMonitoring": "Angle monitoring post-contingency.",
+          "postContingencyScenarioAngleMonitoring": "Angle monitoring post-contingency ${contingencyId}.",
+          "root": "Root node for tests",
+          "someConstrainedElements": "Some AngleCnecs are not secure:"
+        }
+      }
+    }
+  }

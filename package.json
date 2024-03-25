@@ -17,7 +17,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.20",
-    "@mui/x-tree-view": "^7.7.1",
+    "@mui/x-tree-view": "^6.17.0",
     "@reduxjs/toolkit": "^2.2.5",
     "core-js": "^3.37.1",
     "dateformat": "^5.0.3",

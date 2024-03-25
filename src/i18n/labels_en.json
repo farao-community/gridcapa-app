@@ -9,6 +9,7 @@
   "latestModification": "Latest modification",
   "overview": "Overview",
   "events": "Logs",
+  "structuredLogs": "Structured Logs",
   "selectTimestampDate": "Timestamp date",
   "selectTimestampTime": "Timestamp time",
   "runButtonLabel": "Run",
