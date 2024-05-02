@@ -328,14 +328,7 @@ export function fetchTaskManagerSelectFile(timestamp, type, filename) {
     };
 
     return backendFetch(
-        getBaseUrl() +
-            PREFIX_TASK_QUERIES +
-            '/' +
-            timestamp +
-            '/input/' +
-            type +
-            '?filename=' +
-            filename,
+        getBaseUrl() + PREFIX_TASK_QUERIES + '/' + timestamp+ '/input/' + type + '?filename=' + filename,
         requestOptions
     );
 }
