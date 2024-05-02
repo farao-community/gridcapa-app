@@ -6,5 +6,5 @@
   "parametersNotSavedDialog": "Some parameter values have changed and have not been saved. Do you really want to quit without saving?",
   "interruptionProcessAlertMessage": "Do you want to stop the computation?",
   "manualExportAlertMessage": "Do you want to trigger an export of result files?",
-  "changeProcessFileAlertMessage": "Are you sure you want to change {input_type} file ?"
+  "changeProcessFileAlertMessage": "Are you sure you want to change {input_type} file?"
 }
