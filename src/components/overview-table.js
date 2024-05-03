@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Paper,
     Table,
@@ -130,17 +130,10 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
         setSelectedFilename('');
     };
 
-    const selectFile = useCallback(
-        async function () {
-            handleClose();
-            await fetchTaskManagerSelectFile(
-                timestamp,
-                fileType,
-                selectedFilename
-            );
-        },
-        [timestamp, fileType, selectedFilename]
-    );
+    const selectFile = async () => {
+        await fetchTaskManagerSelectFile(timestamp, fileType, selectedFilename);
+        handleClose();
+    };
 
     // Hiding Upload button for now until we complete the feature
     return (
