@@ -17,17 +17,13 @@ import {
     FormControl,
     Select,
     MenuItem,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Button,
-    Dialog,
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from '../utils/commons';
 import DownloadButton from './buttons/download-button';
 import UploadButton from './upload-button';
 import { fetchTaskManagerSelectFile } from '../utils/rest-api';
+import SelectFileDialog from './dialogs/select-file-dialog';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
@@ -119,7 +115,7 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
     const [open, setOpen] = useState(false);
     let fileType = processFile.fileType;
     let processFilename = processFile.fileName;
-    const [selectedFilename, setSelectedFilename] = useState('');
+    let [selectedFilename, setSelectedFilename] = useState('');
     let processFileStatus = processFile.processFileStatus;
     let lastModificationDate = gridcapaFormatDate(
         processFile.lastModificationDate
@@ -131,6 +127,7 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
 
     const handleClose = () => {
         setOpen(false);
+        setSelectedFilename('');
     };
 
     const selectFile = useCallback(
@@ -171,9 +168,9 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                             </MenuItem>
 
                             {availableInputs
-                                .filter((input) => input.fileType === fileType)
                                 .filter(
                                     (input) =>
+                                        input.fileType === fileType &&
                                         input.fileName !== processFilename
                                 )
                                 .map((input) => (
@@ -182,32 +179,12 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                                     </MenuItem>
                                 ))}
                         </Select>
-                        <Dialog open={open} onClose={handleClose}>
-                            <DialogContent>
-                                <DialogContentText>
-                                    <FormattedMessage
-                                        id="changeProcessFileAlertMessage"
-                                        values={{ input_type: fileType }}
-                                    />
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    color="primary"
-                                    data-test="yes-button"
-                                    onClick={selectFile}
-                                >
-                                    <FormattedMessage id="yes" />
-                                </Button>
-                                <Button
-                                    onClick={handleClose}
-                                    color="primary"
-                                    data-test="cancel-button"
-                                >
-                                    <FormattedMessage id="cancel" />
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
+                        <SelectFileDialog
+                            open={open}
+                            handleClose={handleClose}
+                            fileType={fileType}
+                            selectFile={selectFile}
+                        />
                     </FormControl>
                 ) : (
                     processFilename
