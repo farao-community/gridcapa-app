@@ -321,6 +321,25 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     ).then();
 }
 
+export function fetchTaskManagerSelectFile(timestamp, type, filename) {
+    console.log('Requesting task manager to select file for : ' + timestamp);
+    const requestOptions = {
+        method: 'put',
+    };
+
+    return backendFetch(
+        getBaseUrl() +
+            PREFIX_TASK_QUERIES +
+            '/' +
+            timestamp +
+            '/input/' +
+            type +
+            '?filename=' +
+            filename,
+        requestOptions
+    );
+}
+
 export function fetchTaskManagerManualExport(taskTimestamp) {
     console.log('Requesting export for task: ' + taskTimestamp);
     const requestOptions = {

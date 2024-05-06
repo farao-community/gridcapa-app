@@ -63,6 +63,7 @@ const TableCore = ({ taskData, eventsData }) => {
             <TabPanel value={value} index={0}>
                 <OverviewTable
                     inputs={taskData.inputs || []}
+                    availableInputs={taskData.availableInputs || []}
                     outputs={taskData.outputs || []}
                     timestamp={taskData.timestamp}
                 />

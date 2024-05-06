@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Paper,
     Table,
@@ -14,15 +14,23 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    FormControl,
+    Select,
+    MenuItem,
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from '../utils/commons';
 import DownloadButton from './buttons/download-button';
 import UploadButton from './upload-button';
+import { fetchTaskManagerSelectFile } from '../utils/rest-api';
+import SelectFileDialog from './dialogs/select-file-dialog';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
-
+const SELECT_STYLES = {
+    padding: 0,
+    minWidth: '200px',
+};
 const processFileStatusStyles = {
     NOT_PRESENT: {
         backgroundColor: 'grey',
@@ -64,13 +72,19 @@ function FileGroupTableHead({ fileGroup }) {
     );
 }
 
-function FileGroupTableRows({ fileGroup, processFiles, timestamp }) {
+function FileGroupTableRows({
+    fileGroup,
+    availableInputs,
+    processFiles,
+    timestamp,
+}) {
     return (
         <TableBody>
             {processFiles.map((processFile, index) => (
                 <FileDataRow
                     key={'file_' + index}
                     processFile={processFile}
+                    availableInputs={availableInputs}
                     fileGroup={fileGroup}
                     timestamp={timestamp}
                 />
@@ -79,25 +93,48 @@ function FileGroupTableRows({ fileGroup, processFiles, timestamp }) {
     );
 }
 
-function FileGroupTable({ fileGroup, processFiles, timestamp }) {
+function FileGroupTable({
+    fileGroup,
+    processFiles,
+    availableInputs,
+    timestamp,
+}) {
     return (
         <>
             <FileGroupTableHead fileGroup={fileGroup} />
             <FileGroupTableRows
                 processFiles={processFiles}
+                availableInputs={availableInputs}
                 fileGroup={fileGroup}
                 timestamp={timestamp}
             />
         </>
     );
 }
-
-function FileDataRow({ processFile, fileGroup, timestamp }) {
+function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
+    const [open, setOpen] = useState(false);
     let fileType = processFile.fileType;
+    let processFilename = processFile.fileName;
+    let [selectedFilename, setSelectedFilename] = useState('');
     let processFileStatus = processFile.processFileStatus;
     let lastModificationDate = gridcapaFormatDate(
         processFile.lastModificationDate
     );
+    const handleClickOpen = (event) => {
+        setOpen(true);
+        setSelectedFilename(event.target.value);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedFilename('');
+    };
+
+    const selectFile = async () => {
+        await fetchTaskManagerSelectFile(timestamp, fileType, selectedFilename);
+        handleClose();
+    };
+
     // Hiding Upload button for now until we complete the feature
     return (
         <TableRow>
@@ -111,7 +148,40 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
                 {processFileStatus}
             </TableCell>
             <TableCell data-test={fileType + '-' + fileGroup + '-filename'}>
-                {processFile.filename}
+                {availableInputs !== undefined ? (
+                    <FormControl>
+                        <Select
+                            sx={SELECT_STYLES}
+                            displayEmpty
+                            onChange={handleClickOpen}
+                            value={processFilename}
+                        >
+                            <MenuItem value={processFilename}>
+                                <em>{processFilename}</em>
+                            </MenuItem>
+
+                            {availableInputs
+                                .filter(
+                                    (input) =>
+                                        input.fileType === fileType &&
+                                        input.fileName !== processFilename
+                                )
+                                .map((input) => (
+                                    <MenuItem value={input.fileName}>
+                                        {input.fileName}
+                                    </MenuItem>
+                                ))}
+                        </Select>
+                        <SelectFileDialog
+                            open={open}
+                            handleClose={handleClose}
+                            fileType={fileType}
+                            selectFile={selectFile}
+                        />
+                    </FormControl>
+                ) : (
+                    processFilename
+                )}
             </TableCell>
             <TableCell
                 data-test={fileType + '-' + fileGroup + '-latest-modification'}
@@ -142,13 +212,14 @@ function FileDataRow({ processFile, fileGroup, timestamp }) {
     );
 }
 
-const OverviewTable = ({ inputs, outputs, timestamp }) => {
+const OverviewTable = ({ inputs, availableInputs, outputs, timestamp }) => {
     return (
         <TableContainer component={Paper}>
             <Table className="table">
                 <FileGroupTable
                     fileGroup={INPUT_FILE_GROUP}
                     processFiles={inputs}
+                    availableInputs={availableInputs}
                     timestamp={timestamp}
                 />
                 <FileGroupTable
