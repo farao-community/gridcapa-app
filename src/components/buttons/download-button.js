@@ -31,7 +31,7 @@ async function downloadFile(processFile, timestamp, intlRef, enqueueSnackbar) {
     const url = URL.createObjectURL(blob);
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
-    downloadLink.download = processFile.filename;
+    downloadLink.download = processFile.fileName;
     downloadLink.click();
 }
 
