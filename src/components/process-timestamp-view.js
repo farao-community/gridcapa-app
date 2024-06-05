@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeader from './table-header';
-import TableCore from './table-core';
+import TableCore from './tables/table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
@@ -113,6 +113,7 @@ const ProcessTimestampView = ({
                 <Grid item>
                     {timestampData ? (
                         <TableCore
+                            processName={processName}
                             taskData={timestampData}
                             eventsData={eventsData}
                         />

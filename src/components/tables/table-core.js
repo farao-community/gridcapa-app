@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,10 +10,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { AppBar } from '@mui/material';
 import Box from '@mui/material/Box';
-import OverviewTable from './overview-table';
+import OverviewTable from '../overview-table';
 import EventsTable from './events-table';
 
 import { FormattedMessage } from 'react-intl';
+import StructuredLogsProvider from '../structured-logs-provider';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -38,7 +39,7 @@ function a11yProps(index) {
     };
 }
 
-const TableCore = ({ taskData, eventsData }) => {
+const TableCore = ({ processName, taskData, eventsData }) => {
     const [value, setValue] = React.useState(0);
     const handleChange = (_event, newValue) => {
         setValue(newValue);
@@ -58,6 +59,13 @@ const TableCore = ({ taskData, eventsData }) => {
                         data-test="events"
                         {...a11yProps(1)}
                     />
+                    {processName === 'SWE D2CC' && (
+                        <Tab
+                            label={<FormattedMessage id="structuredLogs" />}
+                            data-test="structuredLogs"
+                            {...a11yProps(2)}
+                        />
+                    )}
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
@@ -71,6 +79,11 @@ const TableCore = ({ taskData, eventsData }) => {
             <TabPanel value={value} index={1}>
                 <EventsTable eventsData={eventsData} />
             </TabPanel>
+            {processName === 'SWE D2CC' && (
+                <TabPanel value={value} index={2}>
+                    <StructuredLogsProvider eventsData={eventsData} />
+                </TabPanel>
+            )}
         </div>
     );
 };

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -9,58 +9,15 @@ import React, { useEffect, useState } from 'react';
 import {
     Paper,
     Table,
-    TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
 } from '@mui/material';
+
 import { FormattedMessage } from 'react-intl';
-
-import { gridcapaFormatDate, sha256 } from '../utils/commons';
-import FilterMenu from './filter-menu';
-
-const processEventLevelStyles = {
-    INFO: {
-        color: 'green',
-    },
-    WARN: {
-        color: 'orange',
-    },
-    ERROR: {
-        color: 'red',
-    },
-};
-
-function inputDataRow(processEvent) {
-    let level = processEvent.level;
-    let timestamp = processEvent.timestamp;
-    let message = processEvent.message;
-    let encryptedMessage = sha256(message);
-
-    let formattedTimestamp = gridcapaFormatDate(timestamp);
-
-    return (
-        <TableRow key={timestamp + encryptedMessage}>
-            <TableCell
-                data-test={encryptedMessage + '-process-event-level'}
-                style={{ ...processEventLevelStyles[level], width: '9vw' }}
-            >
-                {level}
-            </TableCell>
-            <TableCell
-                data-test={encryptedMessage + '-process-event-timestamp'}
-            >
-                {formattedTimestamp}
-            </TableCell>
-            <TableCell data-test={encryptedMessage + '-process-event-message'}>
-                {message.split('\n').map((line) => (
-                    <p>{line}</p>
-                ))}
-            </TableCell>
-        </TableRow>
-    );
-}
+import FilterMenu from '../filter-menu';
+import EventsTableBody from './events-table-body';
 
 function loadPredefinedFilter(
     predefinedFilter,
@@ -188,12 +145,9 @@ const EventsTable = ({ eventsData }) => {
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {filterProcessEvent(
-                        levelFilter,
-                        logFilter
-                    )?.map((processEvent) => inputDataRow(processEvent))}
-                </TableBody>
+                <EventsTableBody
+                    eventsData={filterProcessEvent(levelFilter, logFilter)}
+                />
             </Table>
         </TableContainer>
     );

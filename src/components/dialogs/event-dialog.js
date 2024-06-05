@@ -9,7 +9,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import EventsTable from '../events-table';
+import EventsTable from '../tables/events-table';
 import { FormattedMessage } from 'react-intl';
 
 import {
