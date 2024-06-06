@@ -25,20 +25,15 @@ function getTreeItems(nodes) {
     };
 }
 
-function StructuredLogsProvider({ eventsData }) {
+function StructuredLogsProvider() {
     const logsTree = [getTreeItems(jsonTree.reportRoot)];
 
     return (
         <StructuredLogsView
             logsTree={logsTree}
             dictionaries={jsonTree.reportRoot.dictionaries}
-            eventsData={eventsData}
-        />
+          />
     );
 }
-
-StructuredLogsProvider.propTypes = {
-    eventsData: PropTypes.array.isRequired,
-};
 
 export default StructuredLogsProvider;

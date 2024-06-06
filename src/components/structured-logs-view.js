@@ -72,23 +72,14 @@ function getMessage(dictionaries, selectedItem) {
     return message;
 }
 
-function filteredEventData(eventsData, dictionaries, selectedItem) {
-    if (!eventsData || !selectedItem) {
-        return eventsData;
+function getEventsData(dictionaries, selectedItem) {
+    if (!selectedItem) {
+        return [];
     }
-
-    const message = getMessage(dictionaries, selectedItem);
-    if (selectedItem?.values?.reportSeverity?.value) {
-        return eventsData.filter(
-            (event) =>
-                event.level === selectedItem.values.reportSeverity.value &&
-                event.message.includes(message)
-        );
-    }
-    return eventsData.filter((event) => event.message.includes(message));
+    return [getMessage(dictionaries, selectedItem)];
 }
 
-function StructuredLogsView({ logsTree, dictionaries, eventsData }) {
+function StructuredLogsView({ logsTree, dictionaries }) {
     const apiRef = useTreeViewApiRef();
     const [selectedItem, setSelectedItem] = useState(null);
 
@@ -112,11 +103,7 @@ function StructuredLogsView({ logsTree, dictionaries, eventsData }) {
             </Box>
             <Box sx={styles.structuredLogsTableStyle}>
                 <StructuredLogsTable
-                    eventsData={filteredEventData(
-                        eventsData,
-                        dictionaries,
-                        selectedItem
-                    )}
+                    eventsData={getEventsData(dictionaries, selectedItem)}
                 />
             </Box>
         </Box>
@@ -126,7 +113,6 @@ function StructuredLogsView({ logsTree, dictionaries, eventsData }) {
 StructuredLogsView.propTypes = {
     logsTree: PropTypes.array.isRequired,
     dictionaries: PropTypes.object.isRequired,
-    eventsData: PropTypes.array.isRequired,
 };
 
 export default StructuredLogsView;

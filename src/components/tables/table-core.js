@@ -81,7 +81,7 @@ const TableCore = ({ processName, taskData, eventsData }) => {
             </TabPanel>
             {processName === 'SWE D2CC' && (
                 <TabPanel value={value} index={2}>
-                    <StructuredLogsProvider eventsData={eventsData} />
+                    <StructuredLogsProvider />
                 </TabPanel>
             )}
         </div>
