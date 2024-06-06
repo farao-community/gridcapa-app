@@ -15,7 +15,7 @@ const eventLevelColor = {
     INFO: 'green',
     WARN: 'orange',
     ERROR: 'red',
-    DEBUG: '#1565c0',
+    DEBUG: 'royalblue',
 };
 
 function formattedMessage(message) {

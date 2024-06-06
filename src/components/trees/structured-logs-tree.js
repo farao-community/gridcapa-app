@@ -41,7 +41,7 @@ function getIconColor(item) {
             case 'ERROR':
                 return 'red';
             case 'DEBUG':
-                return '#1565c0';
+                return 'royalblue';
             default:
                 break;
         }
