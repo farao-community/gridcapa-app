@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import jsonTree from '../jsonData/jsonTree.json';
 import StructuredLogsView from './structured-logs-view';
@@ -32,7 +31,7 @@ function StructuredLogsProvider() {
         <StructuredLogsView
             logsTree={logsTree}
             dictionaries={jsonTree.reportRoot.dictionaries}
-          />
+        />
     );
 }
 

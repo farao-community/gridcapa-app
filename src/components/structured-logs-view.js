@@ -76,7 +76,16 @@ function getEventsData(dictionaries, selectedItem) {
     if (!selectedItem) {
         return [];
     }
-    return [getMessage(dictionaries, selectedItem)];
+
+    const severity = selectedItem?.values?.reportSeverity?.value;
+    const message = getMessage(dictionaries, selectedItem);
+    return [
+        {
+            level: severity,
+            timestamp: '',
+            message: message,
+        },
+    ];
 }
 
 function StructuredLogsView({ logsTree, dictionaries }) {
