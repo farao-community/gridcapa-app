@@ -24,9 +24,8 @@ const AppTopBar = ({ user, userManager }) => {
     const dispatch = useDispatch();
 
     const [themeLocal, handleChangeTheme] = useParameterState(PARAM_THEME);
-    const [languageLocal, handleChangeLanguage] = useParameterState(
-        PARAM_LANGUAGE
-    );
+    const [languageLocal, handleChangeLanguage] =
+        useParameterState(PARAM_LANGUAGE);
 
     const [appsAndUrls, setAppsAndUrls] = useState([]);
     const [showParameters, setShowParameters] = useState(false);
@@ -56,7 +55,7 @@ const AppTopBar = ({ user, userManager }) => {
         setShowAbout(false);
     };
 
-    const onLogoClicked = () => {
+    const handleLogoClicked = () => {
         navigate('/', { replace: true });
     };
 
@@ -68,7 +67,7 @@ const AppTopBar = ({ user, userManager }) => {
                 appLogo={<FaraoLogo />}
                 onParametersClick={handleShowParameters}
                 onLogoutClick={() => logout(dispatch, userManager.instance)}
-                onLogoClick={onLogoClicked}
+                onLogoClick={handleLogoClicked}
                 user={user}
                 appsAndUrls={appsAndUrls}
                 onAboutClick={handleShowAbout}

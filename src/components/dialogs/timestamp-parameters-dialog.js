@@ -39,10 +39,8 @@ function TimestampParametersDialog({
     buttonAction,
 }) {
     const [parametersChanged, setParametersChanged] = useState(false);
-    const [
-        showClosingConfirmationDialog,
-        setShowClosingConfirmationDialog,
-    ] = useState(false);
+    const [showClosingConfirmationDialog, setShowClosingConfirmationDialog] =
+        useState(false);
 
     function checkBeforeClose() {
         parametersChanged ? setShowClosingConfirmationDialog(true) : onClose();
