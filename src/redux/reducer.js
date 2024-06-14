@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -47,47 +47,47 @@ const initialState = {
     ...paramsInitialState,
 };
 
-export const reducer = createReducer(initialState, {
-    [SELECT_THEME]: (state, action) => {
+export const reducer = createReducer(initialState, (builder) => {
+    builder.addCase(SELECT_THEME, (state, action) => {
         state.theme = action.theme;
         saveLocalStorageTheme(state.theme);
-    },
+    });
 
-    [SELECT_LANGUAGE]: (state, action) => {
+    builder.addCase(SELECT_LANGUAGE, (state, action) => {
         state.language = action.language;
         saveLocalStorageLanguage(state.language);
-    },
+    });
 
-    [USER]: (state, action) => {
+    builder.addCase(USER, (state, action) => {
         state.user = action.user;
-    },
+    });
 
-    [SIGNIN_CALLBACK_ERROR]: (state, action) => {
+    builder.addCase(SIGNIN_CALLBACK_ERROR, (state, action) => {
         state.signInCallbackError = action.signInCallbackError;
-    },
+    });
 
-    [UNAUTHORIZED_USER_INFO]: (state, action) => {
+    builder.addCase(UNAUTHORIZED_USER_INFO, (state, action) => {
         state.authenticationRouterError = action.authenticationRouterError;
-    },
+    });
 
-    [LOGOUT_ERROR]: (state, action) => {
+    builder.addCase(LOGOUT_ERROR, (state, action) => {
         state.authenticationRouterError = action.authenticationRouterError;
-    },
+    });
 
-    [USER_VALIDATION_ERROR]: (state, action) => {
+    builder.addCase(USER_VALIDATION_ERROR, (state, action) => {
         state.authenticationRouterError = action.authenticationRouterError;
-    },
+    });
 
-    [RESET_AUTHENTICATION_ROUTER_ERROR]: (state, action) => {
+    builder.addCase(RESET_AUTHENTICATION_ROUTER_ERROR, (state, action) => {
         state.authenticationRouterError = null;
-    },
+    });
 
-    [SHOW_AUTH_INFO_LOGIN]: (state, action) => {
+    builder.addCase(SHOW_AUTH_INFO_LOGIN, (state, action) => {
         state.showAuthenticationRouterLogin =
             action.showAuthenticationRouterLogin;
-    },
+    });
 
-    [SELECT_COMPUTED_LANGUAGE]: (state, action) => {
+    builder.addCase(SELECT_COMPUTED_LANGUAGE, (state, action) => {
         state.computedLanguage = action.computedLanguage;
-    },
+    });
 });
