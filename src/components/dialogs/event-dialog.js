@@ -57,7 +57,7 @@ EventDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     isLoadingEvent: PropTypes.bool.isRequired,
-    taskData: PropTypes.object.isRequired,
+    eventsData: PropTypes.array.isRequired,
 };
 
 export default EventDialog;

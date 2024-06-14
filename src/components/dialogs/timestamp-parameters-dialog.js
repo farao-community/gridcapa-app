@@ -67,7 +67,7 @@ function TimestampParametersDialog({
                 open={open}
                 onClose={checkBeforeClose}
                 maxWidth="md"
-                fullWidth="true"
+                fullWidth
             >
                 <DialogTitle sx={style.dialogTitleStyle}>
                     <FormattedMessage id="timestampParameters" />
