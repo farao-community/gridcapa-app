@@ -27,15 +27,15 @@ jobs:
         run: npm install
 
       - name: Run pre build tests
-        run: npm run-script test
+        run: npm run test
 
       - name: Build without authentication
-        run: npm run-script build
+        run: npm run build
         env:
-          REACT_APP_USE_AUTHENTICATION: false
+          VITE_USE_AUTHENTICATION: false
 
       - name: Run post build tests
-        run: npm run-script test
+        run: npm run test
 
       - name: Commit and tag release version
         uses: stefanzweifel/git-auto-commit-action@master
@@ -54,9 +54,9 @@ jobs:
           tags: v${{ github.event.inputs.releaseVersion }}
 
       - name: Build with authentication
-        run: npm run-script build
+        run: npm run build
         env:
-          REACT_APP_USE_AUTHENTICATION: true
+          VITE_USE_AUTHENTICATION: true
 
       - name: Build and publish Docker image with authentication
         uses: elgohr/Publish-Docker-Github-Action@v5
