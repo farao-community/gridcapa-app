@@ -11,7 +11,10 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-import { fetchAppsAndUrls } from '../utils/rest-api';
+import {
+    fetchAppsAndUrls,
+    fetchVersionAndEnvironnement,
+} from '../utils/rest-api';
 
 import { logout, TopBar } from '@gridsuite/commons-ui';
 import ParametersDialog, {
@@ -19,11 +22,12 @@ import ParametersDialog, {
 } from './dialogs/parameters-dialog';
 import { APP_NAME, PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params';
 import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
-import AboutDialog from './dialogs/about-dialog';
 import ViewTabs from './tabs/view-tabs';
 import ParametersButton from './buttons/parameters-button';
 import MinioDiskUsage from './minio-disk-usage';
 import { Box } from '@mui/material';
+import AppPackage from '../../package.json';
+import GridcapaLogoText from './gridcapa-logo-text';
 
 const AppTopBar = ({
     user,
@@ -41,7 +45,6 @@ const AppTopBar = ({
 
     const [appsAndUrls, setAppsAndUrls] = useState([]);
     const [showParameters, setShowParameters] = useState(false);
-    const [showAbout, setShowAbout] = useState(false);
 
     useEffect(() => {
         if (user !== null) {
@@ -59,14 +62,6 @@ const AppTopBar = ({
         setShowParameters(false);
     };
 
-    const handleShowAbout = () => {
-        setShowAbout(true);
-    };
-
-    const handleHideAbout = () => {
-        setShowAbout(false);
-    };
-
     const handleLogoClicked = () => {
         navigate('/', { replace: true });
     };
@@ -77,16 +72,18 @@ const AppTopBar = ({
                 appName={APP_NAME}
                 appColor="grey"
                 appLogo={<FaraoLogo />}
+                appVersion={AppPackage.version}
+                logoAboutDialog={<GridcapaLogoText />}
                 onParametersClick={handleShowParameters}
                 onLogoutClick={() => logout(dispatch, userManager.instance)}
                 onLogoClick={handleLogoClicked}
                 user={user}
                 appsAndUrls={appsAndUrls}
-                onAboutClick={handleShowAbout}
                 onThemeClick={handleChangeTheme}
                 theme={themeLocal}
                 onLanguageClick={handleChangeLanguage}
                 language={languageLocal}
+                globalVersionPromise={fetchVersionAndEnvironnement}
             >
                 {user && (
                     <Box
@@ -107,7 +104,6 @@ const AppTopBar = ({
                 open={showParameters}
                 onClose={handleHideParameters}
             />
-            <AboutDialog open={showAbout} onClose={handleHideAbout} />
         </>
     );
 };
