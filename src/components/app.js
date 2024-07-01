@@ -89,7 +89,7 @@ const App = () => {
             return initializeAuthenticationProd(
                 dispatch,
                 initialMatchSilentRenewCallbackUrl != null,
-                fetch('idpSettings.json')
+                () => fetch('idpSettings.json').then(res => res.json())
             );
         } else {
             return initializeAuthenticationDev(
