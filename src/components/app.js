@@ -39,6 +39,7 @@ import {
     connectNotificationsWsUpdateConfig,
     fetchConfigParameter,
     fetchConfigParameters,
+    fetchIdpSettings,
 } from '../utils/rest-api';
 import {
     APP_NAME,
@@ -85,7 +86,7 @@ const App = () => {
             return initializeAuthenticationProd(
                 dispatch,
                 initialMatchSilentRenewCallbackUrl != null,
-                () => fetch('idpSettings.json').then(res => res.json())
+                fetchIdpSettings
             );
         } else {
             return initializeAuthenticationDev(
