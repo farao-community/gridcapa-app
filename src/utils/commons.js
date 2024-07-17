@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -40,4 +40,19 @@ export function setTimestampWithDaysIncrement(date, days) {
     let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
+}
+
+export function latestRunFromTaskRunHistory(runHistory) {
+    if (runHistory) {
+        let reverseSorted;
+        if (runHistory.length === 1) {
+            reverseSorted = runHistory;
+        } else {
+            reverseSorted = runHistory.toSorted(
+                (a, b) => b.executionDate.getTime() - a.executionDate.getTime()
+            );
+        }
+        return reverseSorted.at(0).id;
+    }
+    return null;
 }
