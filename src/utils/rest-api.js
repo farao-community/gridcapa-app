@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -313,7 +313,7 @@ export function fetchJobLauncherPost(taskTimestamp, parameters) {
     );
 }
 
-export function fetchJobLauncherToInterruptTask(taskTimestamp) {
+export function fetchJobLauncherToInterruptTask(taskTimestamp, runId) {
     console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
@@ -321,7 +321,11 @@ export function fetchJobLauncherToInterruptTask(taskTimestamp) {
     };
 
     backendFetch(
-        getBaseUrl() + PREFIX_INTERRUPT_PROCESS_QUERIES + taskTimestamp,
+        getBaseUrl() +
+            PREFIX_INTERRUPT_PROCESS_QUERIES +
+            taskTimestamp +
+            '/' +
+            runId,
         requestOptions
     ).then();
 }

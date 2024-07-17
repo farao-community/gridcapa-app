@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -7,7 +7,11 @@
 
 import React from 'react';
 import { Button, Grid, TableCell, TableRow } from '@mui/material';
-import { gridcapaFormatDate, sha256 } from '../utils/commons';
+import {
+    gridcapaFormatDate,
+    latestRunFromTaskRunHistory,
+    sha256,
+} from '../utils/commons';
 import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import FileSummary from './file-summary';
@@ -24,6 +28,7 @@ const RunningTasksViewCoreRow = ({
     let timestamp = task.timestamp;
     let formattedTimestamp = gridcapaFormatDate(timestamp);
     let encryptedMessage = sha256(formattedTimestamp);
+    let latestRunId = latestRunFromTaskRunHistory(task.runHistory);
 
     return (
         task && (
@@ -78,6 +83,7 @@ const RunningTasksViewCoreRow = ({
                     <StopButton
                         status={task.status}
                         timestamp={task.timestamp}
+                        runId={latestRunId}
                     />
                 </TableCell>
                 <TableCell size="small">
