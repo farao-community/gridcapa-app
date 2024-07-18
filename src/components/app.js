@@ -39,6 +39,7 @@ import {
     connectNotificationsWsUpdateConfig,
     fetchConfigParameter,
     fetchConfigParameters,
+    fetchIdpSettings,
 } from '../utils/rest-api';
 import {
     APP_NAME,
@@ -80,35 +81,51 @@ const App = () => {
             path: '/silent-renew-callback',
         })
     );
+    const [initialMatchSigninCallbackUrl] = useState(
+        useMatch({
+            path: '/sign-in-callback',
+        })
+    );
     const [timestamp, setTimestamp] = useState(null);
     const [view, setView] = useState(Views.BUSINESS_DATE_VIEW);
     const [parametersEnabled, setParametersEnabled] = useState(false);
 
-    const initialize = useCallback(() => {
-        if (process.env.REACT_APP_USE_AUTHENTICATION === 'true') {
-            return initializeAuthenticationProd(
-                dispatch,
-                initialMatchSilentRenewCallbackUrl != null,
-                fetch('idpSettings.json')
-            );
-        } else {
-            return initializeAuthenticationDev(
-                dispatch,
-                initialMatchSilentRenewCallbackUrl != null
-            );
-        }
-        // Note: initialMatchSilentRenewCallbackUrl and dispatch don't change
-    }, [initialMatchSilentRenewCallbackUrl, dispatch]);
+    const validateUser = (user) => Promise.resolve(true);
 
     useEffect(() => {
-        initialize()
-            .then((requestedUserManager) => {
-                setUserManager({ instance: requestedUserManager, error: null });
-            })
-            .catch((error) => {
+        (async function initializeAuthentication() {
+            try {
+                if (process.env.REACT_APP_USE_AUTHENTICATION === 'true') {
+                    setUserManager({
+                        instance: await initializeAuthenticationProd(
+                            dispatch,
+                            initialMatchSilentRenewCallbackUrl != null,
+                            fetchIdpSettings,
+                            validateUser,
+                            initialMatchSigninCallbackUrl != null
+                        ),
+                        error: null,
+                    });
+                } else {
+                    setUserManager({
+                        instance: await initializeAuthenticationDev(
+                            dispatch,
+                            initialMatchSilentRenewCallbackUrl != null,
+                            validateUser,
+                            initialMatchSigninCallbackUrl != null
+                        ),
+                        error: null,
+                    });
+                }
+            } catch (error) {
                 setUserManager({ instance: null, error: error.message });
-            });
-    }, [initialize]);
+            }
+        })();
+    }, [
+        dispatch,
+        initialMatchSigninCallbackUrl,
+        initialMatchSilentRenewCallbackUrl,
+    ]);
 
     const updateParams = useCallback(
         (params) => {

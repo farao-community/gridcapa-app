@@ -6,11 +6,11 @@
     "dependencies": {
         "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.5",
-        "@gridsuite/commons-ui": "^0.61.3",
+        "@gridsuite/commons-ui": "^0.63.1",
         "@mui/icons-material": "^5.15.19",
         "@mui/lab": "^5.0.0-alpha.169",
         "@mui/material": "^5.15.19",
-        "@mui/x-tree-view": "^7.6.2",
+        "@mui/x-tree-view": "^6.17.0",
         "@reduxjs/toolkit": "^2.2.5",
         "core-js": "^3.37.1",
         "dateformat": "^5.0.3",

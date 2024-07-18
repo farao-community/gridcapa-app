@@ -106,6 +106,11 @@ export function fetchFileToBackend(timestamp, formData) {
     );
 }
 
+export function fetchIdpSettings() {
+    console.info('Fetching IdP settings...');
+    return fetch('idpSettings.json').then((res) => res.json());
+}
+
 export function fetchAppsAndUrls() {
     console.info(`Fetching apps and urls...`);
     return fetch('env.json')
