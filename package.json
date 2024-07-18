@@ -1,6 +1,6 @@
 {
     "name": "gridcapa-app",
-    "version": "1.17.0-snapshot.0",
+    "version": "1.18.0-snapshot.0",
     "homepage": ".",
     "private": true,
     "dependencies": {
