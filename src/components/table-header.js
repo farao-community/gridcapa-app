@@ -38,12 +38,11 @@ function displayRunButton(taskData) {
 }
 
 function displayStopButton(taskData) {
-    let latestRunId = latestRunFromTaskRunHistory(taskData.runHistory);
     return taskData !== null ? (
         <StopButton
             status={taskData.status}
             timestamp={taskData.timestamp}
-            runId={latestRunId}
+            runId={latestRunFromTaskRunHistory(taskData.runHistory)}
         />
     ) : null;
 }

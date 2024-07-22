@@ -18,7 +18,7 @@ import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';
 
 function isDisabled(taskStatus) {
-    return taskStatus !== 'RUNNING' && taskStatus !== 'INTERRUPTED';
+    return taskStatus !== 'RUNNING' && taskStatus !== 'PENDING';
 }
 
 const style = {

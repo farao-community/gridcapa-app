@@ -43,16 +43,21 @@ export function setTimestampWithDaysIncrement(date, days) {
 }
 
 export function latestRunFromTaskRunHistory(runHistory) {
-    if (runHistory) {
-        let reverseSorted;
-        if (runHistory.length === 1) {
-            reverseSorted = runHistory;
-        } else {
-            reverseSorted = runHistory.toSorted(
-                (a, b) => b.executionDate.getTime() - a.executionDate.getTime()
-            );
+    if (runHistory && Array.isArray(runHistory) && runHistory.length > 0) {
+        if (runHistory.length > 1) {
+            runHistory.sort((a, b) => {
+                let x = a.executionDate;
+                let y = b.executionDate;
+                if (x < y) {
+                    return 1;
+                }
+                if (x > y) {
+                    return -1;
+                }
+                return 0;
+            });
         }
-        return reverseSorted.at(0).id;
+        return runHistory.at(0).id;
     }
     return null;
 }
