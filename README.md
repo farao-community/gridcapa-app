@@ -24,7 +24,7 @@ The application can now be reached on http://localhost:3000.
 For building Docker image of the application, start by creating a production build.
 
 ```bash
-npm run-script build
+npm run build
 ```
 
 Then build docker image
