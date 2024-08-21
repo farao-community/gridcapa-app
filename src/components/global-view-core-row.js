@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, TableCell, TableRow } from '@mui/material';
 import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import { ListAlt, Visibility } from '@mui/icons-material';
@@ -13,6 +13,16 @@ import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
+import { ManualExportButton } from './manual-export-button';
+
+function displayManualExportButton(taskData, manualExportEnabled) {
+    return taskData !== null && manualExportEnabled ? (
+        <ManualExportButton
+            status={taskData.status}
+            timestamp={taskData.timestamp}
+        />
+    ) : null;
+}
 
 const GlobalViewCoreRow = ({
     step,
@@ -25,6 +35,20 @@ const GlobalViewCoreRow = ({
     let timestamp = step.timestamp;
     let formattedTimestamp = gridcapaFormatDate(timestamp);
     let encryptedMessage = sha256(formattedTimestamp);
+    const [manualExportEnabled, setManualExportEnabled] = useState(false);
+
+    useEffect(() => {
+        async function getManualExportEnabled() {
+            try {
+                const response = await fetch('process-metadata.json');
+                const data = await response.json();
+                setManualExportEnabled(data.manualExportEnabled || false);
+            } catch (error) {
+                console.error('An error has occurred:', error);
+            }
+        }
+        getManualExportEnabled();
+    }, []);
 
     return (
         step.taskData && (
@@ -86,6 +110,10 @@ const GlobalViewCoreRow = ({
                         status={step.taskData.status}
                         timestamp={step.taskData.timestamp}
                     />
+                    {displayManualExportButton(
+                        step.taskData,
+                        manualExportEnabled
+                    )}
                 </TableCell>
                 <TableCell size="small">
                     <Button
