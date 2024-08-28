@@ -16,6 +16,7 @@ import ParametersConfirmClosingDialog from './parameters-confirm-closing-dialog'
 
 import {
     Button,
+    CircularProgress,
     Dialog,
     DialogTitle,
     DialogContent,
@@ -39,17 +40,27 @@ function TimestampParametersDialog({
     buttonAction,
 }) {
     const [parametersChanged, setParametersChanged] = useState(false);
-    const [showClosingConfirmationDialog, setShowClosingConfirmationDialog] =
-        useState(false);
+    const [runButtonDisabled, setRunButtonDisabled] = useState(false);
+    const [
+        showClosingConfirmationDialog,
+        setShowClosingConfirmationDialog,
+    ] = useState(false);
 
     function checkBeforeClose() {
         parametersChanged ? setShowClosingConfirmationDialog(true) : onClose();
     }
 
     function handleButtonAction() {
+        setRunButtonDisabled(true);
         buttonAction()
-            .then(() => setParametersChanged(false))
-            .catch((errorMessage) => console.error(errorMessage));
+            .then(() => {
+                setParametersChanged(false);
+                setRunButtonDisabled(false);
+            })
+            .catch((errorMessage) => {
+                console.error(errorMessage);
+                setRunButtonDisabled(false);
+            });
     }
 
     function handleConfirmClosing() {
@@ -86,9 +97,18 @@ function TimestampParametersDialog({
                     <Button
                         color="primary"
                         variant="contained"
+                        disabled={runButtonDisabled}
                         onClick={handleButtonAction}
                     >
-                        <FormattedMessage id="runButtonLabel" />
+                        {!runButtonDisabled && (
+                            <FormattedMessage id="runButtonLabel" />
+                        )}
+                        {runButtonDisabled && (
+                            <CircularProgress
+                                size="24px"
+                                style={{ margin: 'auto' }}
+                            />
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
