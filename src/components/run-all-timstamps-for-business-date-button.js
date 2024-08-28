@@ -121,15 +121,31 @@ export function RunAllButton({ timestamp }) {
         }
     }
 
-    function launchTaskWithParameters() {
+    async function launchTaskWithParameters() {
         fetchTasks();
-        tasks.forEach(async (task) => {
-            if (!isDisabledTask(task.status)) {
-                await fetchJobLauncherPost(task.timestamp, parameters);
-            }
-        });
+        let launchErrors = [];
+        await Promise.all(
+            tasks.map(async (task) => {
+                if (!isDisabledTask(task.status)) {
+                    const res = await fetchJobLauncherPost(
+                        task.timestamp,
+                        parameters
+                    );
+                    if (
+                        res?.status === undefined ||
+                        res.status < 200 ||
+                        res.status > 299
+                    ) {
+                        launchErrors.push(task.timestamp);
+                    }
+                }
+            })
+        );
         fetchTasks();
         handleParametersDialogClosing();
+        if (launchErrors.length > 0) {
+            throw new Error(launchErrors.join(', '));
+        }
     }
 
     function handleParametersDialogClosing() {

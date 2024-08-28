@@ -6,6 +6,11 @@
  */
 
 import React, { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import {
+    displayErrorMessageWithSnackbar,
+    useIntlRef,
+} from '../../utils/messages';
 
 import PropTypes from 'prop-types';
 
@@ -39,12 +44,12 @@ function TimestampParametersDialog({
     parameters,
     buttonAction,
 }) {
+    const intlRef = useIntlRef();
+    const { enqueueSnackbar } = useSnackbar();
     const [parametersChanged, setParametersChanged] = useState(false);
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
-    const [
-        showClosingConfirmationDialog,
-        setShowClosingConfirmationDialog,
-    ] = useState(false);
+    const [showClosingConfirmationDialog, setShowClosingConfirmationDialog] =
+        useState(false);
 
     function checkBeforeClose() {
         parametersChanged ? setShowClosingConfirmationDialog(true) : onClose();
@@ -58,6 +63,14 @@ function TimestampParametersDialog({
                 setRunButtonDisabled(false);
             })
             .catch((errorMessage) => {
+                displayErrorMessageWithSnackbar({
+                    errorMessage: errorMessage,
+                    enqueueSnackbar: enqueueSnackbar,
+                    headerMessage: {
+                        headerMessageId: 'computationLaunchError',
+                        intlRef: intlRef,
+                    },
+                });
                 console.error(errorMessage);
                 setRunButtonDisabled(false);
             });

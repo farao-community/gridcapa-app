@@ -64,8 +64,11 @@ export function RunButton({ status, timestamp }) {
     }
 
     async function launchTaskWithParameters() {
-        await fetchJobLauncherPost(timestamp, parameters);
+        const res = await fetchJobLauncherPost(timestamp, parameters);
         handleParametersDialogClosing();
+        if (res?.status === undefined || res.status < 200 || res.status > 299) {
+            throw new Error(res?.statusText);
+        }
     }
 
     function handleParametersDialogClosing() {
