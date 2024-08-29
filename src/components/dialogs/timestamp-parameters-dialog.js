@@ -71,7 +71,6 @@ function TimestampParametersDialog({
                         intlRef: intlRef,
                     },
                 });
-                console.error(errorMessage);
                 setRunButtonDisabled(false);
             });
     }
