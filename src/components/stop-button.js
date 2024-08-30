@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2024, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -18,7 +18,7 @@ import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';
 
 function isDisabled(taskStatus) {
-    return taskStatus !== 'RUNNING';
+    return taskStatus !== 'RUNNING' && taskStatus !== 'PENDING';
 }
 
 const style = {
@@ -28,7 +28,7 @@ const style = {
     },
 };
 
-export function StopButton({ status, timestamp }) {
+export function StopButton({ status, timestamp, runId }) {
     const [disabled, setDisabled] = useState(false);
     const [open, setOpen] = React.useState(false);
 
@@ -44,10 +44,10 @@ export function StopButton({ status, timestamp }) {
         async function () {
             setDisabled(true);
             handleClose();
-            await fetchJobLauncherToInterruptTask(timestamp);
+            await fetchJobLauncherToInterruptTask(timestamp, runId);
             setDisabled(false);
         },
-        [timestamp]
+        [timestamp, runId]
     );
 
     return (
