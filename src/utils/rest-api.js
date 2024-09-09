@@ -20,11 +20,11 @@ const PREFIX_PARAMETERS_QUERIES = '/task-manager/parameters';
 
 function getToken() {
     const state = store.getState();
-    return state.user.id_token;
+    return state.user?.id_token;
 }
 
 function removeTrailingSlash(aString) {
-    return aString.replace(/\/$/, '');
+    return aString?.replace(/\/$/, '');
 }
 
 const wsOptions = {
@@ -130,7 +130,6 @@ export function fetchVersionAndEnvironnement() {
     return fetch('env.json')
         .then((res) => res.json())
         .then((res) => {
-            console.log(res);
             return removeTrailingSlash(res.appVersionAndEnvironnement);
         });
 }
@@ -409,8 +408,8 @@ export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
 
 export function getBaseUrl() {
     let baseUrl = document.baseURI;
-    if (process.env.REACT_APP_PROFILE === 'development') {
-        baseUrl = process.env.REACT_APP_PUBLIC_URL;
+    if (import.meta.env.MODE === 'development') {
+        baseUrl = import.meta.env.VITE_PUBLIC_URL;
     }
     return removeTrailingSlash(baseUrl);
 }
