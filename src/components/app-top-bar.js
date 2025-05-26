@@ -25,9 +25,10 @@ import { ReactComponent as FaraoLogo } from '../images/farao-logo.svg';
 import ViewTabs from './tabs/view-tabs';
 import ParametersButton from './buttons/parameters-button';
 import MinioDiskUsage from './minio-disk-usage';
-import { Box } from '@mui/material';
+import {Box, IconButton} from '@mui/material';
 import AppPackage from '../../package.json';
 import GridcapaLogoText from './gridcapa-logo-text';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const AppTopBar = ({
     user,
@@ -66,6 +67,10 @@ const AppTopBar = ({
         navigate('/', { replace: true });
     };
 
+    const handleDocumentationClick = () => {
+        window.open("/documentation/"); // TODO Make this URL parameterizable
+    };
+
     return (
         <>
             <TopBar
@@ -97,6 +102,11 @@ const AppTopBar = ({
                             <MinioDiskUsage />
                         </Box>
                         {parametersEnabled && <ParametersButton />}
+
+                        <!-- TODO Add conditions to display this button only if needed -->
+                        <IconButton onClick={handleDocumentationClick}>
+                            <MenuBookIcon />
+                        </IconButton>
                     </Box>
                 )}
             </TopBar>
