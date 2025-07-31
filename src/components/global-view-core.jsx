@@ -5,9 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 
-import SockJsClient from 'react-stomp';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
@@ -30,11 +29,11 @@ import {
     LinearProgress,
 } from '@mui/material';
 
+import { fetchBusinessDateData, fetchTimestampData } from '../utils/rest-api';
 import {
-    fetchBusinessDateData,
-    fetchTimestampData,
-    getWebSocketUrl,
-} from '../utils/rest-api';
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -68,6 +67,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [statusFilter, setStatusFilter] = useState([]);
     const [timestampFilter, setTimestampFilter] = useState([]);
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
+    const websockets = useRef([]);
 
     useEffect(() => {
         async function getTimestampFilter() {
@@ -101,14 +101,14 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         [steps]
     );
 
-    const getListOfTopics = () => {
+    const getListOfTopics = useCallback(() => {
         return [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-    };
+    }, [timestampMin, timestampMax]);
 
     const handleChangePage = (_event, newPage) => {
         setPage(newPage);
@@ -288,13 +288,24 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         return index >= 0 ? steps[index].taskData.timestamp : null;
     };
 
+    useEffect(() => {
+        if (websockets.current.length === 0) {
+            const taskNotificationClient = connectTaskNotificationWebSocket(
+                getListOfTopics(),
+                handleTimestampMessage
+            );
+            websockets.current.push(taskNotificationClient);
+        }
+
+        // 👇️ The above function runs when the component unmounts 👇️
+        return () => {
+            websockets.current.forEach(disconnectTaskNotificationWebSocket);
+            websockets.current = [];
+        };
+    }, [getListOfTopics, handleTimestampMessage]);
+
     return (
         <div>
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopics()}
-                onMessage={handleTimestampMessage}
-            />
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}

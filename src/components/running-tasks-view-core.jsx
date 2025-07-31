@@ -5,9 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 
-import SockJsClient from 'react-stomp';
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
@@ -30,11 +29,11 @@ import {
     LinearProgress,
 } from '@mui/material';
 
+import { fetchRunningTasksData, fetchTimestampData } from '../utils/rest-api';
 import {
-    fetchRunningTasksData,
-    fetchTimestampData,
-    getWebSocketUrl,
-} from '../utils/rest-api';
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 
 const RunningTasksViewCore = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -52,6 +51,7 @@ const RunningTasksViewCore = () => {
     const [statusFilter, setStatusFilter] = useState([]);
     const [timestampFilter, setTimestampFilter] = useState([]);
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
+    const websockets = useRef([]);
 
     useEffect(() => {
         async function getTimestampFilter() {
@@ -102,13 +102,13 @@ const RunningTasksViewCore = () => {
         [tasks]
     );
 
-    const getListOfTopics = () => {
+    const getListOfTopics = useCallback(() => {
         return tasks.map(
             (task) =>
                 '/task/update/' +
                 new Date(task.timestamp).toISOString().substr(0, 10)
         );
-    };
+    }, [tasks]);
 
     const handleChangePage = (_event, newPage) => {
         setPage(newPage);
@@ -224,13 +224,24 @@ const RunningTasksViewCore = () => {
         return index >= 0 ? tasks[index].timestamp : null;
     };
 
+    useEffect(() => {
+        if (websockets.current.length === 0) {
+            const taskNotificationClient = connectTaskNotificationWebSocket(
+                getListOfTopics(),
+                handleTimestampMessage
+            );
+            websockets.current.push(taskNotificationClient);
+        }
+
+        // 👇️ The above function runs when the component unmounts 👇️
+        return () => {
+            websockets.current.forEach(disconnectTaskNotificationWebSocket);
+            websockets.current = [];
+        };
+    }, [getListOfTopics, handleTimestampMessage]);
+
     return (
         <div>
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopics()}
-                onMessage={handleTimestampMessage}
-            />
             <TableContainer
                 style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}

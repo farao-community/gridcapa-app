@@ -36,11 +36,11 @@ import { FormattedMessage } from 'react-intl';
 import Box from '@mui/material/Box';
 
 import {
-    connectNotificationsWsUpdateConfig,
     fetchConfigParameter,
     fetchConfigParameters,
     fetchIdpSettings,
 } from '../utils/rest-api';
+import { connectUiConfigNotificationWebsocket } from '../utils/websocket-api';
 import {
     APP_NAME,
     COMMON_APP_NAME,
@@ -165,7 +165,7 @@ const App = () => {
     );
 
     const connectNotificationsUpdateConfig = useCallback(() => {
-        const ws = connectNotificationsWsUpdateConfig();
+        const ws = connectUiConfigNotificationWebsocket();
 
         ws.onmessage = (event) => {
             let eventData = JSON.parse(event.data);

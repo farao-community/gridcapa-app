@@ -5,15 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { APP_NAME, getAppName } from './config-params';
+import { getAppName } from './config-params';
 import { store } from '../redux/store';
-import ReconnectingWebSocket from 'reconnecting-websocket';
 import { displayErrorMessageWithSnackbar } from './messages';
 
 const PREFIX_CONFIG_QUERIES = '/config';
-const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_QUERIES = '/task-manager/tasks';
-const PREFIX_TASK_NOTIFICATION_WS = '/task-notification/tasks/notify';
 const PREFIX_JOB_LAUNCHER_QUERIES = '/gridcapa-job-launcher/start/';
 const PREFIX_INTERRUPT_PROCESS_QUERIES = '/gridcapa-job-launcher/stop/';
 const PREFIX_PARAMETERS_QUERIES = '/task-manager/parameters';
@@ -25,62 +22,6 @@ function getToken() {
 
 function removeTrailingSlash(aString) {
     return aString?.replace(/\/$/, '');
-}
-
-const wsOptions = {
-    minReconnectionDelay: 1000,
-    connectionTimeout: 500,
-    maxRetries: 10,
-};
-
-export function connectNotificationsWsUpdateConfig() {
-    const webSocketBaseUrl = getBaseUrl()
-        .replace(/^http:\/\//, 'ws://')
-        .replace(/^https:\/\//, 'wss://');
-    const webSocketUrl =
-        webSocketBaseUrl +
-        PREFIX_CONFIG_NOTIFICATION_WS +
-        '/notify?appName=' +
-        APP_NAME;
-
-    let webSocketUrlWithToken = webSocketUrl + '&access_token=' + getToken();
-
-    const reconnectingWebSocket = new ReconnectingWebSocket(
-        webSocketUrlWithToken,
-        null,
-        wsOptions
-    );
-    reconnectingWebSocket.onopen = function () {
-        console.info(
-            'Connected Websocket update config ui ' + webSocketUrl + ' ...'
-        );
-    };
-    return reconnectingWebSocket;
-}
-
-export function getWebSocketUrl(type) {
-    let webSocketBaseUrl = getBaseUrl();
-    let prefixConfig = '';
-    switch (type) {
-        case 'config':
-            webSocketBaseUrl = webSocketBaseUrl
-                .replace(/^http:\/\//, 'ws://')
-                .replace(/^https:\/\//, 'wss://');
-            prefixConfig =
-                PREFIX_CONFIG_NOTIFICATION_WS +
-                '/notify?appName=' +
-                APP_NAME +
-                '&access_token=' +
-                getToken();
-            break;
-        case 'task':
-            prefixConfig =
-                PREFIX_TASK_NOTIFICATION_WS + '?access_token=' + getToken();
-            break;
-        default:
-            console.err("Error don't know where to connect");
-    }
-    return webSocketBaseUrl + prefixConfig;
 }
 
 function backendFetch(url, init) {
