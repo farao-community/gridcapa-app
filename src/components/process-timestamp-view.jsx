@@ -11,9 +11,12 @@ import TableHeader from './table-header';
 import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
-import { fetchTimestampData, getWebSocketUrl } from '../utils/rest-api';
+import { fetchTimestampData } from '../utils/rest-api';
+import {
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 import { gridcapaFormatDate } from '../utils/commons';
-import SockJsClient from 'react-stomp';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
@@ -29,6 +32,7 @@ const ProcessTimestampView = ({
     const [timestampData, setTimestampData] = useState(null);
     const [eventsData, setEventsData] = useState([]);
     const eventsUpdateTimer = useRef(undefined);
+    const websockets = useRef([]);
 
     const updateTimestampData = useCallback(() => {
         console.log('Fetching timestamp data...');
@@ -66,14 +70,17 @@ const ProcessTimestampView = ({
         setEventsData(eventsFromTaskManager.processEvents);
     }, [timestamp, intlRef, enqueueSnackbar]);
 
-    const handleEventsUpdate = async (eventsUpdate) => {
-        if (eventsUpdate && eventsUpdateTimer.current === undefined) {
-            eventsUpdateTimer.current = setTimeout(
-                updateEventsAndResetTimer,
-                5000
-            );
-        }
-    };
+    const handleEventsUpdate = useCallback(
+        async (eventsUpdate) => {
+            if (eventsUpdate && eventsUpdateTimer.current === undefined) {
+                eventsUpdateTimer.current = setTimeout(
+                    updateEventsAndResetTimer,
+                    5000
+                );
+            }
+        },
+        [updateEventsAndResetTimer]
+    );
 
     const getListOfTopicsTasks = (timestampSubscription) => {
         return ['/task/update/' + timestampSubscription.toISOString()];
@@ -89,18 +96,29 @@ const ProcessTimestampView = ({
         updateTimestampData();
     }, [updateTimestampData]);
 
+    useEffect(() => {
+        if (websockets.current.length === 0) {
+            const taskNotificationClient = connectTaskNotificationWebSocket(
+                getListOfTopicsTasks(timestamp),
+                handleTimestampMessage
+            );
+            websockets.current.push(taskNotificationClient);
+            const eventNotificationClient = connectTaskNotificationWebSocket(
+                getListOfTopicsEvents(timestamp),
+                handleEventsUpdate
+            );
+            websockets.current.push(eventNotificationClient);
+        }
+
+        // 👇️ The above function runs when the component unmounts 👇️
+        return () => {
+            websockets.current.forEach(disconnectTaskNotificationWebSocket);
+            websockets.current = [];
+        };
+    }, [handleEventsUpdate, handleTimestampMessage, timestamp]);
+
     return (
         <div>
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopicsTasks(timestamp)}
-                onMessage={handleTimestampMessage}
-            />
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopicsEvents(timestamp)}
-                onMessage={handleEventsUpdate}
-            />
             <Grid container direction="column">
                 <Grid item>
                     <TableHeader

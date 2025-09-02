@@ -5,18 +5,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Button } from '@mui/material';
 import dateFormat from 'dateformat';
 import {
-    getWebSocketUrl,
     fetchJobLauncherPost,
     fetchBusinessDateData,
     fetchProcessParameters,
 } from '../utils/rest-api';
+import {
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
-import SockJsClient from 'react-stomp';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 
@@ -50,6 +52,7 @@ export function RunAllButton({ timestamp }) {
     const [parametersEnabled, setParametersEnabled] = useState(false);
     const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
+    const websockets = useRef([]);
 
     const fetchTasks = useCallback(async () => {
         let timestampMid =
@@ -87,14 +90,14 @@ export function RunAllButton({ timestamp }) {
         getBackendTasks();
     }, [enqueueSnackbar, intlRef, timestamp, currentTimestamp]);
 
-    const getListOfTopics = () => {
+    const getListOfTopics = useCallback(() => {
         return [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-    };
+    }, [timestampMin, timestampMax]);
 
     async function handleParametersDialogOpening() {
         const parameters = await fetchProcessParameters();
@@ -157,13 +160,24 @@ export function RunAllButton({ timestamp }) {
         setRunButtonDisabled(false);
     }
 
+    useEffect(() => {
+        if (websockets.current.length === 0) {
+            const taskNotificationClient = connectTaskNotificationWebSocket(
+                getListOfTopics(),
+                fetchTasks
+            );
+            websockets.current.push(taskNotificationClient);
+        }
+
+        // 👇️ The above function runs when the component unmounts 👇️
+        return () => {
+            websockets.current.forEach(disconnectTaskNotificationWebSocket);
+            websockets.current = [];
+        };
+    }, [fetchTasks, getListOfTopics]);
+
     return (
         <>
-            <SockJsClient
-                url={getWebSocketUrl('task')}
-                topics={getListOfTopics()}
-                onMessage={fetchTasks}
-            />
             <Button
                 data-test={'run-all-button-' + timestamp}
                 variant="contained"
