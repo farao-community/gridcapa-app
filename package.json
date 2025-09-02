@@ -1,7 +1,7 @@
 {
   "name": "gridcapa-app",
   "private": true,
-  "version": "1.20.0-snapshot.0",
+  "version": "1.19.1",
   "type": "module",
   "scripts": {
     "start": "vite",
