@@ -1,4 +1,4 @@
 {
-  "displayDocumentationButton": true,
-  "documentationUrl": "https://gridcapa.github.io"
+  "displayDocumentationButton": false,
+  "documentationUrl": ""
 }
