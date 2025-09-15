@@ -25,9 +25,10 @@ import FaraoLogo from '../images/farao-logo.svg?react';
 import ViewTabs from './tabs/view-tabs';
 import ParametersButton from './buttons/parameters-button';
 import MinioDiskUsage from './minio-disk-usage';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import AppPackage from '../../package.json';
 import GridcapaLogoText from './gridcapa-logo-text';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const AppTopBar = ({
     user,
@@ -45,6 +46,9 @@ const AppTopBar = ({
 
     const [appsAndUrls, setAppsAndUrls] = useState([]);
     const [showParameters, setShowParameters] = useState(false);
+    const [displayDocumentationButton, setDisplayDocumentationButton] =
+        useState(false);
+    const [documentationUrl, setDocumentationUrl] = useState('#');
 
     useEffect(() => {
         if (user !== null) {
@@ -65,6 +69,22 @@ const AppTopBar = ({
     const handleLogoClicked = () => {
         navigate('/', { replace: true });
     };
+
+    const handleDocumentationClick = () => {
+        window.open(documentationUrl);
+    };
+
+    useEffect(() => {
+        console.log('Fetching documentation config...');
+        fetch('documentation-config.json')
+            .then((res) => res.json())
+            .then((res) => {
+                setDisplayDocumentationButton(
+                    res.displayDocumentationButton || false
+                );
+                setDocumentationUrl(res.documentationUrl || '#');
+            });
+    }, []);
 
     return (
         <>
@@ -97,6 +117,12 @@ const AppTopBar = ({
                             <MinioDiskUsage />
                         </Box>
                         {parametersEnabled && <ParametersButton />}
+
+                        {displayDocumentationButton && (
+                            <IconButton onClick={handleDocumentationClick}>
+                                <MenuBookIcon />
+                            </IconButton>
+                        )}
                     </Box>
                 )}
             </TopBar>
