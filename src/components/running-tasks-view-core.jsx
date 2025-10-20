@@ -30,12 +30,7 @@ import {
 } from '@mui/material';
 
 import {fetchRunningTasksData, fetchTimestampData} from '../utils/rest-api';
-import {
-    addWebSocket,
-    connectTaskNotificationWebSocket,
-    disconnect,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import {addWebSocket, disconnect,} from '../utils/websocket-api';
 import {areSameDates, toISODate} from "../utils/date-time-utils.js";
 import {applyTimestampFilterEffect} from "../utils/effect-utils.js";
 
@@ -58,7 +53,9 @@ const RunningTasksViewCore = () => {
     const websockets = useRef([]);
 
     useEffect(() => {
-        applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef)
+        applyTimestampFilterEffect(
+            (filter) => setTimestampFilter(filter),
+            (ref) => setTimestampFilterRef(ref));
         initAllTasksAndProcessEvents();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
@@ -165,7 +162,7 @@ const RunningTasksViewCore = () => {
     };
 
     const filterTasks = (currentStatusFilter, currentTimestampFilter) => {
-        return doFilterTasks(tasks, t => t, currentStatusFilter, currentTimestampFilter);
+        return doFilterTasks(tasks, (t) => t, currentStatusFilter, currentTimestampFilter);
     };
 
     function isBeforeCurrentPage(statusFilter, timestampFilter) {
@@ -202,8 +199,8 @@ const RunningTasksViewCore = () => {
     useEffect(() => {
         if (websockets.current.length === 0) {
             addWebSocket(websockets,
-                ()=>getListOfTopics(),
-                (event)=>handleTimestampMessage(event));
+                () => getListOfTopics(),
+                (event) => handleTimestampMessage(event));
         }
         // 👇️ The above function runs when the component unmounts 👇️
         return () => disconnect(websockets);

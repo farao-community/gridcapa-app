@@ -30,7 +30,7 @@ import {
 } from '@mui/material';
 
 import {fetchBusinessDateData, fetchTimestampData} from '../utils/rest-api';
-import {addWebSocket, connectTaskNotificationWebSocket, disconnect,} from '../utils/websocket-api';
+import {addWebSocket, disconnect,} from '../utils/websocket-api';
 import {areSameDates, toISODate} from "../utils/date-time-utils.js";
 import {applyTimestampFilterEffect} from "../utils/effect-utils.js";
 
@@ -68,7 +68,9 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
     const websockets = useRef([]);
 
-    useEffect(() => applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef), []);
+    useEffect(() => applyTimestampFilterEffect(
+        (filter) => setTimestampFilter(filter),
+        (ref) => setTimestampFilterRef(ref)), []);
     // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleTimestampMessage = useCallback(
@@ -173,7 +175,7 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     }
 
     const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
-        return doFilterTasks(steps, step => step.taskData, currentStatusFilter, currentTimestampFilter);
+        return doFilterTasks(steps, (step) => step.taskData, currentStatusFilter, currentTimestampFilter);
     };
 
     const getMissingData = useCallback(
