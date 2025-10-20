@@ -5,30 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeader from './table-header';
 import TableCore from './table-core';
-import { useIntlRef } from '../utils/messages';
-import { useSnackbar } from 'notistack';
-import { fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
-import { gridcapaFormatDate } from '../utils/commons';
+import {useIntlRef} from '../utils/messages';
+import {useSnackbar} from 'notistack';
+import {fetchTimestampData} from '../utils/rest-api';
+import {addWebSocket, disconnect,} from '../utils/websocket-api';
+import {gridcapaFormatDate} from '../utils/commons';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
 }
 
 const ProcessTimestampView = ({
-    processName,
-    timestamp,
-    onTimestampChange,
-}) => {
+                                  processName,
+                                  timestamp,
+                                  onTimestampChange,
+                              }) => {
     const intlRef = useIntlRef();
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);
     const [eventsData, setEventsData] = useState([]);
     const eventsUpdateTimer = useRef(undefined);
@@ -98,23 +95,16 @@ const ProcessTimestampView = ({
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            const taskNotificationClient = connectTaskNotificationWebSocket(
-                getListOfTopicsTasks(timestamp),
-                handleTimestampMessage
-            );
-            websockets.current.push(taskNotificationClient);
-            const eventNotificationClient = connectTaskNotificationWebSocket(
-                getListOfTopicsEvents(timestamp),
-                handleEventsUpdate
-            );
-            websockets.current.push(eventNotificationClient);
+            addWebSocket(websockets,
+                () => getListOfTopicsTasks(timestamp),
+                (event) => handleTimestampMessage(event));
+            addWebSocket(websockets,
+                () => getListOfTopicsEvents(timestamp),
+                (event) => handleEventsUpdate(event));
         }
 
         // 👇️ The above function runs when the component unmounts 👇️
-        return () => {
-            websockets.current.forEach(disconnectTaskNotificationWebSocket);
-            websockets.current = [];
-        };
+        return () => disconnect(websockets);
     }, [handleEventsUpdate, handleTimestampMessage, timestamp]);
 
     return (

@@ -18,6 +18,7 @@ import { RunButton } from './run-button';
 import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
+import {enableManualExportEffect} from "../utils/effect-utils.js";
 
 function displayManualExportButton(taskData, manualExportEnabled) {
     return taskData !== null && manualExportEnabled ? (
@@ -42,18 +43,7 @@ const GlobalViewCoreRow = ({
     let latestRunId = latestRunFromTaskRunHistory(step.taskData.runHistory);
     const [manualExportEnabled, setManualExportEnabled] = useState(false);
 
-    useEffect(() => {
-        async function getManualExportEnabled() {
-            try {
-                const response = await fetch('process-metadata.json');
-                const data = await response.json();
-                setManualExportEnabled(data.manualExportEnabled || false);
-            } catch (error) {
-                console.error('An error has occurred:', error);
-            }
-        }
-        getManualExportEnabled();
-    }, []);
+    useEffect(() => enableManualExportEffect((enabled)=>setManualExportEnabled(enabled)), []);
 
     return (
         step.taskData && (

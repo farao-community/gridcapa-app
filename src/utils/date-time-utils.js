@@ -80,3 +80,18 @@ export function getTimeString(timestamp) {
     const minutes = twoDigits(timestamp.getUTCMinutes());
     return `${hours}:${minutes}`;
 }
+
+export function plusOneDay(timestamp){
+    //86400000 = 24x60x60x1000
+    return timestamp + 86400000;
+}
+
+export function toISODate(timestamp){
+    return new Date(timestamp).toISOString().substring(0, 10);
+}
+
+//same values, or same once parsed
+export function areSameDates(tsOrDate, date){
+    return Date.parse(tsOrDate.timestamp) === date.timestamp ||
+        tsOrDate.timestamp === date.timestamp
+}

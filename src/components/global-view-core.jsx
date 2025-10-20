@@ -5,35 +5,34 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useCallback, useState, useRef } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
-import { FormattedMessage } from 'react-intl';
-import { useSnackbar } from 'notistack';
-import { useIntlRef } from '../utils/messages';
+import {FormattedMessage} from 'react-intl';
+import {useSnackbar} from 'notistack';
+import {useIntlRef} from '../utils/messages';
 
 import FilterMenu from './filter-menu';
-import { gridcapaFormatDate } from '../utils/commons';
+import {doFilterTasks} from '../utils/commons';
 import GlobalViewCoreRow from './global-view-core-row';
 import EventDialog from './dialogs/event-dialog';
 import FileDialog from './dialogs/file-dialog';
 
 import {
+    LinearProgress,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
     TablePagination,
-    LinearProgress,
+    TableRow,
 } from '@mui/material';
 
-import { fetchBusinessDateData, fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import {fetchBusinessDateData, fetchTimestampData} from '../utils/rest-api';
+import {addWebSocket, connectTaskNotificationWebSocket, disconnect,} from '../utils/websocket-api';
+import {areSameDates, toISODate} from "../utils/date-time-utils.js";
+import {applyTimestampFilterEffect} from "../utils/effect-utils.js";
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -42,7 +41,7 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let result = [];
 
     while (currentTimeStamp <= timestampMax) {
-        let elem = { timestamp: currentTimeStamp };
+        let elem = {timestamp: currentTimeStamp};
         result.push(elem);
         currentTimeStamp += seconds * 1000;
     }
@@ -50,8 +49,8 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     return result;
 };
 
-const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
-    const { enqueueSnackbar } = useSnackbar();
+const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
+    const {enqueueSnackbar} = useSnackbar();
     const intlRef = useIntlRef();
 
     const [openEvent, setOpenEvent] = useState([]);
@@ -69,29 +68,15 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
     const websockets = useRef([]);
 
-    useEffect(() => {
-        async function getTimestampFilter() {
-            let filter = await fetch('process-metadata.json')
-                .then((res) => {
-                    return res.json();
-                })
-                .then((res) => {
-                    return res.globalViewTimestampFilter;
-                });
-            setTimestampFilter(filter);
-            setTimestampFilterRef(filter);
-        }
-        getTimestampFilter();
-    }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
+    useEffect(() => applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef), []);
+    // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleTimestampMessage = useCallback(
         async (event) => {
             const data = event;
             const stepsCopy = [...steps];
             let globalIndex = stepsCopy.findIndex(
-                (step) =>
-                    Date.parse(data.timestamp) === step.timestamp ||
-                    data.timestamp === step.timestamp
+                (step) => areSameDates(data, step)
             );
             if (globalIndex >= 0) {
                 stepsCopy[globalIndex].taskData = data;
@@ -103,12 +88,14 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getListOfTopics = useCallback(() => {
         return [
-            '/task/update/' +
-                new Date(timestampMin).toISOString().substr(0, 10),
-            '/task/update/' +
-                new Date(timestampMax).toISOString().substr(0, 10),
+            formatUrl(timestampMin),
+            formatUrl(timestampMax)
         ];
     }, [timestampMin, timestampMax]);
+
+    function formatUrl(timestamp) {
+        return '/task/update/' + toISODate(timestamp);
+    }
 
     const handleChangePage = (_event, newPage) => {
         setPage(newPage);
@@ -160,50 +147,33 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     };
 
     const handleStatusFilterChange = (filters) => {
-        let newFilter = filters.map((filter) => filter.toUpperCase());
-        setStatusFilter(newFilter);
-        if (
-            filterSteps(newFilter, timestampFilter).length <
-            page * rowsPerPage
-        ) {
-            setPage(
-                Math.floor(
-                    filterSteps(newFilter, timestampFilter).length / rowsPerPage
-                )
-            );
+        const newStatusFilter = filters.map((filter) => filter.toUpperCase());
+        setStatusFilter(newStatusFilter);
+        if (isBeforeCurrentPage(newStatusFilter, timestampFilter)) {
+            setPage(getCurrentPage(newStatusFilter, timestampFilter));
         }
     };
 
     const handleTimestampFilterChange = (filters) => {
-        let newFilter = filters.map((filter) => filter.toUpperCase());
-        setTimestampFilter(newFilter);
-        if (filterSteps(statusFilter, newFilter).length < page * rowsPerPage) {
-            setPage(
-                Math.floor(
-                    filterSteps(statusFilter, newFilter).length / rowsPerPage
-                )
-            );
+        const newTimestampFilter = filters.map((filter) => filter.toUpperCase());
+        setTimestampFilter(newTimestampFilter);
+        if (isBeforeCurrentPage(statusFilter, newTimestampFilter)) {
+            setPage(getCurrentPage(statusFilter, newTimestampFilter));
         }
     };
 
+    function isBeforeCurrentPage(statusFilter, timestampFilter) {
+        return filterSteps(statusFilter, timestampFilter).length < page * rowsPerPage;
+    }
+
+    function getCurrentPage(statusFilter, timestampFilter) {
+        return Math.floor(
+            filterSteps(statusFilter, timestampFilter).length / rowsPerPage
+        );
+    }
+
     const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
-        // gridcapaFormatDate is not accessible inside the filter we have to use an intermediate
-        let formatDate = gridcapaFormatDate;
-        return steps.filter((step) => {
-            return (
-                step.taskData &&
-                (currentStatusFilter.length === 0 ||
-                    (currentStatusFilter.length > 0 &&
-                        currentStatusFilter.some((f) =>
-                            step.taskData.status.includes(f)
-                        ))) &&
-                (currentTimestampFilter.length === 0 ||
-                    (currentTimestampFilter.length > 0 &&
-                        currentTimestampFilter.some((f) =>
-                            formatDate(step.taskData.timestamp).includes(f)
-                        )))
-            );
-        });
+        return doFilterTasks(steps, step => step.taskData, currentStatusFilter, currentTimestampFilter);
     };
 
     const getMissingData = useCallback(
@@ -213,25 +183,15 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             for (
                 let i = consideredPage * consideredRowsPerPage;
                 i <
-                    consideredPage * consideredRowsPerPage +
-                        consideredRowsPerPage && i < allSteps.length;
+                consideredPage * consideredRowsPerPage +
+                consideredRowsPerPage && i < allSteps.length;
                 i++
             ) {
                 if (!allSteps[i].taskData) {
                     setIsLoading(true);
-                    let day = new Date(allSteps[i].timestamp)
-                        .toISOString()
-                        .substring(0, 10);
+                    let day = toISODate(allSteps[i].timestamp);
                     if (!searchDays.includes(day)) {
-                        allPromise.push(
-                            fetchBusinessDateData(
-                                new Date(allSteps[i].timestamp)
-                                    .toISOString()
-                                    .substring(0, 10),
-                                intlRef,
-                                enqueueSnackbar
-                            )
-                        );
+                        allPromise.push(fetchBusinessDateData(day, intlRef, enqueueSnackbar));
                         searchDays.push(day);
                     }
                 }
@@ -240,9 +200,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 values.forEach((tasksdata) => {
                     tasksdata.forEach((td) => {
                         let globalIndex = allSteps.findIndex(
-                            (step) =>
-                                Date.parse(td.timestamp) === step.timestamp ||
-                                td.timestamp === step.timestamp
+                            (step) => areSameDates(td, step)
                         );
                         if (globalIndex >= 0) {
                             allSteps[globalIndex].taskData = td;
@@ -290,31 +248,25 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            const taskNotificationClient = connectTaskNotificationWebSocket(
-                getListOfTopics(),
-                handleTimestampMessage
-            );
-            websockets.current.push(taskNotificationClient);
+            addWebSocket(websockets,
+                () => getListOfTopics(),
+                (event) => handleTimestampMessage(event));
         }
-
         // 👇️ The above function runs when the component unmounts 👇️
-        return () => {
-            websockets.current.forEach(disconnectTaskNotificationWebSocket);
-            websockets.current = [];
-        };
+        return () => disconnect(websockets);
     }, [getListOfTopics, handleTimestampMessage]);
 
     return (
         <div>
             <TableContainer
-                style={{ maxHeight: '73vh', minHeight: '63vh' }}
+                style={{maxHeight: '73vh', minHeight: '63vh'}}
                 component={Paper}
             >
                 <Table className="table">
                     <TableHead>
                         <TableRow>
                             <TableCell size="small">
-                                <FormattedMessage id="timestamp" />
+                                <FormattedMessage id="timestamp"/>
                                 <FilterMenu
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
@@ -324,10 +276,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreFiles" />
+                                <FormattedMessage id="globalViewCoreFiles"/>
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="status" />
+                                <FormattedMessage id="status"/>
                                 <FilterMenu
                                     filterHint="filterOnStatus"
                                     handleChange={handleStatusFilterChange}
@@ -335,10 +287,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreAction" />
+                                <FormattedMessage id="globalViewCoreAction"/>
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="events" />
+                                <FormattedMessage id="events"/>
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -346,7 +298,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                         {isLoading && (
                             <TableRow>
                                 <TableCell colSpan={5}>
-                                    <LinearProgress />
+                                    <LinearProgress/>
                                 </TableCell>
                             </TableRow>
                         )}
@@ -378,7 +330,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
+                labelRowsPerPage={<FormattedMessage id="RowsPerPage"/>}
             />
             <EventDialog
                 open={modalEventOpen}

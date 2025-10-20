@@ -18,7 +18,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@mui/icons-material';
 
-const createselectedFilterArray = (predefinedValues, isSelected = true) => {
+const createSelectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
         return predefinedValues.map((filter) => {
             if (filter.filterName) {
@@ -49,26 +49,27 @@ const FilterMenu = ({
     const [selectedFilter, setSelectedFilter] = useState([]);
 
     useEffect(() => {
-        setSelectedFilter(createselectedFilterArray(predefinedValues));
+        setSelectedFilter(createSelectedFilterArray(predefinedValues));
         // eslint-disable-next-line
     }, [predefinedValues.length]); //tell to eslint to ignore this line.
     // We only trigger this effect when the size of the filter change. Typically when we receive it from the fetch.
     // We have an infinite loop otherwise.
     // refer to https://reactjs.org/docs/hooks-effect.html
 
-    const [toFilter, settoFilter] = useState([]);
+    const [toFilter, setToFilter] = useState([]);
 
     const handleClose = () => {
         setAnchorElementForFilterMenu(null);
     };
 
     const handleLocalChange = (event) => {
-        let newtoFilter = [];
+        let newToFilter = [];
         let boxFilter = [...selectedFilter];
         if (event.currentTarget.name === 'text') {
-            setLocalFilter([event.currentTarget.value]);
-            if (event.currentTarget.value !== '') {
-                newtoFilter.push(event.currentTarget.value);
+            const value = event.currentTarget.value;
+            setLocalFilter([value]);
+            if (value !== '') {
+                newToFilter.push(value);
             }
         } else {
             let index = event.currentTarget.name.split('_')[1];
@@ -76,27 +77,27 @@ const FilterMenu = ({
             setSelectedFilter(boxFilter);
 
             if (Array.isArray(predefinedValues)) {
-                predefinedValues.forEach((filtre, filterIndex) => {
-                    if (boxFilter[filterIndex] && filtre.filterValue) {
-                        newtoFilter.push(...filtre.filterValue);
+                predefinedValues.forEach((filter, filterIndex) => {
+                    if (boxFilter[filterIndex] && filter.filterValue) {
+                        newToFilter.push(...filter.filterValue);
                     } else if (boxFilter[filterIndex]) {
-                        newtoFilter.push(filtre);
+                        newToFilter.push(filter);
                     }
                 });
             } else {
                 Object.keys(predefinedValues).forEach((category, keyIndex) => {
                     if (boxFilter[keyIndex]) {
                         predefinedValues[category].forEach((fil) =>
-                            newtoFilter.push(fil)
+                            newToFilter.push(fil)
                         );
                     }
                 });
-                newtoFilter = [...new Set(newtoFilter)];
+                newToFilter = [...new Set(newToFilter)];
             }
         }
 
-        settoFilter(newtoFilter);
-        handleChange(newtoFilter);
+        setToFilter(newToFilter);
+        handleChange(newToFilter);
     };
 
     const autofocus = () => {
@@ -106,18 +107,18 @@ const FilterMenu = ({
     };
 
     const createFilterList = () => {
-        let listOfkey = [];
+        let keys = [];
         if (Array.isArray(predefinedValues)) {
-            listOfkey = predefinedValues.map((filter) => {
+            keys = predefinedValues.map((filter) => {
                 return filter.filterName ? filter.filterName : filter;
             });
         } else if (Object.keys(predefinedValues).length > 0) {
-            listOfkey = Object.keys(predefinedValues);
+            keys = Object.keys(predefinedValues);
         }
 
         return (
             <FormGroup row>
-                {listOfkey.map((oneFilter, index) => {
+                {keys.map((oneFilter, index) => {
                     return (
                         <FormControlLabel
                             key={'checkBox' + index}

@@ -8,6 +8,7 @@
 import Grid from '@mui/material/Grid';
 import TableHeaderBusinessView from './table-header-business-view';
 import GlobalViewCore from './global-view-core';
+import {plusOneDay} from "../utils/date-time-utils.js";
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));
@@ -24,7 +25,7 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
             <Grid item>
                 <GlobalViewCore
                     timestampMin={refTimestamp.getTime()}
-                    timestampMax={refTimestamp.getTime() + 24 * 60 * 60 * 1000}
+                    timestampMax={plusOneDay(refTimestamp.getTime())}
                     timestampStep={'01:00'}
                 />
             </Grid>
