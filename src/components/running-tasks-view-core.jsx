@@ -143,11 +143,7 @@ const RunningTasksViewCore = () => {
         const newStatusFilter = filters.map((filter) => filter.toUpperCase());
         setStatusFilter(newStatusFilter);
         if (isBeforeCurrentPage(newStatusFilter, timestampFilter)) {
-            setPage(
-                Math.floor(
-                    filterTasks(newStatusFilter, timestampFilter).length / rowsPerPage
-                )
-            );
+            setPage(getCurrentPage(newStatusFilter, timestampFilter));
         }
     };
 

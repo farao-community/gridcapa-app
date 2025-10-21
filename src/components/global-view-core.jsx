@@ -68,8 +68,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
     const websockets = useRef([]);
 
-    useEffect(
-        () =>
+    useEffect(() =>
             applyTimestampFilterEffect(
                 setTimestampFilter,
                 setTimestampFilterRef
