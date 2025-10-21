@@ -199,7 +199,7 @@ const RunningTasksViewCore = () => {
     useEffect(() => {
         if (websockets.current.length === 0) {
             addWebSocket(websockets,
-                () => getListOfTopics(),
+                getListOfTopics(),
                 (event) => handleTimestampMessage(event));
         }
         // 👇️ The above function runs when the component unmounts 👇️

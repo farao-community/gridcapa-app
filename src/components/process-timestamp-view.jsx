@@ -96,10 +96,10 @@ const ProcessTimestampView = ({
     useEffect(() => {
         if (websockets.current.length === 0) {
             addWebSocket(websockets,
-                () => getListOfTopicsTasks(timestamp),
+                getListOfTopicsTasks(timestamp),
                 (event) => handleTimestampMessage(event));
             addWebSocket(websockets,
-                () => getListOfTopicsEvents(timestamp),
+                getListOfTopicsEvents(timestamp),
                 (event) => handleEventsUpdate(event));
         }
 

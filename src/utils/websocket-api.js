@@ -6,10 +6,10 @@
  */
 
 import ReconnectingWebSocket from 'reconnecting-websocket';
-import { APP_NAME } from './config-params';
-import { getBaseUrl } from './rest-api';
-import { store } from '../redux/store';
-import { Client } from '@stomp/stompjs';
+import {APP_NAME} from './config-params';
+import {getBaseUrl} from './rest-api';
+import {store} from '../redux/store';
+import {Client} from '@stomp/stompjs';
 
 const PREFIX_CONFIG_NOTIFICATION_WS = '/config-notification';
 const PREFIX_TASK_NOTIFICATION_WS = '/task-notification/ws/tasks/notify';
@@ -99,12 +99,9 @@ export function connectTaskNotificationWebSocket(topics, onMessage) {
     return client;
 }
 
-export function addWebSocket(websockets, eventsGetter, eventHandler){
-        const eventNotificationClient = connectTaskNotificationWebSocket(
-            eventsGetter,
-            eventHandler
-        );
-        websockets.current.push(eventNotificationClient);
+export function addWebSocket(websockets, events, eventHandler) {
+    const eventNotificationClient = connectTaskNotificationWebSocket(events, eventHandler);
+    websockets.current.push(eventNotificationClient);
 }
 
 export function disconnect(websockets){

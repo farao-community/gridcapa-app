@@ -31,8 +31,8 @@ import {
 
 import {fetchBusinessDateData, fetchTimestampData} from '../utils/rest-api';
 import {addWebSocket, disconnect,} from '../utils/websocket-api';
-import {areSameDates, toISODate} from "../utils/date-time-utils.js";
-import {applyTimestampFilterEffect} from "../utils/effect-utils.js";
+import {areSameDates, toISODate} from '../utils/date-time-utils.js';
+import {applyTimestampFilterEffect} from '../utils/effect-utils.js';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -251,7 +251,7 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     useEffect(() => {
         if (websockets.current.length === 0) {
             addWebSocket(websockets,
-                () => getListOfTopics(),
+                getListOfTopics(),
                 (event) => handleTimestampMessage(event));
         }
         // 👇️ The above function runs when the component unmounts 👇️
