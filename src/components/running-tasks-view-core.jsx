@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {useCallback, useEffect, useRef, useState} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import {FormattedMessage} from 'react-intl';
-import {useSnackbar} from 'notistack';
-import {useIntlRef} from '../utils/messages';
+import { FormattedMessage } from 'react-intl';
+import { useSnackbar } from 'notistack';
+import { useIntlRef } from '../utils/messages';
 
 import FilterMenu from './filter-menu';
-import {doFilterTasks} from '../utils/commons';
+import { doFilterTasks } from '../utils/commons';
 import RunningTasksViewCoreRow from './running-tasks-view-core-row';
 import EventDialog from './dialogs/event-dialog';
 import FileDialog from './dialogs/file-dialog';
@@ -29,13 +29,13 @@ import {
     TableRow,
 } from '@mui/material';
 
-import {fetchRunningTasksData, fetchTimestampData} from '../utils/rest-api';
-import {addWebSocket, disconnect,} from '../utils/websocket-api';
-import {areSameDates, toISODate} from "../utils/date-time-utils.js";
-import {applyTimestampFilterEffect} from "../utils/effect-utils.js";
+import { fetchRunningTasksData, fetchTimestampData } from '../utils/rest-api';
+import { addWebSocket, disconnect } from '../utils/websocket-api';
+import { areSameDates, toISODate } from '../utils/date-time-utils.js';
+import { applyTimestampFilterEffect } from '../utils/effect-utils.js';
 
 const RunningTasksViewCore = () => {
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
 
     const [openEvent, setOpenEvent] = useState([]);
@@ -53,9 +53,7 @@ const RunningTasksViewCore = () => {
     const websockets = useRef([]);
 
     useEffect(() => {
-        applyTimestampFilterEffect(
-            (filter) => setTimestampFilter(filter),
-            (ref) => setTimestampFilterRef(ref));
+        applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef);
         initAllTasksAndProcessEvents();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
@@ -198,9 +196,11 @@ const RunningTasksViewCore = () => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            addWebSocket(websockets,
+            addWebSocket(
+                websockets,
                 getListOfTopics(),
-                (event) => handleTimestampMessage(event));
+                handleTimestampMessage
+            );
         }
         // 👇️ The above function runs when the component unmounts 👇️
         return () => disconnect(websockets);

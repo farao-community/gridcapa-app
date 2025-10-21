@@ -70,7 +70,7 @@ const TableHeader = ({
     const tableHeaderName = (processName || '') + ' Supervisor';
     const [manualExportEnabled, setManualExportEnabled] = useState(false);
 
-    useEffect(() => enableManualExportEffect((enabled)=>setManualExportEnabled(enabled)), []);
+    useEffect(() => enableManualExportEffect(setManualExportEnabled), []);
 
     const handleDateChange = useCallback(
         (event) => onTimestampChange(getNewTimestampFromEvent(timestamp, event)),

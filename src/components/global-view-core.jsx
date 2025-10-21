@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {useCallback, useEffect, useRef, useState} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import {FormattedMessage} from 'react-intl';
-import {useSnackbar} from 'notistack';
-import {useIntlRef} from '../utils/messages';
+import { FormattedMessage } from 'react-intl';
+import { useSnackbar } from 'notistack';
+import { useIntlRef } from '../utils/messages';
 
 import FilterMenu from './filter-menu';
-import {doFilterTasks} from '../utils/commons';
+import { doFilterTasks } from '../utils/commons';
 import GlobalViewCoreRow from './global-view-core-row';
 import EventDialog from './dialogs/event-dialog';
 import FileDialog from './dialogs/file-dialog';
@@ -29,10 +29,10 @@ import {
     TableRow,
 } from '@mui/material';
 
-import {fetchBusinessDateData, fetchTimestampData} from '../utils/rest-api';
-import {addWebSocket, disconnect,} from '../utils/websocket-api';
-import {areSameDates, toISODate} from '../utils/date-time-utils.js';
-import {applyTimestampFilterEffect} from '../utils/effect-utils.js';
+import { fetchBusinessDateData, fetchTimestampData } from '../utils/rest-api';
+import { addWebSocket, disconnect } from '../utils/websocket-api';
+import { areSameDates, toISODate } from '../utils/date-time-utils.js';
+import { applyTimestampFilterEffect } from '../utils/effect-utils.js';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -41,7 +41,7 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let result = [];
 
     while (currentTimeStamp <= timestampMax) {
-        let elem = {timestamp: currentTimeStamp};
+        let elem = { timestamp: currentTimeStamp };
         result.push(elem);
         currentTimeStamp += seconds * 1000;
     }
@@ -49,8 +49,8 @@ const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     return result;
 };
 
-const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
-    const {enqueueSnackbar} = useSnackbar();
+const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
 
     const [openEvent, setOpenEvent] = useState([]);
@@ -68,9 +68,12 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
     const websockets = useRef([]);
 
-    useEffect(() => applyTimestampFilterEffect(
-        (filter) => setTimestampFilter(filter),
-        (ref) => setTimestampFilterRef(ref)), []);
+    useEffect(
+        () =>
+            applyTimestampFilterEffect(
+                setTimestampFilter,
+                setTimestampFilterRef
+            ), []);
     // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleTimestampMessage = useCallback(
@@ -89,10 +92,7 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     );
 
     const getListOfTopics = useCallback(() => {
-        return [
-            formatUrl(timestampMin),
-            formatUrl(timestampMax)
-        ];
+        return [formatUrl(timestampMin), formatUrl(timestampMax)];
     }, [timestampMin, timestampMax]);
 
     function formatUrl(timestamp) {
@@ -175,7 +175,10 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     }
 
     const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
-        return doFilterTasks(steps, (step) => step.taskData, currentStatusFilter, currentTimestampFilter);
+        return doFilterTasks(steps,
+                             (step) => step.taskData,
+                             currentStatusFilter,
+                             currentTimestampFilter);
     };
 
     const getMissingData = useCallback(
@@ -193,7 +196,9 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
                     setIsLoading(true);
                     let day = toISODate(allSteps[i].timestamp);
                     if (!searchDays.includes(day)) {
-                        allPromise.push(fetchBusinessDateData(day, intlRef, enqueueSnackbar));
+                        allPromise.push(
+                            fetchBusinessDateData(day, intlRef, enqueueSnackbar)
+                        );
                         searchDays.push(day);
                     }
                 }
@@ -250,9 +255,11 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            addWebSocket(websockets,
+            addWebSocket(
+                websockets,
                 getListOfTopics(),
-                (event) => handleTimestampMessage(event));
+                handleTimestampMessage
+            );
         }
         // 👇️ The above function runs when the component unmounts 👇️
         return () => disconnect(websockets);
@@ -261,7 +268,7 @@ const GlobalViewCore = ({timestampMin, timestampMax, timestampStep}) => {
     return (
         <div>
             <TableContainer
-                style={{maxHeight: '73vh', minHeight: '63vh'}}
+                style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
             >
                 <Table className="table">

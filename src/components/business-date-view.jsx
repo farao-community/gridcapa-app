@@ -10,7 +10,7 @@ import TableHeaderBusinessView from './table-header-business-view';
 import GlobalViewCore from './global-view-core';
 import { plusOneDay } from '../utils/date-time-utils.js';
 
-const BusinessDateView = ({processName, timestamp, onTimestampChange}) => {
+const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));
     refTimestamp.setHours(0, 30, 0, 0);
     return (

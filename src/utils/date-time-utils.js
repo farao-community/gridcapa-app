@@ -81,7 +81,7 @@ export function getTimeString(timestamp) {
     return `${hours}:${minutes}`;
 }
 
-export function plusOneDay(timestamp){
+export function plusOneDay(timestamp) {
     //86400000 = 24x60x60x1000
     return timestamp + 86400000;
 }
@@ -91,7 +91,7 @@ export function toISODate(timestamp){
 }
 
 //same values, or same once parsed
-export function areSameDates(tsOrDate, date){
-    return Date.parse(tsOrDate.timestamp) === date.timestamp ||
-        tsOrDate.timestamp === date.timestamp
+export function areSameDates(tsOrDate, date) {
+    return Date.parse(tsOrDate.timestamp) === date.timestamp
+        || tsOrDate.timestamp === date.timestamp
 }

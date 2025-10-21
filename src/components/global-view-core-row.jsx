@@ -44,7 +44,7 @@ const GlobalViewCoreRow = ({
     const [manualExportEnabled, setManualExportEnabled] = useState(false);
 
     useEffect(() => {
-        enableManualExportEffect((enabled)=>setManualExportEnabled(enabled))
+        enableManualExportEffect(setManualExportEnabled);
     }, []);
 
     return (

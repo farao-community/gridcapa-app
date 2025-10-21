@@ -69,15 +69,15 @@ export function doFilterTasks(objects, taskGetter, currentStatusFilter, currentT
         const task = taskGetter(item);
         const nbStatusFiltered = currentStatusFilter.length;
         const nbTsFiltered = currentTimestampFilter.length;
-        return (
-            task &&
-            nbStatusFiltered === 0 ||
-                (nbStatusFiltered > 0 &&
-                    currentStatusFilter.some((f) => task.status.includes(f)))) &&
-            (nbTsFiltered === 0 ||
-                (nbTsFiltered > 0 &&
-                    currentTimestampFilter.some((f) => formatDate(task.timestamp).includes(f)))
-        );
+
+        const filterStatus = nbStatusFiltered === 0
+            || (nbStatusFiltered > 0
+                && currentStatusFilter.some((f) => task.status.includes(f)));
+        const filterTimestamp = nbTsFiltered === 0
+            || (nbTsFiltered > 0
+                && currentTimestampFilter.some((f) => formatDate(task.timestamp).includes(f)))
+
+        return task && filterStatus && filterTimestamp;
     });
 }
 

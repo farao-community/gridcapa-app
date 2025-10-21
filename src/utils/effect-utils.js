@@ -15,7 +15,6 @@ export function enableManualExportEffect(setManualExportEnabled) {
             console.error('An error has occurred:', error);
         }
     }
-
     getManualExportEnabled();
 }
 
@@ -31,7 +30,5 @@ export function applyTimestampFilterEffect(setTimestampFilter, setTimestampFilte
         setTimestampFilter(filter);
         setTimestampFilterRef(filter);
     }
-
     getTimestampFilter();
-
 }
