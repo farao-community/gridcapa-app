@@ -68,19 +68,22 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const [timestampFilterRef, setTimestampFilterRef] = useState([]);
     const websockets = useRef([]);
 
-    useEffect(() =>
+    useEffect(
+        () =>
             applyTimestampFilterEffect(
                 setTimestampFilter,
                 setTimestampFilterRef
-            ), []);
+            ),
+        []
+    );
     // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
     const handleTimestampMessage = useCallback(
         async (event) => {
             const data = event;
             const stepsCopy = [...steps];
-            let globalIndex = stepsCopy.findIndex(
-                (step) => areSameDates(data, step)
+            let globalIndex = stepsCopy.findIndex((step) =>
+                areSameDates(data, step)
             );
             if (globalIndex >= 0) {
                 stepsCopy[globalIndex].taskData = data;
@@ -155,19 +158,24 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     };
 
     const handleTimestampFilterChange = (filters) => {
-        const newTimestampFilter = filters.map((filter) => filter.toUpperCase());
+        const newTimestampFilter = filters.map((filter) =>
+            filter.toUpperCase()
+        );
         setTimestampFilter(newTimestampFilter);
         adjustIfWrongPage(statusFilter, newTimestampFilter);
     };
 
-    function adjustIfWrongPage(statusFilter, timestampFilter){
+    function adjustIfWrongPage(statusFilter, timestampFilter) {
         if (isBeforeCurrentPage(statusFilter, timestampFilter)) {
             setPage(getCurrentPage(statusFilter, timestampFilter));
         }
     }
 
     function isBeforeCurrentPage(statusFilter, timestampFilter) {
-        return filterSteps(statusFilter, timestampFilter).length < page * rowsPerPage;
+        return (
+            filterSteps(statusFilter, timestampFilter).length <
+            page * rowsPerPage
+        );
     }
 
     function getCurrentPage(statusFilter, timestampFilter) {
@@ -177,10 +185,12 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     }
 
     const filterSteps = (currentStatusFilter, currentTimestampFilter) => {
-        return doFilterTasks(steps,
-                             (step) => step.taskData,
-                             currentStatusFilter,
-                             currentTimestampFilter);
+        return doFilterTasks(
+            steps,
+            (step) => step.taskData,
+            currentStatusFilter,
+            currentTimestampFilter
+        );
     };
 
     const getMissingData = useCallback(
@@ -190,8 +200,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             for (
                 let i = consideredPage * consideredRowsPerPage;
                 i <
-                consideredPage * consideredRowsPerPage +
-                consideredRowsPerPage && i < allSteps.length;
+                    consideredPage * consideredRowsPerPage +
+                        consideredRowsPerPage && i < allSteps.length;
                 i++
             ) {
                 if (!allSteps[i].taskData) {
@@ -208,8 +218,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             Promise.all(allPromise).then((promise) => {
                 promise.forEach((tasksData) => {
                     tasksData.forEach((taskData) => {
-                        let globalIndex = allSteps.findIndex(
-                            (step) => areSameDates(taskData, step)
+                        let globalIndex = allSteps.findIndex((step) =>
+                            areSameDates(taskData, step)
                         );
                         if (globalIndex >= 0) {
                             allSteps[globalIndex].taskData = taskData;
@@ -257,11 +267,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            addWebSocket(
-                websockets,
-                getListOfTopics(),
-                handleTimestampMessage
-            );
+            addWebSocket(websockets, getListOfTopics(), handleTimestampMessage);
         }
         // 👇️ The above function runs when the component unmounts 👇️
         return () => disconnect(websockets);
@@ -277,7 +283,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell size="small">
-                                <FormattedMessage id="timestamp"/>
+                                <FormattedMessage id="timestamp" />
                                 <FilterMenu
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
@@ -287,10 +293,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreFiles"/>
+                                <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="status"/>
+                                <FormattedMessage id="status" />
                                 <FilterMenu
                                     filterHint="filterOnStatus"
                                     handleChange={handleStatusFilterChange}
@@ -298,10 +304,10 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreAction"/>
+                                <FormattedMessage id="globalViewCoreAction" />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="events"/>
+                                <FormattedMessage id="events" />
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -309,7 +315,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                         {isLoading && (
                             <TableRow>
                                 <TableCell colSpan={5}>
-                                    <LinearProgress/>
+                                    <LinearProgress />
                                 </TableCell>
                             </TableRow>
                         )}
@@ -341,7 +347,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={<FormattedMessage id="RowsPerPage"/>}
+                labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
             />
             <EventDialog
                 open={modalEventOpen}

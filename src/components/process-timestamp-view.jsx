@@ -19,7 +19,11 @@ function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
 }
 
-const ProcessTimestampView = ({ processName, timestamp, onTimestampChange }) => {
+const ProcessTimestampView = ({
+    processName,
+    timestamp,
+    onTimestampChange,
+}) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
     const [timestampData, setTimestampData] = useState(null);

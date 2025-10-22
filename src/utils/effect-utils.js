@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 export function enableManualExportEffect(setManualExportEnabled) {
-
     async function getManualExportEnabled() {
         try {
             const response = await fetch('process-metadata.json');
@@ -18,7 +17,10 @@ export function enableManualExportEffect(setManualExportEnabled) {
     getManualExportEnabled();
 }
 
-export function applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef) {
+export function applyTimestampFilterEffect(
+    setTimestampFilter,
+    setTimestampFilterRef
+) {
     async function getTimestampFilter() {
         let filter = await fetch('process-metadata.json')
             .then((res) => {

@@ -15,8 +15,11 @@ import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
-import {getNewTimestampFromEvent, latestRunFromTaskRunHistory} from '../utils/commons';
-import {enableManualExportEffect} from "../utils/effect-utils.js";
+import {
+    getNewTimestampFromEvent,
+    latestRunFromTaskRunHistory,
+} from '../utils/commons';
+import { enableManualExportEffect } from '../utils/effect-utils.js';
 
 const styles = {
     container: (theme) => ({
@@ -73,7 +76,8 @@ const TableHeader = ({
     useEffect(() => enableManualExportEffect(setManualExportEnabled), []);
 
     const handleDateChange = useCallback(
-        (event) => onTimestampChange(getNewTimestampFromEvent(timestamp, event)),
+        (event) =>
+            onTimestampChange(getNewTimestampFromEvent(timestamp, event)),
         [timestamp, onTimestampChange]
     );
 

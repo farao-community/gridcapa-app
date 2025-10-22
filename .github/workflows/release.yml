@@ -1,96 +1,96 @@
 name: Release job
 
 on:
-  workflow_dispatch:
-    inputs:
-      releaseVersion:
-        description: 'Release version'
-        required: true
-      nextVersion:
-        description: 'Next version'
-        required: true
+    workflow_dispatch:
+        inputs:
+            releaseVersion:
+                description: 'Release version'
+                required: true
+            nextVersion:
+                description: 'Next version'
+                required: true
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || startsWith(github.ref_name, 'hotfix')
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    release:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref_name, 'hotfix')
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
 
-      - name: Change version to release version
-        uses: reedyuk/npm-version@1.1.1
-        with:
-          version: ${{ github.event.inputs.releaseVersion }}
+            - name: Change version to release version
+              uses: reedyuk/npm-version@1.1.1
+              with:
+                  version: ${{ github.event.inputs.releaseVersion }}
 
-      - name: Install dependencies
-        run: npm install
+            - name: Install dependencies
+              run: npm install
 
-      - name: Run pre build tests
-        run: npm run test
+            - name: Run pre build tests
+              run: npm run test
 
-      - name: Build without authentication
-        run: npm run build
-        env:
-          VITE_USE_AUTHENTICATION: false
+            - name: Build without authentication
+              run: npm run build
+              env:
+                  VITE_USE_AUTHENTICATION: false
 
-      - name: Run post build tests
-        run: npm run test
+            - name: Run post build tests
+              run: npm run test
 
-      - name: Commit and tag release version
-        uses: stefanzweifel/git-auto-commit-action@master
-        with:
-          branch: release-v${{ github.event.inputs.releaseVersion }}
-          create_branch: true
-          commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
-          tagging_message: v${{ github.event.inputs.releaseVersion }}
+            - name: Commit and tag release version
+              uses: stefanzweifel/git-auto-commit-action@master
+              with:
+                  branch: release-v${{ github.event.inputs.releaseVersion }}
+                  create_branch: true
+                  commit_message: Prepare release ${{ github.event.inputs.releaseVersion }}
+                  tagging_message: v${{ github.event.inputs.releaseVersion }}
 
-      - name: Build and publish Docker image without authentication
-        uses: elgohr/Publish-Docker-Github-Action@v5
-        with:
-          name: farao/gridcapa-app
-          username: farao
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: v${{ github.event.inputs.releaseVersion }}
+            - name: Build and publish Docker image without authentication
+              uses: elgohr/Publish-Docker-Github-Action@v5
+              with:
+                  name: farao/gridcapa-app
+                  username: farao
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  tags: v${{ github.event.inputs.releaseVersion }}
 
-      - name: Build with authentication
-        run: npm run build
-        env:
-          VITE_USE_AUTHENTICATION: true
+            - name: Build with authentication
+              run: npm run build
+              env:
+                  VITE_USE_AUTHENTICATION: true
 
-      - name: Build and publish Docker image with authentication
-        uses: elgohr/Publish-Docker-Github-Action@v5
-        with:
-          name: farao/gridcapa-app-auth
-          username: farao
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          tags: v${{ github.event.inputs.releaseVersion }}
+            - name: Build and publish Docker image with authentication
+              uses: elgohr/Publish-Docker-Github-Action@v5
+              with:
+                  name: farao/gridcapa-app-auth
+                  username: farao
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  tags: v${{ github.event.inputs.releaseVersion }}
 
-      - name: Change version to next version
-        uses: reedyuk/npm-version@1.1.1
-        with:
-          version: ${{ github.event.inputs.nextVersion }}-snapshot.0
+            - name: Change version to next version
+              uses: reedyuk/npm-version@1.1.1
+              with:
+                  version: ${{ github.event.inputs.nextVersion }}-snapshot.0
 
-      - name: Commit next version
-        uses: stefanzweifel/git-auto-commit-action@master
-        with:
-          branch: next-release-v${{ github.event.inputs.nextVersion }}
-          create_branch: true
-          commit_message: Prepare next release ${{ github.event.inputs.nextVersion }}
-          skip_fetch: true
-          skip_checkout: true
+            - name: Commit next version
+              uses: stefanzweifel/git-auto-commit-action@master
+              with:
+                  branch: next-release-v${{ github.event.inputs.nextVersion }}
+                  create_branch: true
+                  commit_message: Prepare next release ${{ github.event.inputs.nextVersion }}
+                  skip_fetch: true
+                  skip_checkout: true
 
-      - name: Merge automatically into source branch
-        uses: devmasx/merge-branch@master
-        with:
-          type: now
-          from_branch: next-release-v${{ github.event.inputs.nextVersion }}
-          target_branch: ${{ github.ref_name }}
-          message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
-          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+            - name: Merge automatically into source branch
+              uses: devmasx/merge-branch@master
+              with:
+                  type: now
+                  from_branch: next-release-v${{ github.event.inputs.nextVersion }}
+                  target_branch: ${{ github.ref_name }}
+                  message: Automatic merge after release ${{ github.event.inputs.releaseVersion }}
+                  github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-      - name: Delete merged branch
-        uses: dawidd6/action-delete-branch@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branches: next-release-v${{ github.event.inputs.nextVersion }}
+            - name: Delete merged branch
+              uses: dawidd6/action-delete-branch@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  branches: next-release-v${{ github.event.inputs.nextVersion }}

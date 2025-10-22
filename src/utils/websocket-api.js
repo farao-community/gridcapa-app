@@ -100,11 +100,14 @@ export function connectTaskNotificationWebSocket(topics, onMessage) {
 }
 
 export function addWebSocket(websockets, events, eventHandler) {
-    const eventNotificationClient = connectTaskNotificationWebSocket(events, eventHandler);
+    const eventNotificationClient = connectTaskNotificationWebSocket(
+        events,
+        eventHandler
+    );
     websockets.current.push(eventNotificationClient);
 }
 
-export function disconnect(websockets){
+export function disconnect(websockets) {
     websockets.current.forEach(disconnectTaskNotificationWebSocket);
     websockets.current = [];
 }

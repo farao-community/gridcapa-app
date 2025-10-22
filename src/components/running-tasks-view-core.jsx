@@ -77,8 +77,8 @@ const RunningTasksViewCore = () => {
         async (event) => {
             const data = event;
             const tasksCopy = [...tasks];
-            let globalIndex = tasksCopy.findIndex(
-                (task) => areSameDates(data, task)
+            let globalIndex = tasksCopy.findIndex((task) =>
+                areSameDates(data, task)
             );
             if (globalIndex >= 0) {
                 tasksCopy[globalIndex] = data;
@@ -146,23 +146,33 @@ const RunningTasksViewCore = () => {
     };
 
     const handleTimestampFilterChange = (filters) => {
-        const newTimestampFilter = filters.map((filter) => filter.toUpperCase());
+        const newTimestampFilter = filters.map((filter) =>
+            filter.toUpperCase()
+        );
         setTimestampFilter(newTimestampFilter);
         adjustIfWrongPage(statusFilter, newTimestampFilter);
     };
 
     const filterTasks = (currentStatusFilter, currentTimestampFilter) => {
-        return doFilterTasks(tasks, (t) => t, currentStatusFilter, currentTimestampFilter);
+        return doFilterTasks(
+            tasks,
+            (t) => t,
+            currentStatusFilter,
+            currentTimestampFilter
+        );
     };
 
-    function adjustIfWrongPage(statusFilter, timestampFilter){
+    function adjustIfWrongPage(statusFilter, timestampFilter) {
         if (isBeforeCurrentPage(statusFilter, timestampFilter)) {
             setPage(getCurrentPage(statusFilter, timestampFilter));
         }
     }
 
     function isBeforeCurrentPage(statusFilter, timestampFilter) {
-        return filterTasks(statusFilter, timestampFilter).length < page * rowsPerPage;
+        return (
+            filterTasks(statusFilter, timestampFilter).length <
+            page * rowsPerPage
+        );
     }
 
     function getCurrentPage(statusFilter, timestampFilter) {
@@ -193,11 +203,7 @@ const RunningTasksViewCore = () => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            addWebSocket(
-                websockets,
-                getListOfTopics(),
-                handleTimestampMessage
-            );
+            addWebSocket(websockets, getListOfTopics(), handleTimestampMessage);
         }
         // 👇️ The above function runs when the component unmounts 👇️
         return () => disconnect(websockets);
@@ -206,14 +212,14 @@ const RunningTasksViewCore = () => {
     return (
         <div>
             <TableContainer
-                style={{maxHeight: '73vh', minHeight: '63vh'}}
+                style={{ maxHeight: '73vh', minHeight: '63vh' }}
                 component={Paper}
             >
                 <Table className="table">
                     <TableHead>
                         <TableRow>
                             <TableCell size="small">
-                                <FormattedMessage id="timestamp"/>
+                                <FormattedMessage id="timestamp" />
                                 <FilterMenu
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
@@ -223,10 +229,10 @@ const RunningTasksViewCore = () => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreFiles"/>
+                                <FormattedMessage id="globalViewCoreFiles" />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="status"/>
+                                <FormattedMessage id="status" />
                                 <FilterMenu
                                     filterHint="filterOnStatus"
                                     handleChange={handleStatusFilterChange}
@@ -234,10 +240,10 @@ const RunningTasksViewCore = () => {
                                 />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="globalViewCoreAction"/>
+                                <FormattedMessage id="globalViewCoreAction" />
                             </TableCell>
                             <TableCell size="small">
-                                <FormattedMessage id="events"/>
+                                <FormattedMessage id="events" />
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -245,7 +251,7 @@ const RunningTasksViewCore = () => {
                         {isLoading && (
                             <TableRow>
                                 <TableCell colSpan={5}>
-                                    <LinearProgress/>
+                                    <LinearProgress />
                                 </TableCell>
                             </TableRow>
                         )}
@@ -277,7 +283,7 @@ const RunningTasksViewCore = () => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={<FormattedMessage id="RowsPerPage"/>}
+                labelRowsPerPage={<FormattedMessage id="RowsPerPage" />}
             />
             <EventDialog
                 open={modalEventOpen}

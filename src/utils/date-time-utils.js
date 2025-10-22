@@ -86,12 +86,14 @@ export function plusOneDay(timestamp) {
     return timestamp + 86400000;
 }
 
-export function toISODate(timestamp){
+export function toISODate(timestamp) {
     return new Date(timestamp).toISOString().substring(0, 10);
 }
 
 //same values, or same once parsed
 export function areSameDates(tsOrDate, date) {
-    return Date.parse(tsOrDate.timestamp) === date.timestamp
-        || tsOrDate.timestamp === date.timestamp
+    return (
+        Date.parse(tsOrDate.timestamp) === date.timestamp ||
+        tsOrDate.timestamp === date.timestamp
+    );
 }

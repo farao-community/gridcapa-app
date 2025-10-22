@@ -1,10 +1,7 @@
 {
-  "processName": "Process Name",
-  "dayIncrementInDate": 0,
-  "globalViewTimestampFilter": [
-  ],
-  "eventLevelPredefinedFilter": [
-  ],
-  "eventLogPredefinedFilter": [
-  ]
+    "processName": "Process Name",
+    "dayIncrementInDate": 0,
+    "globalViewTimestampFilter": [],
+    "eventLevelPredefinedFilter": [],
+    "eventLogPredefinedFilter": []
 }
