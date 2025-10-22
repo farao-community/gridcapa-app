@@ -142,22 +142,24 @@ const RunningTasksViewCore = () => {
     const handleStatusFilterChange = (filters) => {
         const newStatusFilter = filters.map((filter) => filter.toUpperCase());
         setStatusFilter(newStatusFilter);
-        if (isBeforeCurrentPage(newStatusFilter, timestampFilter)) {
-            setPage(getCurrentPage(newStatusFilter, timestampFilter));
-        }
+        adjustIfWrongPage(newStatusFilter, timestampFilter);
     };
 
     const handleTimestampFilterChange = (filters) => {
         const newTimestampFilter = filters.map((filter) => filter.toUpperCase());
         setTimestampFilter(newTimestampFilter);
-        if (isBeforeCurrentPage(statusFilter, newTimestampFilter)) {
-            setPage(getCurrentPage(statusFilter, newTimestampFilter));
-        }
+        adjustIfWrongPage(statusFilter, newTimestampFilter);
     };
 
     const filterTasks = (currentStatusFilter, currentTimestampFilter) => {
         return doFilterTasks(tasks, (t) => t, currentStatusFilter, currentTimestampFilter);
     };
+
+    function adjustIfWrongPage(statusFilter, timestampFilter){
+        if (isBeforeCurrentPage(statusFilter, timestampFilter)) {
+            setPage(getCurrentPage(statusFilter, timestampFilter));
+        }
+    }
 
     function isBeforeCurrentPage(statusFilter, timestampFilter) {
         return filterTasks(statusFilter, timestampFilter).length < page * rowsPerPage;
@@ -168,7 +170,6 @@ const RunningTasksViewCore = () => {
             filterTasks(statusFilter, timestampFilter).length / rowsPerPage
         );
     }
-
 
     useEffect(() => {
         setPage(0);

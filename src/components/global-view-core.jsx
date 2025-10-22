@@ -141,6 +141,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
         openEvent[index] = true;
         setModalFileOpen(true);
     };
+
     const handleFileClose = () => {
         let index = openEvent.indexOf(true);
         openEvent[index] = false;
@@ -150,18 +151,20 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const handleStatusFilterChange = (filters) => {
         const newStatusFilter = filters.map((filter) => filter.toUpperCase());
         setStatusFilter(newStatusFilter);
-        if (isBeforeCurrentPage(newStatusFilter, timestampFilter)) {
-            setPage(getCurrentPage(newStatusFilter, timestampFilter));
-        }
+        adjustIfWrongPage(newStatusFilter, timestampFilter);
     };
 
     const handleTimestampFilterChange = (filters) => {
         const newTimestampFilter = filters.map((filter) => filter.toUpperCase());
         setTimestampFilter(newTimestampFilter);
-        if (isBeforeCurrentPage(statusFilter, newTimestampFilter)) {
-            setPage(getCurrentPage(statusFilter, newTimestampFilter));
-        }
+        adjustIfWrongPage(statusFilter, newTimestampFilter);
     };
+
+    function adjustIfWrongPage(statusFilter, timestampFilter){
+        if (isBeforeCurrentPage(statusFilter, timestampFilter)) {
+            setPage(getCurrentPage(statusFilter, timestampFilter));
+        }
+    }
 
     function isBeforeCurrentPage(statusFilter, timestampFilter) {
         return filterSteps(statusFilter, timestampFilter).length < page * rowsPerPage;
@@ -202,14 +205,14 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                     }
                 }
             }
-            Promise.all(allPromise).then((values) => {
-                values.forEach((tasksdata) => {
-                    tasksdata.forEach((td) => {
+            Promise.all(allPromise).then((promise) => {
+                promise.forEach((tasksData) => {
+                    tasksData.forEach((taskData) => {
                         let globalIndex = allSteps.findIndex(
-                            (step) => areSameDates(td, step)
+                            (step) => areSameDates(taskData, step)
                         );
                         if (globalIndex >= 0) {
-                            allSteps[globalIndex].taskData = td;
+                            allSteps[globalIndex].taskData = taskData;
                         }
                     });
                 });
