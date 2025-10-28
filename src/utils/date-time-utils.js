@@ -91,9 +91,9 @@ export function toISODate(timestamp) {
 }
 
 //same values, or same once parsed
-export function areSameDates(tsOrDate, date) {
+export function areSameDates(dateOrParsable, date) {
     return (
-        Date.parse(tsOrDate.timestamp) === date.timestamp ||
-        tsOrDate.timestamp === date.timestamp
+        Date.parse(dateOrParsable.timestamp) === date.timestamp ||
+        dateOrParsable.timestamp === date.timestamp
     );
 }
