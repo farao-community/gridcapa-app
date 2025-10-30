@@ -20,7 +20,7 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
-import UploadButton from "./upload-button.jsx";
+import UploadButton from './upload-button.jsx';
 
 let container = null;
 let root = null;
@@ -38,8 +38,7 @@ afterEach(() => {
 });
 
 it('renders upload button with its options', async () => {
-
-    let processFile = {fileType:'cgm'};
+    let processFile = { fileType: 'cgm' };
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
     await act(async () =>
         root.render(
@@ -51,7 +50,10 @@ it('renders upload button with its options', async () => {
                                 <SnackbarProvider hideIconVariant={false}>
                                     <CssBaseline />
                                     <CardErrorBoundary>
-                                        <UploadButton processFile={processFile} timestamp={timestamp} />
+                                        <UploadButton
+                                            processFile={processFile}
+                                            timestamp={timestamp}
+                                        />
                                     </CardErrorBoundary>
                                 </SnackbarProvider>
                             </ThemeProvider>
