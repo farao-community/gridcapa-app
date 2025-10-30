@@ -20,6 +20,7 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
+import UploadButton from "./upload-button.jsx";
 
 let container = null;
 let root = null;
@@ -36,7 +37,10 @@ afterEach(() => {
     container = null;
 });
 
-it('renders', async () => {
+it('renders upload button with its options', async () => {
+
+    let processFile = {fileType:'cgm'};
+    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
     await act(async () =>
         root.render(
             <IntlProvider locale="en">
@@ -47,7 +51,7 @@ it('renders', async () => {
                                 <SnackbarProvider hideIconVariant={false}>
                                     <CssBaseline />
                                     <CardErrorBoundary>
-                                        <App />
+                                        <UploadButton processFile={processFile} timestamp={timestamp} />
                                     </CardErrorBoundary>
                                 </SnackbarProvider>
                             </ThemeProvider>
@@ -58,7 +62,7 @@ it('renders', async () => {
         )
     );
 
-    expect(container.textContent).toContain('GridCapa');
+    expect(container.innerHTML).toContain('upload-cgm-1577836800000');
     act(() => {
         root.unmount();
         root = null;
