@@ -256,7 +256,9 @@ function DefaultParameter({ name, displayValue, handleChange }) {
         <span>
             {name}:
             <TextField
-                variant="standard"
+                multiline
+                fullWidth
+                variant="outlined"
                 size="small"
                 defaultValue={displayValue}
                 onChange={handleChange}
