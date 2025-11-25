@@ -19,7 +19,6 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
-import UploadButton from './upload-button.jsx';
 import { RunButton } from './run-button.jsx';
 
 let container = null;
