@@ -5,29 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
-
-import { IntlProvider } from 'react-intl';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { store } from '../redux/store';
-import {
-    createTheme,
-    ThemeProvider,
-    StyledEngineProvider,
-} from '@mui/material/styles';
-import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
-import CssBaseline from '@mui/material/CssBaseline';
 import FileSummary from './file-summary.jsx';
+import {
+    renderWithProviders,
+    setupTestContainer,
+} from '../utils/test-utils.js';
 
 let container = null;
 let root = null;
 beforeEach(() => {
-    // setup a DOM element as a render target
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    root = createRoot(container);
+    ({ container, root } = setupTestContainer());
 });
 
 afterEach(() => {
@@ -43,33 +31,16 @@ afterEach(() => {
     }
 });
 
-it('renders file summary', async () => {
+it('displays validated file count correctly', async () => {
     const listOfFile = [
         { processFileStatus: 'VALIDATED' },
         { processFileStatus: 'ERROR' },
         { processFileStatus: 'RUNNING' },
     ];
     await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <FileSummary
-                                            type="Input"
-                                            listOfFile={listOfFile}
-                                        />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>
+        renderWithProviders(
+            <FileSummary type="Input" listOfFile={listOfFile} />,
+            root
         )
     );
 

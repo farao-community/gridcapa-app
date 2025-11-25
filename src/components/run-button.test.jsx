@@ -5,29 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
-
-import { IntlProvider } from 'react-intl';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { store } from '../redux/store';
-import {
-    createTheme,
-    ThemeProvider,
-    StyledEngineProvider,
-} from '@mui/material/styles';
-import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
-import CssBaseline from '@mui/material/CssBaseline';
 import { RunButton } from './run-button.jsx';
+import {
+    renderWithProviders,
+    setupTestContainer,
+} from '../utils/test-utils.js';
 
 let container = null;
 let root = null;
 beforeEach(() => {
-    // setup a DOM element as a render target
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    root = createRoot(container);
+    ({ container, root } = setupTestContainer());
 });
 
 afterEach(() => {
@@ -43,64 +31,43 @@ afterEach(() => {
     }
 });
 
-it('renders run button when disabled', async () => {
+it('renders run button when success', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            json: () => Promise.resolve({ parametersEnabled: false }),
+        })
+    );
     await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <RunButton
-                                            status="SUCCESS"
-                                            timestamp={timestamp}
-                                        />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>
+        renderWithProviders(
+            <RunButton status="SUCCESS" timestamp={timestamp} />,
+            root
         )
     );
 
     expect(container.innerHTML).toContain('run-button-1577836800000');
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.getElementsByTagName('circle').length).toEqual(0);
+
+    global.fetch.mockRestore();
 });
 
 it('renders loader when running', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            json: () => Promise.resolve({ parametersEnabled: false }),
+        })
+    );
     await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <RunButton
-                                            status="RUNNING"
-                                            timestamp={timestamp}
-                                        />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>
+        renderWithProviders(
+            <RunButton status="RUNNING" timestamp={timestamp} />,
+            root
         )
     );
 
     expect(container.innerHTML).not.toContain('run-button-');
     expect(container.getElementsByTagName('circle').length).toEqual(1);
     expect(container.getElementsByTagName('button').length).toEqual(0);
+    global.fetch.mockRestore();
 });

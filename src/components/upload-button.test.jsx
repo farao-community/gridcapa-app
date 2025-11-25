@@ -20,46 +20,39 @@ import {
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
 import UploadButton from './upload-button.jsx';
+import {
+    renderWithProviders,
+    setupTestContainer,
+} from '../utils/test-utils.js';
+import { RunButton } from './run-button.jsx';
 
 let container = null;
 let root = null;
 beforeEach(() => {
-    // setup a DOM element as a render target
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    root = createRoot(container);
+    ({ container, root } = setupTestContainer());
 });
 
 afterEach(() => {
     // cleanup on exiting
     container.remove();
     container = null;
+
+    if (root) {
+        act(() => {
+            root.unmount();
+        });
+        root = null;
+    }
 });
 
 it('renders upload button with its options', async () => {
     let processFile = { fileType: 'cgm' };
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
+
     await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <UploadButton
-                                            processFile={processFile}
-                                            timestamp={timestamp}
-                                        />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>
+        renderWithProviders(
+            <UploadButton processFile={processFile} timestamp={timestamp} />,
+            root
         )
     );
 
