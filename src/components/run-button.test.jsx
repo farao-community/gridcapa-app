@@ -20,7 +20,7 @@ import {
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
 import UploadButton from './upload-button.jsx';
-import { RunButton } from "./run-button.jsx";
+import { RunButton } from './run-button.jsx';
 
 let container = null;
 let root = null;
@@ -50,7 +50,7 @@ it('renders run button when disabled', async () => {
                                     <CssBaseline />
                                     <CardErrorBoundary>
                                         <RunButton
-                                            status='SUCCESS'
+                                            status="SUCCESS"
                                             timestamp={timestamp}
                                         />
                                     </CardErrorBoundary>
@@ -73,27 +73,27 @@ it('renders run button when disabled', async () => {
 it('renders run button when running', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
     await act(async () =>
-                  root.render(
-                      <IntlProvider locale="en">
-                          <BrowserRouter>
-                              <Provider store={store}>
-                                  <StyledEngineProvider injectFirst>
-                                      <ThemeProvider theme={createTheme({})}>
-                                          <SnackbarProvider hideIconVariant={false}>
-                                              <CssBaseline />
-                                              <CardErrorBoundary>
-                                                  <RunButton
-                                                      status='RUNNING'
-                                                      timestamp={timestamp}
-                                                  />
-                                              </CardErrorBoundary>
-                                          </SnackbarProvider>
-                                      </ThemeProvider>
-                                  </StyledEngineProvider>
-                              </Provider>
-                          </BrowserRouter>
-                      </IntlProvider>
-                  )
+        root.render(
+            <IntlProvider locale="en">
+                <BrowserRouter>
+                    <Provider store={store}>
+                        <StyledEngineProvider injectFirst>
+                            <ThemeProvider theme={createTheme({})}>
+                                <SnackbarProvider hideIconVariant={false}>
+                                    <CssBaseline />
+                                    <CardErrorBoundary>
+                                        <RunButton
+                                            status="RUNNING"
+                                            timestamp={timestamp}
+                                        />
+                                    </CardErrorBoundary>
+                                </SnackbarProvider>
+                            </ThemeProvider>
+                        </StyledEngineProvider>
+                    </Provider>
+                </BrowserRouter>
+            </IntlProvider>
+        )
     );
 
     expect(container.innerHTML).not.toContain('run-button-');
