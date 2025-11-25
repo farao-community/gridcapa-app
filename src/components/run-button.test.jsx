@@ -34,6 +34,13 @@ afterEach(() => {
     // cleanup on exiting
     container.remove();
     container = null;
+
+    if (root) {
+        act(() => {
+            root.unmount();
+        });
+        root = null;
+    }
 });
 
 it('renders run button when disabled', async () => {
@@ -63,16 +70,11 @@ it('renders run button when disabled', async () => {
     );
 
     expect(container.innerHTML).toContain('run-button-1577836800000');
-    expect(document.getElementsByTagName('button').length).toEqual(1);
-    expect(document.getElementsByTagName('circle').length).toEqual(0);
-
-    act(() => {
-        root.unmount();
-        root = null;
-    });
+    expect(container.getElementsByTagName('button').length).toEqual(1);
+    expect(container.getElementsByTagName('circle').length).toEqual(0);
 });
 
-it('renders run button when running', async () => {
+it('renders loader when running', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
     await act(async () =>
         root.render(
@@ -99,11 +101,6 @@ it('renders run button when running', async () => {
     );
 
     expect(container.innerHTML).not.toContain('run-button-');
-    expect(document.getElementsByTagName('circle').length).toEqual(1);
-    expect(document.getElementsByTagName('button').length).toEqual(0);
-
-    act(() => {
-        root.unmount();
-        root = null;
-    });
+    expect(container.getElementsByTagName('circle').length).toEqual(1);
+    expect(container.getElementsByTagName('button').length).toEqual(0);
 });

@@ -20,6 +20,7 @@ import {
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
 import FileSummary from './file-summary.jsx';
+import GridcapaLogoText from './gridcapa-logo-text.jsx';
 
 let container = null;
 let root = null;
@@ -43,12 +44,7 @@ afterEach(() => {
     }
 });
 
-it('renders file summary', async () => {
-    const listOfFile = [
-        { processFileStatus: 'VALIDATED' },
-        { processFileStatus: 'ERROR' },
-        { processFileStatus: 'RUNNING' },
-    ];
+it('renders logo', async () => {
     await act(async () =>
         root.render(
             <IntlProvider locale="en">
@@ -59,10 +55,7 @@ it('renders file summary', async () => {
                                 <SnackbarProvider hideIconVariant={false}>
                                     <CssBaseline />
                                     <CardErrorBoundary>
-                                        <FileSummary
-                                            type="Input"
-                                            listOfFile={listOfFile}
-                                        />
+                                        <GridcapaLogoText />
                                     </CardErrorBoundary>
                                 </SnackbarProvider>
                             </ThemeProvider>
@@ -73,5 +66,10 @@ it('renders file summary', async () => {
         )
     );
 
-    expect(container.innerHTML).toContain('1&nbsp;/&nbsp;3');
+    expect(document.getElementsByTagName('h4').item(0).innerHTML).toContain(
+        'Grid'
+    );
+    expect(document.getElementsByTagName('h4').item(0).innerHTML).toContain(
+        'Capa'
+    );
 });
