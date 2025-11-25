@@ -19,7 +19,7 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
-import { RunButton } from './run-button.jsx';
+import FileSummary from './file-summary.jsx';
 
 let container = null;
 let root = null;
@@ -36,8 +36,12 @@ afterEach(() => {
     container = null;
 });
 
-it('renders run button when disabled', async () => {
-    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
+it('renders file summary', async () => {
+    const listOfFile = [
+        { processFileStatus: 'VALIDATED' },
+        { processFileStatus: 'ERROR' },
+        { processFileStatus: 'RUNNING' },
+    ];
     await act(async () =>
         root.render(
             <IntlProvider locale="en">
@@ -48,9 +52,9 @@ it('renders run button when disabled', async () => {
                                 <SnackbarProvider hideIconVariant={false}>
                                     <CssBaseline />
                                     <CardErrorBoundary>
-                                        <RunButton
-                                            status="SUCCESS"
-                                            timestamp={timestamp}
+                                        <FileSummary
+                                            type="Input"
+                                            listOfFile={listOfFile}
                                         />
                                     </CardErrorBoundary>
                                 </SnackbarProvider>
@@ -62,46 +66,7 @@ it('renders run button when disabled', async () => {
         )
     );
 
-    expect(container.innerHTML).toContain('run-button-1577836800000');
-    expect(document.getElementsByTagName('button').length).toEqual(1);
-    expect(document.getElementsByTagName('circle').length).toEqual(0);
-
-    act(() => {
-        root.unmount();
-        root = null;
-    });
-});
-
-it('renders run button when running', async () => {
-    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
-    await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <RunButton
-                                            status="RUNNING"
-                                            timestamp={timestamp}
-                                        />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>
-        )
-    );
-
-    expect(container.innerHTML).not.toContain('run-button-');
-    expect(document.getElementsByTagName('circle').length).toEqual(1);
-    expect(document.getElementsByTagName('button').length).toEqual(0);
-
+    expect(container.innerHTML).toContain('1&nbsp;/&nbsp;3');
     act(() => {
         root.unmount();
         root = null;

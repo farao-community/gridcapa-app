@@ -64,6 +64,8 @@ it('renders upload button with its options', async () => {
     );
 
     expect(container.innerHTML).toContain('upload-cgm-1577836800000');
+    expect(document.getElementsByTagName('button').length).toEqual(1);
+
     act(() => {
         root.unmount();
         root = null;
