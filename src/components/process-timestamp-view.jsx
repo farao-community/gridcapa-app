@@ -12,10 +12,7 @@ import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import { addWebSocket, disconnect } from '../utils/websocket-api';
 import { gridcapaFormatDate } from '../utils/commons';
 
 function timestampEquals(t1, t2) {
@@ -98,23 +95,20 @@ const ProcessTimestampView = ({
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            const taskNotificationClient = connectTaskNotificationWebSocket(
+            addWebSocket(
+                websockets,
                 getListOfTopicsTasks(timestamp),
                 handleTimestampMessage
             );
-            websockets.current.push(taskNotificationClient);
-            const eventNotificationClient = connectTaskNotificationWebSocket(
+            addWebSocket(
+                websockets,
                 getListOfTopicsEvents(timestamp),
                 handleEventsUpdate
             );
-            websockets.current.push(eventNotificationClient);
         }
 
         // 👇️ The above function runs when the component unmounts 👇️
-        return () => {
-            websockets.current.forEach(disconnectTaskNotificationWebSocket);
-            websockets.current = [];
-        };
+        return () => disconnect(websockets);
     }, [handleEventsUpdate, handleTimestampMessage, timestamp]);
 
     return (

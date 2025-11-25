@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
 import { fetchFileToBackend } from '../utils/rest-api';
 
-function sendFileToback(event, processEvent, timestamp) {
+function sendFileToBack(event, processEvent, timestamp) {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append('file', file);
@@ -22,7 +22,7 @@ function downloadFile(processFile, timestamp) {
     const chooseFile = document.createElement('input');
     chooseFile.type = 'file';
     chooseFile.addEventListener('change', (event) => {
-        sendFileToback(event, processFile, timestamp);
+        sendFileToBack(event, processFile, timestamp);
     });
     chooseFile.click();
     console.log(chooseFile);

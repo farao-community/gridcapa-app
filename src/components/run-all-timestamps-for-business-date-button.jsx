@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import dateFormat from 'dateformat';
 import {
-    fetchJobLauncherPost,
     fetchBusinessDateData,
+    fetchJobLauncherPost,
     fetchProcessParameters,
 } from '../utils/rest-api';
 import {
@@ -21,6 +21,7 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
+import { plusOneDay } from '../utils/date-time-utils.js';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -45,7 +46,7 @@ export function RunAllButton({ timestamp }) {
     const refTimestamp = new Date(Date.parse(timestamp));
     refTimestamp.setHours(0, 30, 0, 0);
     const timestampMin = refTimestamp.getTime();
-    const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
+    const timestampMax = plusOneDay(refTimestamp.getTime());
     const [tasks, setTasks] = useState([]);
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);

@@ -11,7 +11,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { FormattedMessage } from 'react-intl';
-import { RunAllButton } from './run-all-timstamps-for-business-date-button';
+import { RunAllButton } from './run-all-timestamps-for-business-date-button.jsx';
+import { getNewTimestampFromEvent } from '../utils/commons.js';
 
 const styles = {
     container: (theme) => ({
@@ -36,14 +37,8 @@ const TableHeaderBusinessView = ({
     const tableHeaderName = (processName || '') + ' Supervisor';
 
     const handleDateChange = useCallback(
-        (event) => {
-            const date = event.target.value;
-            let newTimestamp = timestamp;
-            newTimestamp.setDate(date.substr(8, 2));
-            newTimestamp.setMonth(date.substr(5, 2) - 1);
-            newTimestamp.setFullYear(date.substr(0, 4));
-            onTimestampChange(newTimestamp);
-        },
+        (event) =>
+            onTimestampChange(getNewTimestampFromEvent(timestamp, event)),
         [timestamp, onTimestampChange]
     );
 

@@ -54,8 +54,7 @@ it('renders', async () => {
                         </StyledEngineProvider>
                     </Provider>
                 </BrowserRouter>
-            </IntlProvider>,
-            container
+            </IntlProvider>
         )
     );
 

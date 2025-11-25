@@ -19,7 +19,7 @@ jobs:
             - name: Build without authentication
               run: npm run build
               env:
-                VITE_USE_AUTHENTICATION: false
+                  VITE_USE_AUTHENTICATION: false
 
             - name: Run post build tests
               run: npm run test
@@ -31,18 +31,18 @@ jobs:
                   name: farao/gridcapa-app
                   username: farao
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
-                  tags: "latest, latest-no-auth"
+                  tags: 'latest, latest-no-auth'
 
             - name: Build with authentication
               run: npm run build
               env:
-                VITE_USE_AUTHENTICATION: true
+                  VITE_USE_AUTHENTICATION: true
 
             - name: Build and publish Docker image with authentication
               if: github.ref == 'refs/heads/master'
               uses: elgohr/Publish-Docker-Github-Action@v5
               with:
-                name: farao/gridcapa-app-auth
-                username: farao
-                password: ${{ secrets.DOCKERHUB_TOKEN }}
-                tags: "latest"
+                  name: farao/gridcapa-app-auth
+                  username: farao
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  tags: 'latest'

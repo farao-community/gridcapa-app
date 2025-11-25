@@ -61,3 +61,41 @@ export function latestRunFromTaskRunHistory(runHistory) {
     }
     return null;
 }
+
+export function doFilterTasks(
+    objects,
+    taskGetter,
+    currentStatusFilter,
+    currentTimestampFilter
+) {
+    // gridcapaFormatDate is not accessible inside the filter we have to use an intermediate
+    const formatDate = gridcapaFormatDate;
+    return objects.filter((item) => {
+        const task = taskGetter(item);
+        const nbStatusFiltered = currentStatusFilter.length;
+        const nbTsFiltered = currentTimestampFilter.length;
+
+        const filterStatus =
+            nbStatusFiltered === 0 ||
+            (nbStatusFiltered > 0 &&
+                currentStatusFilter.some((f) => task.status.includes(f)));
+        const filterTimestamp =
+            nbTsFiltered === 0 ||
+            (nbTsFiltered > 0 &&
+                currentTimestampFilter.some((f) =>
+                    formatDate(task.timestamp).includes(f)
+                ));
+
+        return task && filterStatus && filterTimestamp;
+    });
+}
+
+export function getNewTimestampFromEvent(existingTimestamp, event) {
+    const date = event.target.value;
+    const newTimestamp = existingTimestamp;
+    newTimestamp.setDate(date.substring(8, 2));
+    newTimestamp.setMonth(date.substring(5, 2) - 1);
+    newTimestamp.setFullYear(date.substring(0, 4));
+
+    return newTimestamp;
+}

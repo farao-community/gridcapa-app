@@ -5,35 +5,34 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 
 import FilterMenu from './filter-menu';
-import { gridcapaFormatDate } from '../utils/commons';
+import { doFilterTasks } from '../utils/commons';
 import RunningTasksViewCoreRow from './running-tasks-view-core-row';
 import EventDialog from './dialogs/event-dialog';
 import FileDialog from './dialogs/file-dialog';
 
 import {
+    LinearProgress,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
     TablePagination,
-    LinearProgress,
+    TableRow,
 } from '@mui/material';
 
 import { fetchRunningTasksData, fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import { addWebSocket, disconnect } from '../utils/websocket-api';
+import { areSameDates, toISODate } from '../utils/date-time-utils.js';
+import { applyTimestampFilterEffect } from '../utils/effect-utils.js';
 
 const RunningTasksViewCore = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -54,18 +53,7 @@ const RunningTasksViewCore = () => {
     const websockets = useRef([]);
 
     useEffect(() => {
-        async function getTimestampFilter() {
-            let filter = await fetch('process-metadata.json')
-                .then((res) => {
-                    return res.json();
-                })
-                .then((res) => {
-                    return res.globalViewTimestampFilter;
-                });
-            setTimestampFilter(filter);
-            setTimestampFilterRef(filter);
-        }
-        getTimestampFilter();
+        applyTimestampFilterEffect(setTimestampFilter, setTimestampFilterRef);
         initAllTasksAndProcessEvents();
     }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
 
@@ -89,10 +77,8 @@ const RunningTasksViewCore = () => {
         async (event) => {
             const data = event;
             const tasksCopy = [...tasks];
-            let globalIndex = tasksCopy.findIndex(
-                (task) =>
-                    Date.parse(data.timestamp) === task.timestamp ||
-                    data.timestamp === task.timestamp
+            let globalIndex = tasksCopy.findIndex((task) =>
+                areSameDates(data, task)
             );
             if (globalIndex >= 0) {
                 tasksCopy[globalIndex] = data;
@@ -103,11 +89,7 @@ const RunningTasksViewCore = () => {
     );
 
     const getListOfTopics = useCallback(() => {
-        return tasks.map(
-            (task) =>
-                '/task/update/' +
-                new Date(task.timestamp).toISOString().substr(0, 10)
-        );
+        return tasks.map((task) => '/task/update/' + toISODate(task.timestamp));
     }, [tasks]);
 
     const handleChangePage = (_event, newPage) => {
@@ -158,51 +140,46 @@ const RunningTasksViewCore = () => {
     };
 
     const handleStatusFilterChange = (filters) => {
-        let newFilter = filters.map((filter) => filter.toUpperCase());
-        setStatusFilter(newFilter);
-        if (
-            filterTasks(newFilter, timestampFilter).length <
-            page * rowsPerPage
-        ) {
-            setPage(
-                Math.floor(
-                    filterTasks(newFilter, timestampFilter).length / rowsPerPage
-                )
-            );
-        }
+        const newStatusFilter = filters.map((filter) => filter.toUpperCase());
+        setStatusFilter(newStatusFilter);
+        adjustIfWrongPage(newStatusFilter, timestampFilter);
     };
 
     const handleTimestampFilterChange = (filters) => {
-        let newFilter = filters.map((filter) => filter.toUpperCase());
-        setTimestampFilter(newFilter);
-        if (filterTasks(statusFilter, newFilter).length < page * rowsPerPage) {
-            setPage(
-                Math.floor(
-                    filterTasks(statusFilter, newFilter).length / rowsPerPage
-                )
-            );
-        }
+        const newTimestampFilter = filters.map((filter) =>
+            filter.toUpperCase()
+        );
+        setTimestampFilter(newTimestampFilter);
+        adjustIfWrongPage(statusFilter, newTimestampFilter);
     };
 
     const filterTasks = (currentStatusFilter, currentTimestampFilter) => {
-        // gridcapaFormatDate is not accessible inside the filter we have to use an intermediate
-        let formatDate = gridcapaFormatDate;
-        return tasks.filter((task) => {
-            return (
-                task &&
-                (currentStatusFilter.length === 0 ||
-                    (currentStatusFilter.length > 0 &&
-                        currentStatusFilter.some((f) =>
-                            task.status.includes(f)
-                        ))) &&
-                (currentTimestampFilter.length === 0 ||
-                    (currentTimestampFilter.length > 0 &&
-                        currentTimestampFilter.some((f) =>
-                            formatDate(task.timestamp).includes(f)
-                        )))
-            );
-        });
+        return doFilterTasks(
+            tasks,
+            (t) => t,
+            currentStatusFilter,
+            currentTimestampFilter
+        );
     };
+
+    function adjustIfWrongPage(statusFilter, timestampFilter) {
+        if (isBeforeCurrentPage(statusFilter, timestampFilter)) {
+            setPage(getCurrentPage(statusFilter, timestampFilter));
+        }
+    }
+
+    function isBeforeCurrentPage(statusFilter, timestampFilter) {
+        return (
+            filterTasks(statusFilter, timestampFilter).length <
+            page * rowsPerPage
+        );
+    }
+
+    function getCurrentPage(statusFilter, timestampFilter) {
+        return Math.floor(
+            filterTasks(statusFilter, timestampFilter).length / rowsPerPage
+        );
+    }
 
     useEffect(() => {
         setPage(0);
@@ -226,18 +203,10 @@ const RunningTasksViewCore = () => {
 
     useEffect(() => {
         if (websockets.current.length === 0) {
-            const taskNotificationClient = connectTaskNotificationWebSocket(
-                getListOfTopics(),
-                handleTimestampMessage
-            );
-            websockets.current.push(taskNotificationClient);
+            addWebSocket(websockets, getListOfTopics(), handleTimestampMessage);
         }
-
         // 👇️ The above function runs when the component unmounts 👇️
-        return () => {
-            websockets.current.forEach(disconnectTaskNotificationWebSocket);
-            websockets.current = [];
-        };
+        return () => disconnect(websockets);
     }, [getListOfTopics, handleTimestampMessage]);
 
     return (

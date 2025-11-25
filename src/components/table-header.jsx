@@ -15,7 +15,11 @@ import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
-import { latestRunFromTaskRunHistory } from '../utils/commons';
+import {
+    getNewTimestampFromEvent,
+    latestRunFromTaskRunHistory,
+} from '../utils/commons';
+import { enableManualExportEffect } from '../utils/effect-utils.js';
 
 const styles = {
     container: (theme) => ({
@@ -69,28 +73,11 @@ const TableHeader = ({
     const tableHeaderName = (processName || '') + ' Supervisor';
     const [manualExportEnabled, setManualExportEnabled] = useState(false);
 
-    useEffect(() => {
-        async function getManualExportEnabled() {
-            try {
-                const response = await fetch('process-metadata.json');
-                const data = await response.json();
-                setManualExportEnabled(data.manualExportEnabled || false);
-            } catch (error) {
-                console.error('An error has occurred:', error);
-            }
-        }
-        getManualExportEnabled();
-    }, []); // With the empty array we ensure that the effect is only fired one time check the documentation https://reactjs.org/docs/hooks-effect.html
+    useEffect(() => enableManualExportEffect(setManualExportEnabled), []);
 
     const handleDateChange = useCallback(
-        (event) => {
-            const date = event.target.value;
-            let newTimestamp = timestamp;
-            newTimestamp.setDate(date.substr(8, 2));
-            newTimestamp.setMonth(date.substr(5, 2) - 1);
-            newTimestamp.setFullYear(date.substr(0, 4));
-            onTimestampChange(newTimestamp);
-        },
+        (event) =>
+            onTimestampChange(getNewTimestampFromEvent(timestamp, event)),
         [timestamp, onTimestampChange]
     );
 
