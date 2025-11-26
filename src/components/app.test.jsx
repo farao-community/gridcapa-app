@@ -5,63 +5,24 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { createRoot } from 'react-dom/client';
 import { act } from 'react-dom/test-utils';
-
-import { IntlProvider } from 'react-intl';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import App from './app';
-import { store } from '../redux/store';
 import {
-    createTheme,
-    ThemeProvider,
-    StyledEngineProvider,
-} from '@mui/material/styles';
-import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
-import CssBaseline from '@mui/material/CssBaseline';
+    cleanUpOnExit,
+    renderWithProviders,
+    setupTestContainer,
+} from '../utils/test-utils.js';
 
 let container = null;
 let root = null;
 beforeEach(() => {
-    // setup a DOM element as a render target
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    root = createRoot(container);
+    ({ container, root } = setupTestContainer());
 });
 
-afterEach(() => {
-    // cleanup on exiting
-    container.remove();
-    container = null;
-});
+afterEach(() => cleanUpOnExit(container, root));
 
-it('renders', async () => {
-    await act(async () =>
-        root.render(
-            <IntlProvider locale="en">
-                <BrowserRouter>
-                    <Provider store={store}>
-                        <StyledEngineProvider injectFirst>
-                            <ThemeProvider theme={createTheme({})}>
-                                <SnackbarProvider hideIconVariant={false}>
-                                    <CssBaseline />
-                                    <CardErrorBoundary>
-                                        <App />
-                                    </CardErrorBoundary>
-                                </SnackbarProvider>
-                            </ThemeProvider>
-                        </StyledEngineProvider>
-                    </Provider>
-                </BrowserRouter>
-            </IntlProvider>,
-            container
-        )
-    );
+it('renders GridCapa App', async () => {
+    await act(() => renderWithProviders(<App />, root));
 
     expect(container.textContent).toContain('GridCapa');
-    act(() => {
-        root.unmount();
-        root = null;
-    });
 });

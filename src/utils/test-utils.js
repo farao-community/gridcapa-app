@@ -40,3 +40,15 @@ export function setupTestContainer() {
     document.body.appendChild(container);
     return { container, root: createRoot(container) };
 }
+
+export async function cleanUpOnExit(container, root) {
+    container.remove();
+    container = null;
+
+    if (root) {
+        act(() => {
+            root.unmount();
+        });
+        root = null;
+    }
+}

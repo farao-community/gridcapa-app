@@ -8,6 +8,7 @@
 import { act } from 'react-dom/test-utils';
 import FileSummary from './file-summary.jsx';
 import {
+    cleanUpOnExit,
     renderWithProviders,
     setupTestContainer,
 } from '../utils/test-utils.js';
@@ -18,18 +19,7 @@ beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
 
-afterEach(() => {
-    // cleanup on exiting
-    container.remove();
-    container = null;
-
-    if (root) {
-        act(() => {
-            root.unmount();
-        });
-        root = null;
-    }
-});
+afterEach(() => cleanUpOnExit(container, root));
 
 it('displays validated file count correctly', async () => {
     const listOfFile = [
@@ -37,7 +27,7 @@ it('displays validated file count correctly', async () => {
         { processFileStatus: 'ERROR' },
         { processFileStatus: 'RUNNING' },
     ];
-    await act(async () =>
+    await act(() =>
         renderWithProviders(
             <FileSummary type="Input" listOfFile={listOfFile} />,
             root

@@ -8,6 +8,7 @@
 import { act } from 'react-dom/test-utils';
 import { RunButton } from './run-button.jsx';
 import {
+    cleanUpOnExit,
     renderWithProviders,
     setupTestContainer,
 } from '../utils/test-utils.js';
@@ -18,27 +19,11 @@ beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
 
-afterEach(() => {
-    // cleanup on exiting
-    container.remove();
-    container = null;
-
-    if (root) {
-        act(() => {
-            root.unmount();
-        });
-        root = null;
-    }
-});
+afterEach(() => cleanUpOnExit(container, root));
 
 it('renders run button when success', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
-    global.fetch = jest.fn(() =>
-        Promise.resolve({
-            json: () => Promise.resolve({ parametersEnabled: false }),
-        })
-    );
-    await act(async () =>
+    await act(() =>
         renderWithProviders(
             <RunButton status="SUCCESS" timestamp={timestamp} />,
             root
@@ -48,18 +33,11 @@ it('renders run button when success', async () => {
     expect(container.innerHTML).toContain('run-button-1577836800000');
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.getElementsByTagName('circle').length).toEqual(0);
-
-    global.fetch.mockRestore();
 });
 
 it('renders loader when running', async () => {
     let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
-    global.fetch = jest.fn(() =>
-        Promise.resolve({
-            json: () => Promise.resolve({ parametersEnabled: false }),
-        })
-    );
-    await act(async () =>
+    await act(() =>
         renderWithProviders(
             <RunButton status="RUNNING" timestamp={timestamp} />,
             root
@@ -69,5 +47,4 @@ it('renders loader when running', async () => {
     expect(container.innerHTML).not.toContain('run-button-');
     expect(container.getElementsByTagName('circle').length).toEqual(1);
     expect(container.getElementsByTagName('button').length).toEqual(0);
-    global.fetch.mockRestore();
 });

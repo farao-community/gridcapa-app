@@ -5,29 +5,43 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { createRoot } from 'react-dom/client';
+import {
+    cleanUpOnExit,
+    renderWithProviders,
+    setupTestContainer,
+} from '../utils/test-utils.js';
+import { fetchMinioStorageData } from '../utils/rest-api.js';
 import { act } from 'react-dom/test-utils';
+import MinioDiskUsage from './minio-disk-usage.jsx';
 
 let container = null;
 let root = null;
+jest.mock('../utils/rest-api', () => ({ fetchMinioStorageData: jest.fn() }));
+
 beforeEach(() => {
-    // setup a DOM element as a render target
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    root = createRoot(container);
+    ({ container, root } = setupTestContainer());
 });
 
-afterEach(() => {
-    // cleanup on exiting
-    container.remove();
-    container = null;
+afterEach(() => cleanUpOnExit(container, root));
 
-    if (root) {
-        act(() => {
-            root.unmount();
-        });
-        root = null;
-    }
+it('sums free and ued spaces with several servers and drives', async () => {
+    fetchMinioStorageData.mockImplementation(() =>
+        Promise.resolve({
+            info: {
+                servers: [
+                    { drives: [{ usedspace: 10, availspace: 10 }] },
+                    {
+                        drives: [
+                            { usedspace: 15, availspace: 25 },
+                            { usedspace: 5, availspace: 35 },
+                        ],
+                    },
+                ],
+            },
+        })
+    );
+
+    await act(() => renderWithProviders(<MinioDiskUsage />, root));
+
+    expect(container.innerHTML).toContain('30%');
 });
-
-it('renders minio disk usage', async () => {});
