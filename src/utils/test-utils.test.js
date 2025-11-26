@@ -11,7 +11,6 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
-import { ManualExportButton } from '../components/manual-export-button.jsx';
 
 export async function renderComponent(component, root) {
     return act(async () =>
