@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { act } from 'react-dom/test-utils';
 import UploadButton from './upload-button.jsx';
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
+    startOf2020Iso,
 } from '../utils/test-utils.js';
 
 let container = null;
@@ -23,13 +23,10 @@ afterEach(() => cleanUpOnExit(container, root));
 
 it('renders upload button with its options', async () => {
     let processFile = { fileType: 'cgm' };
-    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
 
-    await act(() =>
-        renderWithProviders(
-            <UploadButton processFile={processFile} timestamp={timestamp} />,
-            root
-        )
+    await renderComponent(
+        <UploadButton processFile={processFile} timestamp={startOf2020Iso()} />,
+        root
     );
 
     expect(container.innerHTML).toContain('upload-cgm-1577836800000');

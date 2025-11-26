@@ -12,7 +12,7 @@ import {
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
 
-export function renderWithProviders(component, root) {
+export async function renderComponent(component, root) {
     return act(async () =>
         root.render(
             <IntlProvider locale="en">
@@ -42,13 +42,18 @@ export function setupTestContainer() {
 }
 
 export async function cleanUpOnExit(container, root) {
-    container.remove();
-    container = null;
-
+    if (container) {
+        container.remove();
+        container = null;
+    }
     if (root) {
         act(() => {
             root.unmount();
         });
         root = null;
     }
+}
+
+export function startOf2020Iso() {
+    return new Date(Date.UTC(2020, 0, 1)).toISOString();
 }

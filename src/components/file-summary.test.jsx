@@ -5,11 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { act } from 'react-dom/test-utils';
 import FileSummary from './file-summary.jsx';
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 
@@ -27,11 +26,10 @@ it('displays validated file count correctly', async () => {
         { processFileStatus: 'ERROR' },
         { processFileStatus: 'RUNNING' },
     ];
-    await act(() =>
-        renderWithProviders(
-            <FileSummary type="Input" listOfFile={listOfFile} />,
-            root
-        )
+
+    await renderComponent(
+        <FileSummary type="Input" listOfFile={listOfFile} />,
+        root
     );
 
     expect(container.innerHTML).toContain('1&nbsp;/&nbsp;3');

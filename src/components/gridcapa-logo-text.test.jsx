@@ -9,7 +9,7 @@ import { act } from 'react-dom/test-utils';
 import GridcapaLogoText from './gridcapa-logo-text.jsx';
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 
@@ -22,7 +22,7 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders logo', async () => {
-    await act(() => renderWithProviders(<GridcapaLogoText />, root));
+    await renderComponent(<GridcapaLogoText />, root);
 
     expect(document.getElementsByTagName('h4').item(0).innerHTML).toContain(
         'Grid'

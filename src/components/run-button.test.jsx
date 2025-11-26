@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { act } from 'react-dom/test-utils';
 import { RunButton } from './run-button.jsx';
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
+    startOf2020Iso,
 } from '../utils/test-utils.js';
 
 let container = null;
@@ -22,12 +22,9 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders run button when success', async () => {
-    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
-    await act(() =>
-        renderWithProviders(
-            <RunButton status="SUCCESS" timestamp={timestamp} />,
-            root
-        )
+    await renderComponent(
+        <RunButton status="SUCCESS" timestamp={startOf2020Iso()} />,
+        root
     );
 
     expect(container.innerHTML).toContain('run-button-1577836800000');
@@ -36,12 +33,9 @@ it('renders run button when success', async () => {
 });
 
 it('renders loader when running', async () => {
-    let timestamp = new Date(Date.UTC(2020, 0, 1)).toISOString();
-    await act(() =>
-        renderWithProviders(
-            <RunButton status="RUNNING" timestamp={timestamp} />,
-            root
-        )
+    await renderComponent(
+        <RunButton status="RUNNING" timestamp={startOf2020Iso()} />,
+        root
     );
 
     expect(container.innerHTML).not.toContain('run-button-');

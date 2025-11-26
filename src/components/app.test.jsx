@@ -5,11 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { act } from 'react-dom/test-utils';
 import App from './app';
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 
@@ -22,7 +21,6 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders GridCapa App', async () => {
-    await act(() => renderWithProviders(<App />, root));
-
+    await renderComponent(<App />, root);
     expect(container.textContent).toContain('GridCapa');
 });

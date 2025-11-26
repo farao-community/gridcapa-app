@@ -7,11 +7,10 @@
 
 import {
     cleanUpOnExit,
-    renderWithProviders,
+    renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 import { fetchMinioStorageData } from '../utils/rest-api.js';
-import { act } from 'react-dom/test-utils';
 import MinioDiskUsage from './minio-disk-usage.jsx';
 
 let container = null;
@@ -41,7 +40,7 @@ it('sums free and ued spaces with several servers and drives', async () => {
         })
     );
 
-    await act(() => renderWithProviders(<MinioDiskUsage />, root));
+    await renderComponent(<MinioDiskUsage />, root);
 
     expect(container.innerHTML).toContain('30%');
 });
