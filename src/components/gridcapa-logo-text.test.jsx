@@ -5,13 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { act } from 'react-dom/test-utils';
 import GridcapaLogoText from './gridcapa-logo-text.jsx';
-import {
-    cleanUpOnExit,
-    renderComponent,
-    setupTestContainer,
-} from '../utils/test-utils.js';
+import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../utils/test-utils.js';
 
 let container = null;
 let root = null;
