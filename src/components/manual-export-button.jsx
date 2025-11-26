@@ -54,7 +54,7 @@ export function ManualExportButton({ status, timestamp }) {
         <>
             <Button
                 color="primary"
-                data-test="mannual-export-button"
+                data-test="manual-export-button"
                 size="large"
                 variant="contained"
                 disabled={disabled || isDisabled(status)}

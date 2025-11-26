@@ -6,7 +6,11 @@
  */
 
 import GridcapaLogoText from './gridcapa-logo-text.jsx';
-import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../utils/test-utils.js';
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+} from '../utils/test-utils.test.js';
 
 let container = null;
 let root = null;

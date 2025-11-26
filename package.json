@@ -20,6 +20,7 @@
     "@mui/x-tree-view": "^6.17.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@stomp/stompjs": "^7.1.1",
+    "@testing-library/react": "^16.3.0",
     "core-js": "^3.37.1",
     "dateformat": "^5.0.3",
     "notistack": "^3.0.1",

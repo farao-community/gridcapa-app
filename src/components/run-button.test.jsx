@@ -10,8 +10,9 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-    startOf2020Iso,
-} from '../utils/test-utils.js';
+    START_2020_AS_NUMERAL_STRING,
+    startOf2020IsoStr,
+} from '../utils/test-utils.test.js';
 
 let container = null;
 let root = null;
@@ -23,18 +24,20 @@ afterEach(() => cleanUpOnExit(container, root));
 
 it('renders run button when success', async () => {
     await renderComponent(
-        <RunButton status="SUCCESS" timestamp={startOf2020Iso()} />,
+        <RunButton status="SUCCESS" timestamp={startOf2020IsoStr()} />,
         root
     );
 
-    expect(container.innerHTML).toContain('run-button-1577836800000');
+    expect(container.innerHTML).toContain(
+        'run-button-' + START_2020_AS_NUMERAL_STRING
+    );
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.getElementsByTagName('circle').length).toEqual(0);
 });
 
 it('renders loader when running', async () => {
     await renderComponent(
-        <RunButton status="RUNNING" timestamp={startOf2020Iso()} />,
+        <RunButton status="RUNNING" timestamp={startOf2020IsoStr()} />,
         root
     );
 

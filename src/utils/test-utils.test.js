@@ -11,6 +11,7 @@ import {
 } from '@mui/material/styles';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ManualExportButton } from '../components/manual-export-button.jsx';
 
 export async function renderComponent(component, root) {
     return act(async () =>
@@ -54,6 +55,14 @@ export async function cleanUpOnExit(container, root) {
     }
 }
 
-export function startOf2020Iso() {
+export function startOf2020IsoStr() {
     return new Date(Date.UTC(2020, 0, 1)).toISOString();
 }
+
+export const START_2020_AS_NUMERAL_STRING = '1577836800000';
+
+it('has coherent dates', () => {
+    expect(Date.parse(startOf2020IsoStr())).toEqual(
+        Number.parseInt(START_2020_AS_NUMERAL_STRING)
+    );
+});
