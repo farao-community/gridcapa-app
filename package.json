@@ -34,9 +34,6 @@
     "reconnecting-websocket": "^4.4.0",
     "typeface-roboto": "^1.1.13"
   },
-  "jest": {
-    "testResultsProcessor": "jest-sonar-reporter"
-  },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-env": "^7.24.7",
