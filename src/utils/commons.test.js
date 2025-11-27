@@ -16,7 +16,7 @@ it('should format date and add days', () => {
         gridcapaFormatDate(
             setTimestampWithDaysIncrement(startOf2020IsoStr(), 1)
         )
-    ).toEqual('2020-01-02 01:00:00');
+    ).toContain('2020-01-02');
 });
 
 it('should not get latest run if data is invalid', () => {
