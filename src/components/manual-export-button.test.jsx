@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2024, RTE (http://www.rte-france.com)
+ * Copyright (c) 2025, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -12,7 +12,6 @@ import {
     startOf2020IsoStr,
 } from '../utils/test-utils.test.js';
 import { ManualExportButton } from './manual-export-button.jsx';
-import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -22,30 +21,26 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders button', async () => {
+it('renders enabled button with SUCCESS status', async () => {
     await renderComponent(
         <ManualExportButton status="SUCCESS" timestamp={startOf2020IsoStr()} />,
         root
     );
 
+    const manualExportButton = container.getElementsByTagName('button').item(0);
+
+    expect(manualExportButton.disabled).toBe(false);
     expect(container.innerHTML).toContain('manual-export-button');
-    expect(container.innerHTML).not.toContain('yes-button');
-    expect(container.innerHTML).not.toContain('cancel-button');
 });
 
-it('renders dialog on click', async () => {
-    const component = (
-        <ManualExportButton status="SUCCESS" timestamp={startOf2020IsoStr()} />
+it('renders disable button with RUNNING status', async () => {
+    await renderComponent(
+        <ManualExportButton status="RUNNING" timestamp={startOf2020IsoStr()} />,
+        root
     );
-    await renderComponent(component, root);
 
-    expect(container.getElementsByTagName('button').item(0).disabled).toBe(
-        false
-    );
-    fireEvent.click(container.getElementsByTagName('button').item(0));
+    const manualExportButton = container.getElementsByTagName('button').item(0);
 
-    setTimeout(function () {
-        expect(container.innerHTML).toContain('yes-button');
-        expect(container.innerHTML).toContain('cancel-button');
-    }, 500);
+    expect(manualExportButton.disabled).toBe(true);
+    expect(container.innerHTML).toContain('manual-export-button');
 });
