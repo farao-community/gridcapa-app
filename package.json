@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test":  "rimraf ./coverage && jest --no-cache --silent --collectCoverage"
+    "test": "rimraf ./coverage && jest --no-cache --silent --collectCoverage"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -23,6 +23,7 @@
     "@testing-library/react": "^16.3.0",
     "core-js": "^3.37.1",
     "dateformat": "^5.0.3",
+    "jest-sonar-reporter": "^2.0.0",
     "notistack": "^3.0.1",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
