@@ -6,12 +6,12 @@
  */
 
 import { reducer } from './reducer.js';
-import {
-    getLocalStorageComputedLanguage,
-    getLocalStorageLanguage,
-    getLocalStorageTheme,
-} from './local-storage.js';
-import { PARAM_LANGUAGE, PARAM_THEME } from '../utils/config-params.js';
+import { getLocalStorageComputedLanguage, } from './local-storage.js';
+import { SELECT_COMPUTED_LANGUAGE, SELECT_LANGUAGE, SELECT_THEME } from "./actions.js";
+import { DARK_THEME, LANG_SYSTEM, LIGHT_THEME, LOGOUT_ERROR,
+    RESET_AUTHENTICATION_ROUTER_ERROR, SHOW_AUTH_INFO_LOGIN, SIGNIN_CALLBACK_ERROR, UNAUTHORIZED_USER_INFO,
+    USER_VALIDATION_ERROR
+} from "@gridsuite/commons-ui";
 
 it('should return the initial state', () => {
     const initialReducer = reducer(undefined, () => {});
@@ -22,7 +22,72 @@ it('should return the initial state', () => {
         signInCallbackError: null,
         authenticationRouterError: null,
         showAuthenticationRouterLogin: false,
-        [PARAM_THEME]: getLocalStorageTheme(),
-        [PARAM_LANGUAGE]: getLocalStorageLanguage(),
+        theme: DARK_THEME,
+        language: LANG_SYSTEM,
     });
+});
+
+it('should handle SELECT_THEME', () => {
+    const action = {
+        type: SELECT_THEME,
+        theme: LIGHT_THEME
+    };
+    expect(reducer({}, action)).toEqual({theme: LIGHT_THEME});
+});
+
+it('should handle SELECT_LANGUAGE', () => {
+    const action = {
+        type: SELECT_LANGUAGE,
+        language: "Bambara"
+    };
+    expect(reducer({}, action)).toEqual({language: "Bambara"});
+});
+
+it('should handle SIGNIN_CALLBACK_ERROR', () => {
+    const action = {
+        type: SIGNIN_CALLBACK_ERROR,
+        signInCallbackError: "Error while signing in"
+    };
+    expect(reducer({}, action)).toEqual({ signInCallbackError: "Error while signing in"});
+});
+
+it('should handle USER', () => {
+    const action = {
+        type: "USER",
+        user: "CORESO"
+    };
+    expect(reducer({}, action)).toEqual({ user: "CORESO"});
+});
+
+it('should handle auth errors', () => {
+    [UNAUTHORIZED_USER_INFO, LOGOUT_ERROR, USER_VALIDATION_ERROR].forEach(type => {
+    const action = {
+        type: type,
+        authenticationRouterError: "Error while routing"
+    };
+
+    expect(reducer({}, action)).toEqual({ authenticationRouterError: "Error while routing" });
+    });
+
+    const reset = {
+        type: RESET_AUTHENTICATION_ROUTER_ERROR,
+    };
+
+    expect(reducer({}, reset)).toEqual({ authenticationRouterError: null });
+});
+
+it('should handle SHOW_AUTH_INFO_LOGIN', () => {
+    const action = {
+        type: SHOW_AUTH_INFO_LOGIN,
+        showAuthenticationRouterLogin: true
+    };
+    expect(reducer({}, action)).toEqual({ showAuthenticationRouterLogin: true});
+});
+
+it('should handle SELECT_COMPUTED_LANGUAGE', () => {
+    const action = {
+        type: SELECT_COMPUTED_LANGUAGE,
+        computedLanguage: "Cocoliche"
+    };
+    expect(reducer({}, action)).toEqual({ computedLanguage: "Cocoliche"});
 });
