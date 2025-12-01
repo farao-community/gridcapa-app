@@ -14,7 +14,7 @@ const config = {
     transformIgnorePatterns: [
         'node_modules/(?!dateformat|@gridsuite/commons-ui|react-dnd|dnd-core|@react-dnd)',
     ], // transform from ESM
-    moduleDirectories: ['node_modules'], // to allow absolute path from ./src
+    moduleDirectories: ['node_modules', 'src'], // to allow absolute path from ./src
     globals: {
         IS_REACT_ACT_ENVIRONMENT: true,
     },
