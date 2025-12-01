@@ -26,7 +26,7 @@ it('renders file dialog', async () => {
         <FileDialog
             open={true}
             inputs={[]}
-            onClose={console.log}
+            onClose={jest.fn()}
             outputs={[]}
             timestamp={startOf2020IsoStr()}
         />,

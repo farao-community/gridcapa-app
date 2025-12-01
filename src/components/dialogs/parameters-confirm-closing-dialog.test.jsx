@@ -20,17 +20,17 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders file dialog', async () => {
+it('renders parameters confirm closing dialog', async () => {
     await renderComponent(
         <ParametersConfirmClosingDialog
             open={true}
-            onClickYes={console.log}
-            closeDialog={console.log}
+            onClickYes={jest.fn()}
+            closeDialog={jest.fn()}
         />,
         root
     );
 
     ['parametersNotSavedDialog', 'yes', 'no', 'quit', 'cancel'].forEach(
-        expect(document.documentElement.innerHTML).toContain
+        (text) => expect(document.documentElement.innerHTML).toContain(text)
     );
 });

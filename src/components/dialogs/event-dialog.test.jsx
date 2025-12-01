@@ -26,26 +26,27 @@ it('renders loading event dialog', async () => {
     await renderComponent(
         <EventDialog
             open={true}
-            onClose={console.log}
+            onClose={jest.fn()}
             eventsData={[]}
             isLoadingEvent={true}
         />,
         root
     );
-    expect(document.documentElement.innerHTML).toContain('MuiLinearProgress');
+
+    const progressBar = document.querySelector('.MuiLinearProgress-root');
+    expect(progressBar).toBeTruthy();
 });
 
 it('renders idle event dialog', async () => {
     await renderComponent(
         <EventDialog
             open={true}
-            onClose={console.log}
+            onClose={jest.fn()}
             eventsData={[{ level: 'INFO', message: 'OK' }]}
             isLoadingEvent={false}
         />,
         root
     );
-    expect(document.documentElement.innerHTML).not.toContain(
-        'MuiLinearProgress'
-    );
+    const progressBar = document.querySelector('.MuiLinearProgress-root');
+    expect(progressBar).toBeFalsy();
 });

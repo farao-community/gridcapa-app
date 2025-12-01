@@ -26,7 +26,6 @@ const config = {
         '!src/**/test-utils.js',
     ],
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
-    testResultsProcessor: 'jest-sonar-reporter',
 };
 
 export default config;

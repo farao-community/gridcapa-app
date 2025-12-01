@@ -24,9 +24,9 @@ it('renders select file dialog', async () => {
     await renderComponent(
         <SelectFileDialog
             fileType="CGM"
-            handleClose={console.log}
+            handleClose={jest.fn()}
             open={true}
-            selectFile={console.log}
+            selectFile={jest.fn()}
         />,
         root
     );
