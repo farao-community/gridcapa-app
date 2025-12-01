@@ -9,7 +9,7 @@ import {
     latestRunFromTaskRunHistory,
     setTimestampWithDaysIncrement,
 } from './commons.js';
-import { startOf2020IsoStr } from './test-utils.test.js';
+import { startOf2020IsoStr } from './test-utils.js';
 
 it('should format date and add days', () => {
     expect(

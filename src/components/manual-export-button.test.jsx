@@ -10,7 +10,7 @@ import {
     renderComponent,
     setupTestContainer,
     startOf2020IsoStr,
-} from '../utils/test-utils.test.js';
+} from '../utils/test-utils.js';
 import { ManualExportButton } from './manual-export-button.jsx';
 
 let container = null;

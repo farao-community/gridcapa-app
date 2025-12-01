@@ -9,7 +9,7 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-} from '../utils/test-utils.test.js';
+} from '../utils/test-utils.js';
 import { fetchMinioStorageData } from '../utils/rest-api.js';
 import MinioDiskUsage from './minio-disk-usage.jsx';
 

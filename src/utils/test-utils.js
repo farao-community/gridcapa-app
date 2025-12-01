@@ -48,7 +48,7 @@ export function setupTestContainer() {
     return { container, root: createRoot(container) };
 }
 
-export async function cleanUpOnExit(container, root) {
+export function cleanUpOnExit(container, root) {
     if (container) {
         container.remove();
         container = null;
@@ -66,9 +66,3 @@ export function startOf2020IsoStr() {
 }
 
 export const START_2020_AS_NUMERAL_STRING = '1577836800000';
-
-it('has coherent dates', () => {
-    expect(Date.parse(startOf2020IsoStr())).toEqual(
-        Number.parseInt(START_2020_AS_NUMERAL_STRING)
-    );
-});

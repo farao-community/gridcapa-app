@@ -12,7 +12,7 @@ import {
     setupTestContainer,
     START_2020_AS_NUMERAL_STRING,
     startOf2020IsoStr,
-} from '../utils/test-utils.test.js';
+} from '../utils/test-utils.js';
 
 let container = null;
 let root = null;

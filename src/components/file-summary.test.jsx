@@ -10,7 +10,7 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-} from '../utils/test-utils.test.js';
+} from '../utils/test-utils.js';
 
 let container = null;
 let root = null;

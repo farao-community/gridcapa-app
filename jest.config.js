@@ -20,7 +20,7 @@ const config = {
     },
     setupFiles: ['<rootDir>/jest.setup.js'],
     collectCoverage: true,
-    collectCoverageFrom: ['src/**/*.{js,jsx}'],
+    collectCoverageFrom: ['src/**/*.{js,jsx}','!src/**/*.test.{js,jsx}','!src/**/test-utils.js'],
     coverageReporters: ['json', 'lcov', 'text', 'clover'],
     testResultsProcessor: 'jest-sonar-reporter',
 };
