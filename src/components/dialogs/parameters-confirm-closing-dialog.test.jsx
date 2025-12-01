@@ -9,9 +9,8 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-    startOf2020IsoStr,
 } from '../../utils/test-utils.js';
-import FileDialog from './file-dialog.jsx';
+import ParametersConfirmClosingDialog from './parameters-confirm-closing-dialog.jsx';
 
 let container = null;
 let root = null;
@@ -23,16 +22,15 @@ afterEach(() => cleanUpOnExit(container, root));
 
 it('renders file dialog', async () => {
     await renderComponent(
-        <FileDialog
+        <ParametersConfirmClosingDialog
             open={true}
-            inputs={[]}
-            onClose={console.log}
-            outputs={[]}
-            timestamp={startOf2020IsoStr()}
+            onClickYes={console.log}
+            closeDialog={console.log}
         />,
         root
     );
 
-    expect(document.getElementsByTagName('button')).toHaveLength(1);
-    expect(document.documentElement.innerHTML).toContain('globalViewCoreFiles');
+    ['parametersNotSavedDialog', 'yes', 'no', 'quit', 'cancel'].forEach(
+        expect(document.documentElement.innerHTML).toContain
+    );
 });
