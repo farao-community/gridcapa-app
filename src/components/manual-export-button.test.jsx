@@ -12,6 +12,7 @@ import {
     startOf2020IsoStr,
 } from '../utils/test-utils.js';
 import { ManualExportButton } from './manual-export-button.jsx';
+import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -43,4 +44,19 @@ it('renders disable button with RUNNING status', async () => {
 
     expect(manualExportButton.disabled).toBe(true);
     expect(container.innerHTML).toContain('manual-export-button');
+});
+
+it('renders dialog on click', async () => {
+    const component = (
+        <ManualExportButton status="SUCCESS" timestamp={startOf2020IsoStr()} />
+    );
+    await renderComponent(component, root);
+
+    expect(container.getElementsByTagName('button').item(0).disabled).toBe(
+        false
+    );
+    fireEvent.click(container.getElementsByTagName('button').item(0));
+
+    expect(document.documentElement.innerHTML).toContain('yes-button');
+    expect(document.documentElement.innerHTML).toContain('cancel-button');
 });

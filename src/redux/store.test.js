@@ -9,5 +9,5 @@ import { store } from './store.js';
 
 it('should have a store', () => {
     expect(store).toBeTruthy();
-    expect(store.getState().computedLanguage === 'en');
+    expect(store.getState().computedLanguage).toBe('en');
 });
