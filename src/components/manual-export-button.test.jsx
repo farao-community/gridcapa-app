@@ -6,7 +6,7 @@
  */
 
 import {
-    cleanUpOnExit,
+    cleanUpOnExit, firstButtonOf,
     renderComponent,
     setupTestContainer,
     startOf2020IsoStr,
@@ -28,7 +28,7 @@ it('renders enabled button with SUCCESS status', async () => {
         root
     );
 
-    const manualExportButton = container.getElementsByTagName('button').item(0);
+    const manualExportButton = firstButtonOf(container);
 
     expect(manualExportButton.disabled).toBe(false);
     expect(container.innerHTML).toContain('manual-export-button');
@@ -40,7 +40,7 @@ it('renders disable button with RUNNING status', async () => {
         root
     );
 
-    const manualExportButton = container.getElementsByTagName('button').item(0);
+    const manualExportButton = firstButtonOf(container);
 
     expect(manualExportButton.disabled).toBe(true);
     expect(container.innerHTML).toContain('manual-export-button');
@@ -52,10 +52,10 @@ it('renders dialog on click', async () => {
     );
     await renderComponent(component, root);
 
-    expect(container.getElementsByTagName('button').item(0).disabled).toBe(
+    expect(firstButtonOf(container).disabled).toBe(
         false
     );
-    fireEvent.click(container.getElementsByTagName('button').item(0));
+    fireEvent.click(firstButtonOf(container));
 
     expect(document.documentElement.innerHTML).toContain('yes-button');
     expect(document.documentElement.innerHTML).toContain('cancel-button');

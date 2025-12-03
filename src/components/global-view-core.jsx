@@ -319,7 +319,7 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                                     filterHint="filterOnTimestamp"
                                     handleChange={handleTimestampFilterChange}
                                     currentFilter={timestampFilter}
-                                    manual={timestampFilterRef.length <= 0}
+                                    manual={timestampFilterRef?.length <= 0}
                                     predefinedValues={timestampFilterRef}
                                 />
                             </TableCell>

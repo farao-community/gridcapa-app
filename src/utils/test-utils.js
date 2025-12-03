@@ -61,6 +61,10 @@ export function cleanUpOnExit(container, root) {
     }
 }
 
+export function firstButtonOf(container) {
+    return container.getElementsByTagName('button').item(0);
+}
+
 export function startOf2020IsoStr() {
     return new Date(Date.UTC(2020, 0, 1)).toISOString();
 }
