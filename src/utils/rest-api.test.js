@@ -78,7 +78,7 @@ it('should call node fetch with args', async () => {
     await fetchJobLauncherToInterruptTask(timestamp, '1');
     await fetchTaskManagerSelectFile(timestamp, type, type);
     await fetchTaskManagerManualExport(timestamp);
-    await updateProcessParameters(formData, intlRef, enqueueSnackbar());
+    await updateProcessParameters(formData, intlRef, enqueueSnackbar);
 
     expect(fetch).toHaveBeenCalledTimes(13);
 });

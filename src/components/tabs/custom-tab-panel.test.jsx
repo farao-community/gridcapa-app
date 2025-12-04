@@ -20,7 +20,7 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('displays tab when index and value are the same', async () => {
+it('displays selected tab', async () => {
     await renderComponent(
         <CustomTabPanel index={0} value={0}>
             aaa
@@ -31,7 +31,7 @@ it('displays tab when index and value are the same', async () => {
     expect(container.innerHTML).toContain('aaa');
 });
 
-it('hides tab when index and value are not the same', async () => {
+it('hides tab when index and value are different', async () => {
     await renderComponent(
         <CustomTabPanel index={0} value={1}>
             aaa

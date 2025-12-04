@@ -23,10 +23,8 @@ afterEach(() => cleanUpOnExit(container, root));
 it('renders logo', async () => {
     await renderComponent(<GridcapaLogoText />, root);
 
-    expect(document.getElementsByTagName('h4').item(0).innerHTML).toContain(
-        'Grid'
-    );
-    expect(document.getElementsByTagName('h4').item(0).innerHTML).toContain(
-        'Capa'
-    );
+    const titleElement = document.getElementsByTagName('h4').item(0);
+
+    expect(titleElement.innerHTML).toContain('Grid');
+    expect(titleElement.innerHTML).toContain('Capa');
 });

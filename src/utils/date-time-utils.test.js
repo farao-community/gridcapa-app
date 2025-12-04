@@ -18,8 +18,8 @@ it('should get initial timestamp to set', async () => {
 
     const res2 = new Date(getInitialTimestampToSet('2020-01-01', null, 5));
     expect(res2.getDate()).toEqual(1);
-    expect(res2.getUTCHours()).not.toEqual(11);
-    expect(res2.getUTCMinutes()).not.toEqual(45);
+    expect(res2.getHours()).toEqual(0);
+    expect(res2.getUTCMinutes()).toEqual(30);
 });
 
 it('should transform date to date and time string', async () => {
