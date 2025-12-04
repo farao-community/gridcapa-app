@@ -20,7 +20,7 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('displays tab when index and value are the same', async () => {
+it('displays tabs', async () => {
     await renderComponent(<ViewTabs onViewChange={jest.fn()} view={0} />, root);
 
     ['0', '1', '2'].forEach((i) => {
