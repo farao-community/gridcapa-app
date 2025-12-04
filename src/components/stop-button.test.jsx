@@ -6,7 +6,8 @@
  */
 
 import {
-    cleanUpOnExit, firstButtonOf,
+    cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
     startOf2020IsoStr,
@@ -32,9 +33,7 @@ it('renders stop button', async () => {
         root
     );
 
-    expect(firstButtonOf(container).disabled).toBe(
-        true
-    );
+    expect(firstButtonOf(container).disabled).toBe(true);
     expect(container.innerHTML).toContain('stop-button');
 });
 
@@ -48,9 +47,7 @@ it('renders dialog on click', async () => {
         root
     );
 
-    expect(firstButtonOf(container).disabled).toBe(
-        false
-    );
+    expect(firstButtonOf(container).disabled).toBe(false);
 
     fireEvent.click(firstButtonOf(container));
 

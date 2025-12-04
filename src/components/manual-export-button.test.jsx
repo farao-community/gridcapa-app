@@ -6,7 +6,8 @@
  */
 
 import {
-    cleanUpOnExit, firstButtonOf,
+    cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
     startOf2020IsoStr,
@@ -52,9 +53,7 @@ it('renders dialog on click', async () => {
     );
     await renderComponent(component, root);
 
-    expect(firstButtonOf(container).disabled).toBe(
-        false
-    );
+    expect(firstButtonOf(container).disabled).toBe(false);
     fireEvent.click(firstButtonOf(container));
 
     expect(document.documentElement.innerHTML).toContain('yes-button');
