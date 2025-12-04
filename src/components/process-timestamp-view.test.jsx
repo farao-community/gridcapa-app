@@ -9,7 +9,6 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-    startOf2020IsoStr,
 } from '../utils/test-utils.js';
 import { connectTaskNotificationWebSocket } from '../utils/websocket-api.js';
 import ProcessTimestampView from './process-timestamp-view.jsx';
