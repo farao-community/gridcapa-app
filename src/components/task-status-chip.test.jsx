@@ -5,8 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../utils/test-utils.js';
-import { TaskStatusChip } from "./task-status-chip.jsx";
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+} from '../utils/test-utils.js';
+import { TaskStatusChip } from './task-status-chip.jsx';
 
 let container = null;
 let root = null;
@@ -17,11 +21,7 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders task status chip', async () => {
-    await renderComponent(
-        <TaskStatusChip task-status={'SUCCESS'}
-        />,
-        root
-    );
+    await renderComponent(<TaskStatusChip task-status={'SUCCESS'} />, root);
 
     expect(container.innerHTML).toContain('SUCCESS');
 });

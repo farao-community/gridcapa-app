@@ -5,8 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../utils/test-utils.js';
-import TableHeaderRunningTasksView from "./table-header-running-tasks-view.jsx";
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+} from '../utils/test-utils.js';
+import TableHeaderRunningTasksView from './table-header-running-tasks-view.jsx';
 
 let container = null;
 let root = null;
@@ -18,11 +22,9 @@ afterEach(() => cleanUpOnExit(container, root));
 
 it('renders running tasks view', async () => {
     await renderComponent(
-        <TableHeaderRunningTasksView processName="VALID"/>,
+        <TableHeaderRunningTasksView processName="VALID" />,
         root
     );
 
     expect(container.innerHTML).toContain('VALID Supervisor');
 });
-
-

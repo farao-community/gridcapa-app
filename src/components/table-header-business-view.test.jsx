@@ -5,8 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, startOf2020IsoStr, } from '../utils/test-utils.js';
-import TableHeaderBusinessView from "./table-header-business-view.jsx";
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+    startOf2020IsoStr,
+} from '../utils/test-utils.js';
+import TableHeaderBusinessView from './table-header-business-view.jsx';
 
 let container = null;
 let root = null;
@@ -17,13 +22,14 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders business date view', async () => {
-
     await renderComponent(
-        <TableHeaderBusinessView processName="VALID" timestamp={startOf2020IsoStr()} onTimestampChange={jest.fn()}/>,
+        <TableHeaderBusinessView
+            processName="VALID"
+            timestamp={startOf2020IsoStr()}
+            onTimestampChange={jest.fn()}
+        />,
         root
     );
 
     expect(container.innerHTML).toContain('VALID Supervisor');
 });
-
-

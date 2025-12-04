@@ -5,31 +5,31 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { displayErrorMessageWithSnackbar } from "./messages.js";
+import { displayErrorMessageWithSnackbar } from './messages.js';
 
 const intlRef = { current: { formatMessage: (a) => a.toString() } };
 const enqueueSnackbar = jest.fn();
 
 it('should call snackbar when displaying errors', async () => {
     displayErrorMessageWithSnackbar({
-                                        errorMessage: 'error',
-                                        enqueueSnackbar: enqueueSnackbar,
-                                        headerMessage: {
-                                            headerMessageId: '1',
-                                            headerMessageValues: {a: 'b', c: 'd'},
-                                            intlRef: intlRef
-                                        }
+        errorMessage: 'error',
+        enqueueSnackbar: enqueueSnackbar,
+        headerMessage: {
+            headerMessageId: '1',
+            headerMessageValues: { a: 'b', c: 'd' },
+            intlRef: intlRef,
+        },
     });
 
     displayErrorMessageWithSnackbar({
-                                        errorMessage: 'error',
-                                        enqueueSnackbar: enqueueSnackbar,
-                                        headerMessage: {
-                                            headerMessageId: undefined,
-                                            headerMessageValues: {a: 'b', c: 'd'},
-                                            intlRef: intlRef
-                                        }
-                                    });
+        errorMessage: 'error',
+        enqueueSnackbar: enqueueSnackbar,
+        headerMessage: {
+            headerMessageId: undefined,
+            headerMessageValues: { a: 'b', c: 'd' },
+            intlRef: intlRef,
+        },
+    });
 
     expect(enqueueSnackbar).toHaveBeenCalledTimes(2);
 });

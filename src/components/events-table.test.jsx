@@ -5,8 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../utils/test-utils.js';
-import EventsTable from "./events-table.jsx";
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+} from '../utils/test-utils.js';
+import EventsTable from './events-table.jsx';
 
 let container = null;
 let root = null;
@@ -15,32 +19,32 @@ beforeEach(() => {
 });
 
 afterEach(() => cleanUpOnExit(container, root));
-jest.mock('./filter-menu')
+jest.mock('./filter-menu');
 
 it('renders events table', async () => {
     const evtData = [
-        {level:'INFO', message:'Hi'},
-        {level:'ERROR', message:'Bye'}
+        { level: 'INFO', message: 'Hi' },
+        { level: 'ERROR', message: 'Bye' },
     ];
 
     global.fetch = jest.fn(() =>
-                               Promise.resolve({
-                                                   ok: true,
-                                                   json: () => Promise.resolve({
-                                                       eventLevelPredefinedFilter: [{ defaultChecked: false, filterValue: 'a'}],
-                                                       eventLogPredefinedFilter: [{ defaultChecked: false, filterValue: 'b'}] ,
-                                                   }),
-                                                   text: () => Promise.resolve('hello'),
-                                               })
+        Promise.resolve({
+            ok: true,
+            json: () =>
+                Promise.resolve({
+                    eventLevelPredefinedFilter: [
+                        { defaultChecked: false, filterValue: 'a' },
+                    ],
+                    eventLogPredefinedFilter: [
+                        { defaultChecked: false, filterValue: 'b' },
+                    ],
+                }),
+            text: () => Promise.resolve('hello'),
+        })
     );
 
-    await renderComponent(
-        <EventsTable eventsData={evtData}/>,
-        root
-    );
+    await renderComponent(<EventsTable eventsData={evtData} />, root);
 
     expect(container.innerHTML).toContain('<p>Hi</p>');
     expect(container.innerHTML).toContain('<p>Bye</p>');
 });
-
-

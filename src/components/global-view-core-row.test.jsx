@@ -5,8 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, START_2020_AS_NUMERAL_STRING, startOf2020IsoStr, } from '../utils/test-utils.js';
-import GlobalViewCoreRow from "./global-view-core-row.jsx";
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+    START_2020_AS_NUMERAL_STRING,
+    startOf2020IsoStr,
+} from '../utils/test-utils.js';
+import GlobalViewCoreRow from './global-view-core-row.jsx';
 
 let container = null;
 let root = null;
@@ -27,19 +33,29 @@ it('renders global view row', async () => {
     let step = {
         timestamp: startOf2020IsoStr(),
         taskData: {
-            inputs:[],
-            outputs:[],
+            inputs: [],
+            outputs: [],
             status: 'RUNNING',
             runHistory: [
                 { id: 'a', executionDate: 12 },
                 { id: 'b', executionDate: 112 },
                 { id: 'c', executionDate: 5 },
-            ]}
+            ],
+        },
     };
     await renderComponent(
-        <GlobalViewCoreRow index={0} handleEventOpen={jest.fn()} handleFileOpen={jest.fn()} page={1} rowsPerPage={10} step={step} />,
+        <GlobalViewCoreRow
+            index={0}
+            handleEventOpen={jest.fn()}
+            handleFileOpen={jest.fn()}
+            page={1}
+            rowsPerPage={10}
+            step={step}
+        />,
         root
     );
 
-    expect(container.innerHTML).toContain('timestamp-files-'+startOf2020IsoStr());
+    expect(container.innerHTML).toContain(
+        'timestamp-files-' + startOf2020IsoStr()
+    );
 });
