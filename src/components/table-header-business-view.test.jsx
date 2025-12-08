@@ -25,7 +25,7 @@ it('renders business date view', async () => {
     await renderComponent(
         <TableHeaderBusinessView
             processName="VALID"
-            timestamp={startOf2020IsoStr()}
+            timestamp={new Date(startOf2020IsoStr())}
             onTimestampChange={jest.fn()}
         />,
         root

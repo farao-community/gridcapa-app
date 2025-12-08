@@ -55,7 +55,7 @@ it('renders process timestamp view', async () => {
     refTimestamp.setHours(0, 30, 0, 0);
 
     fetchTimestampData.mockImplementation((a, b, c) =>
-        Promise.resolve([[{ timestamp: refTimestamp, processEvents: 'abc' }]])
+        Promise.resolve([[{ timestamp: refTimestamp, processEvents: ['abc'] }]])
     );
 
     await renderComponent(
