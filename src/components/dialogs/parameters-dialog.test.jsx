@@ -20,6 +20,7 @@ afterEach(() => cleanUpOnExit(container, root));
 jest.mock('../../utils/rest-api', () => ({ updateConfigParameter: jest.fn() }));
 jest.mock('../../utils/messages', () => ({ useIntlRef: jest.fn() }));
 notistack.useSnackbar = jest.fn(() => jest.fn());
+
 it('renders parameters dialog', async () => {
     await renderComponent(
         <ParametersDialog open={true} onClose={jest.fn()} />,
