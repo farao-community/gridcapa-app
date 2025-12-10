@@ -91,7 +91,7 @@ export function RunAllButton({ timestamp }) {
     const getListOfTopics = useCallback(() => {
         const refTimestamp = new Date(Date.parse(currentTimestamp));
         if (isOnTheHourProcess === true) {
-            refTimestamp.setHours(0, 30, 0, 0);
+            refTimestamp.setHours(0, 0, 0, 0);
         } else {
             refTimestamp.setHours(0, 30, 0, 0);
         }
