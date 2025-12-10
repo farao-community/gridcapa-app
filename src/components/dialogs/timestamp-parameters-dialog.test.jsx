@@ -12,13 +12,12 @@ import {
     setupTestContainer,
 } from '../../utils/test-utils.js';
 import TimestampParametersDialog from './timestamp-parameters-dialog.jsx';
-
+import { fireEvent } from '@testing-library/react';
 let container = null;
 let root = null;
 beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
-import { fireEvent } from '@testing-library/react';
 
 jest.mock('./parameters-confirm-closing-dialog');
 

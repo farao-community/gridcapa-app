@@ -25,7 +25,7 @@ jest.mock('./business-date-view');
 jest.mock('./running-tasks-view');
 jest.mock('./tabs/custom-tab-panel');
 
-it('renders app top bar with parameters enabled', async () => {
+it('renders main view', async () => {
     await renderComponent(
         <GridCapaMain
             view={1}

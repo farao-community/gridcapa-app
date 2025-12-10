@@ -40,8 +40,8 @@ it('renders table core', async () => {
         root
     );
 
-    ['overview', 'tab', 'tablist', 'simple-tab'].forEach(
-        expect(container.innerHTML).toContain
+    ['overview', 'tab', 'tablist', 'simple-tab'].forEach((text) =>
+        expect(container.innerHTML).toContain(text)
     );
 
     expect(container.innerHTML).not.toContain('Error message');

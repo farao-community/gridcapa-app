@@ -10,8 +10,7 @@ import {
     renderComponent,
     setupTestContainer,
 } from '../../utils/test-utils.js';
-import ParametersDialog from './parameters-dialog.jsx';
-import * as notistack from 'notistack';
+import ParametersDialogContent from './parameters-dialog-content.jsx';
 
 let container = null;
 let root = null;
@@ -21,17 +20,16 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-jest.mock('../../utils/messages', () => ({ useIntlRef: jest.fn() }));
-jest.mock('../../utils/rest-api', () => ({ updateConfigParameter: jest.fn() }));
-
 it('renders parameters dialog', async () => {
+    const onChange = jest.fn();
     await renderComponent(
-        <ParametersDialog open={true} onClose={jest.fn()} />,
+        <ParametersDialogContent
+            parameters={[]}
+            setParametersChanged={onChange}
+            reference={'a'}
+        />,
         root
     );
 
-    expect(document.documentElement.innerHTML).toContain(
-        'parameters-dialog-title'
-    );
     expect(container.innerHTML).not.toContain('Error message');
 });

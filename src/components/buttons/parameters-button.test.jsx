@@ -12,10 +12,7 @@ import {
     setupTestContainer,
 } from '../../utils/test-utils.js';
 import { fireEvent } from '@testing-library/react';
-import {
-    fetchProcessParameters,
-    updateProcessParameters,
-} from '../../utils/rest-api.js';
+import { fetchProcessParameters } from '../../utils/rest-api.js';
 import ParametersButton from './parameters-button.jsx';
 
 jest.mock('../../utils/rest-api', () => ({
