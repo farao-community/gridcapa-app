@@ -33,4 +33,5 @@ it('displays validated file count correctly', async () => {
     );
 
     expect(container.innerHTML).toContain('1&nbsp;/&nbsp;3');
+    expect(container.innerHTML).not.toContain('Error message');
 });

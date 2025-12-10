@@ -33,6 +33,7 @@ it('renders run button when success', async () => {
     );
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.getElementsByTagName('circle').length).toEqual(0);
+    expect(container.innerHTML).not.toContain('Error message');
 });
 
 it('renders loader when running', async () => {
@@ -44,4 +45,5 @@ it('renders loader when running', async () => {
     expect(container.innerHTML).not.toContain('run-button-');
     expect(container.getElementsByTagName('circle').length).toEqual(1);
     expect(container.getElementsByTagName('button').length).toEqual(0);
+    expect(container.innerHTML).not.toContain('Error message');
 });

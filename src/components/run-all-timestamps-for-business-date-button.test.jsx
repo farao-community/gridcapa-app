@@ -44,7 +44,7 @@ it('renders run all button', async () => {
     expect(container.innerHTML).toContain(
         'run-all-button-2020-01-01T00:00:00.000Z'
     );
-
+    expect(container.innerHTML).not.toContain('Error message');
     expect(container.getElementsByTagName('button').length).toEqual(1);
 
     fireEvent.click(firstButtonOf(container));

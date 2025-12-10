@@ -43,4 +43,5 @@ it('sums free and used spaces with several servers and drives', async () => {
     await renderComponent(<MinioDiskUsage />, root);
 
     expect(container.innerHTML).toContain('30%');
+    expect(container.innerHTML).not.toContain('Error message');
 });

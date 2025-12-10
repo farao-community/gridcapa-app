@@ -7,13 +7,13 @@
 
 import {
     cleanUpOnExit,
+    mockWebSocketClient,
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 import { connectTaskNotificationWebSocket } from '../utils/websocket-api.js';
 import ProcessTimestampView from './process-timestamp-view.jsx';
 import { fetchTimestampData } from '../utils/rest-api.js';
-import { Client } from '@stomp/stompjs';
 
 let container = null;
 let root = null;
@@ -33,23 +33,9 @@ jest.mock('../utils/rest-api', () => ({
 }));
 
 it('renders process timestamp view', async () => {
-    const client = new Client({
-        brokerURL: 'aaaa',
-        connectionTimeout: 3000,
-        onConnect: () => {
-            console.info('Connected task-notification Websocket with URL: ');
-        },
-        onStompError: (error) =>
-            console.error(
-                'Error occurred in task-notification Stomp with URL: '
-            ),
-        onWebSocketError: (error) =>
-            console.error(
-                'Error occurred in task-notification Websocket with URL: '
-            ),
-    });
-
-    connectTaskNotificationWebSocket.mockImplementation((a, b) => client);
+    connectTaskNotificationWebSocket.mockImplementation((a, b) =>
+        mockWebSocketClient()
+    );
 
     const refTimestamp = new Date();
     refTimestamp.setHours(0, 30, 0, 0);
@@ -68,4 +54,5 @@ it('renders process timestamp view', async () => {
     );
 
     expect(container.innerHTML).toContain('MuiGrid');
+    expect(container.innerHTML).not.toContain('Error message');
 });

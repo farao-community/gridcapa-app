@@ -46,7 +46,7 @@ it('renders download button with its options', async () => {
         />,
         root
     );
-
+    expect(container.innerHTML).not.toContain('Error message');
     expect(container.innerHTML).toContain(
         'download-cgm-' + START_2020_AS_NUMERAL_STRING
     );
@@ -72,7 +72,7 @@ it('renders nothing if fileUrl is null', async () => {
         />,
         root
     );
-
+    expect(container.innerHTML).not.toContain('Error message');
     expect(container.innerHTML).not.toContain(
         'download-cgm-' + START_2020_AS_NUMERAL_STRING
     );

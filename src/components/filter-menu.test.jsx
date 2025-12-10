@@ -10,7 +10,7 @@ import {
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
-import RunningTasksView from './running-tasks-view.jsx';
+import FilterMenu from './filter-menu.jsx';
 
 let container = null;
 let root = null;
@@ -19,11 +19,18 @@ beforeEach(() => {
 });
 
 afterEach(() => cleanUpOnExit(container, root));
-jest.mock('./running-tasks-view-core');
 
-it('renders running tasks view', async () => {
-    await renderComponent(<RunningTasksView processName="VALID" />, root);
+it('displays filter', async () => {
+    const action = jest.fn();
+    await renderComponent(
+        <FilterMenu
+            filterHint={'a'}
+            handleChange={action}
+            currentFilter={'a'}
+        />,
+        root
+    );
 
-    expect(container.innerHTML).toContain('VALID Supervisor');
+    expect(container.innerHTML).toContain('FilterListIcon');
     expect(container.innerHTML).not.toContain('Error message');
 });

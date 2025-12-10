@@ -32,7 +32,7 @@ it('renders loading event dialog', async () => {
         />,
         root
     );
-
+    expect(container.innerHTML).not.toContain('Error message');
     const progressBar = document.querySelector('.MuiLinearProgress-root');
     expect(progressBar).toBeTruthy();
 });
@@ -47,6 +47,7 @@ it('renders idle event dialog', async () => {
         />,
         root
     );
+    expect(container.innerHTML).not.toContain('Error message');
     const progressBar = document.querySelector('.MuiLinearProgress-root');
     expect(progressBar).toBeFalsy();
 });

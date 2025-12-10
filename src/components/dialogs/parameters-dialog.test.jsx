@@ -10,7 +10,10 @@ import {
     renderComponent,
     setupTestContainer,
 } from '../../utils/test-utils.js';
-import SelectFileDialog from './select-file-dialog.jsx';
+import ParametersDialog, { useParameterState } from './parameters-dialog.jsx';
+import { useIntlRef } from '../../utils/messages.js';
+import * as notistack from 'notistack';
+import { PARAM_THEME } from '../../utils/config-params.js';
 
 let container = null;
 let root = null;
@@ -20,20 +23,17 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders select file dialog', async () => {
+jest.mock('../../utils/rest-api', () => ({ updateConfigParameter: jest.fn() }));
+jest.mock('../../utils/messages', () => ({ useIntlRef: jest.fn() }));
+notistack.useSnackbar = jest.fn(() => jest.fn());
+it('renders parameters dialog', async () => {
     await renderComponent(
-        <SelectFileDialog
-            fileType="CGM"
-            handleClose={jest.fn()}
-            open={true}
-            selectFile={jest.fn()}
-        />,
+        <ParametersDialog open={true} onClose={jest.fn()} />,
         root
     );
 
-    expect(document.getElementsByTagName('button')).toHaveLength(2);
     expect(document.documentElement.innerHTML).toContain(
-        'changeProcessFileAlertMessage'
+        'parameters-dialog-title'
     );
     expect(container.innerHTML).not.toContain('Error message');
 });

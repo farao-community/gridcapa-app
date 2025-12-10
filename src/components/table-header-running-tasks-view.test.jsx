@@ -27,4 +27,5 @@ it('renders running tasks view', async () => {
     );
 
     expect(container.innerHTML).toContain('VALID Supervisor');
+    expect(container.innerHTML).not.toContain('Error message');
 });

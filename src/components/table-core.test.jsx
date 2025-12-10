@@ -9,8 +9,8 @@ import {
     cleanUpOnExit,
     renderComponent,
     setupTestContainer,
-} from '../../utils/test-utils.js';
-import SelectFileDialog from './select-file-dialog.jsx';
+} from '../utils/test-utils.js';
+import TableCore from './table-core.jsx';
 
 let container = null;
 let root = null;
@@ -18,22 +18,31 @@ beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
 
+jest.mock('./overview-table');
+jest.mock('./events-table');
+
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders select file dialog', async () => {
+it('renders table core', async () => {
+    const taskData = {
+        inputs: [],
+        outputs: [],
+        status: 'RUNNING',
+        runHistory: [
+            { id: 'a', executionDate: 12 },
+            { id: 'b', executionDate: 112 },
+            { id: 'c', executionDate: 5 },
+        ],
+    };
+
     await renderComponent(
-        <SelectFileDialog
-            fileType="CGM"
-            handleClose={jest.fn()}
-            open={true}
-            selectFile={jest.fn()}
-        />,
+        <TableCore taskData={taskData} eventsData={[]} />,
         root
     );
 
-    expect(document.getElementsByTagName('button')).toHaveLength(2);
-    expect(document.documentElement.innerHTML).toContain(
-        'changeProcessFileAlertMessage'
+    ['overview', 'tab', 'tablist', 'simple-tab'].forEach(
+        expect(container.innerHTML).toContain
     );
+
     expect(container.innerHTML).not.toContain('Error message');
 });

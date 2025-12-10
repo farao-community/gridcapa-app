@@ -45,4 +45,5 @@ it('renders overview table', async () => {
     expect(container.innerHTML).toContain('c-output-type');
     expect(container.innerHTML).toContain('a-input-type');
     expect(container.innerHTML).toContain('b-input-type');
+    expect(container.innerHTML).not.toContain('Error message');
 });

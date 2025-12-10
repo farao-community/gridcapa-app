@@ -10,7 +10,7 @@ import {
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
-import RunningTasksView from './running-tasks-view.jsx';
+import GridCapaMain from './gridcapa-main.jsx';
 
 let container = null;
 let root = null;
@@ -19,11 +19,24 @@ beforeEach(() => {
 });
 
 afterEach(() => cleanUpOnExit(container, root));
-jest.mock('./running-tasks-view-core');
 
-it('renders running tasks view', async () => {
-    await renderComponent(<RunningTasksView processName="VALID" />, root);
+jest.mock('./process-timestamp-view');
+jest.mock('./business-date-view');
+jest.mock('./running-tasks-view');
+jest.mock('./tabs/custom-tab-panel');
 
-    expect(container.innerHTML).toContain('VALID Supervisor');
+it('renders app top bar with parameters enabled', async () => {
+    await renderComponent(
+        <GridCapaMain
+            view={1}
+            onTimestampChange={jest.fn()}
+            setParametersEnabled={jest.fn()}
+            setTimestamp={jest.fn()}
+            setView={jest.fn()}
+            timestamp={new Date()}
+        />,
+        root
+    );
+
     expect(container.innerHTML).not.toContain('Error message');
 });

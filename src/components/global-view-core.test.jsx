@@ -7,6 +7,7 @@
 
 import {
     cleanUpOnExit,
+    mockWebSocketClient,
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
@@ -15,7 +16,6 @@ import {
     fetchBusinessDateData,
     fetchTimestampData,
 } from '../utils/rest-api.js';
-import { Client } from '@stomp/stompjs';
 import { connectTaskNotificationWebSocket } from '../utils/websocket-api.js';
 
 let container = null;
@@ -40,23 +40,9 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders global view content', async () => {
-    const client = new Client({
-        brokerURL: 'aaaa',
-        connectionTimeout: 3000,
-        onConnect: () => {
-            console.info('Connected task-notification Websocket with URL: ');
-        },
-        onStompError: (error) =>
-            console.error(
-                'Error occurred in task-notification Stomp with URL: '
-            ),
-        onWebSocketError: (error) =>
-            console.error(
-                'Error occurred in task-notification Websocket with URL: '
-            ),
-    });
-
-    connectTaskNotificationWebSocket.mockImplementation((a, b) => client);
+    connectTaskNotificationWebSocket.mockImplementation((a, b) =>
+        mockWebSocketClient()
+    );
 
     const refTimestamp = new Date();
     refTimestamp.setHours(0, 30, 0, 0);
@@ -78,4 +64,5 @@ it('renders global view content', async () => {
     );
 
     expect(container.innerHTML).toContain('globalViewCoreAction');
+    expect(container.innerHTML).not.toContain('Error message');
 });

@@ -32,7 +32,7 @@ it('renders file dialog', async () => {
         />,
         root
     );
-
+    expect(container.innerHTML).not.toContain('Error message');
     expect(document.getElementsByTagName('button')).toHaveLength(1);
     expect(document.documentElement.innerHTML).toContain('globalViewCoreFiles');
 });

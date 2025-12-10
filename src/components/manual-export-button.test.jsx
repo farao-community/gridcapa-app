@@ -33,6 +33,7 @@ it('renders enabled button with SUCCESS status', async () => {
 
     expect(manualExportButton.disabled).toBe(false);
     expect(container.innerHTML).toContain('manual-export-button');
+    expect(container.innerHTML).not.toContain('Error message');
 });
 
 it('renders disable button with RUNNING status', async () => {
@@ -45,6 +46,7 @@ it('renders disable button with RUNNING status', async () => {
 
     expect(manualExportButton.disabled).toBe(true);
     expect(container.innerHTML).toContain('manual-export-button');
+    expect(container.innerHTML).not.toContain('Error message');
 });
 
 it('renders dialog on click', async () => {
@@ -58,4 +60,5 @@ it('renders dialog on click', async () => {
 
     expect(document.documentElement.innerHTML).toContain('yes-button');
     expect(document.documentElement.innerHTML).toContain('cancel-button');
+    expect(container.innerHTML).not.toContain('Error message');
 });

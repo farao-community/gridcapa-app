@@ -24,4 +24,5 @@ it('renders task status chip', async () => {
     await renderComponent(<TaskStatusChip task-status={'SUCCESS'} />, root);
 
     expect(container.innerHTML).toContain('SUCCESS');
+    expect(container.innerHTML).not.toContain('Error message');
 });

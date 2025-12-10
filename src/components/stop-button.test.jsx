@@ -35,6 +35,7 @@ it('renders stop button', async () => {
 
     expect(firstButtonOf(container).disabled).toBe(true);
     expect(container.innerHTML).toContain('stop-button');
+    expect(container.innerHTML).not.toContain('Error message');
 });
 
 it('renders dialog on click', async () => {
@@ -48,6 +49,7 @@ it('renders dialog on click', async () => {
     );
 
     expect(firstButtonOf(container).disabled).toBe(false);
+    expect(container.innerHTML).not.toContain('Error message');
 
     fireEvent.click(firstButtonOf(container));
 

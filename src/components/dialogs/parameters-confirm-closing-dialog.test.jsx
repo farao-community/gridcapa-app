@@ -33,4 +33,5 @@ it('renders parameters confirm closing dialog', async () => {
     ['parametersNotSavedDialog', 'yes', 'no', 'quit', 'cancel'].forEach(
         (text) => expect(document.documentElement.innerHTML).toContain(text)
     );
+    expect(container.innerHTML).not.toContain('Error message');
 });

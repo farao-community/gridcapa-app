@@ -12,7 +12,7 @@ import {
     setupTestContainer,
     startOf2020IsoStr,
 } from '../utils/test-utils.js';
-import GlobalViewCoreRow from './global-view-core-row.jsx';
+import RunningTasksViewCoreRow from './running-tasks-view-core-row.jsx';
 import { fireEvent } from '@testing-library/react';
 
 let container = null;
@@ -31,7 +31,7 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 
 it('renders global view row', async () => {
-    let step = {
+    let task = {
         timestamp: startOf2020IsoStr(),
         taskData: {
             inputs: [],
@@ -46,13 +46,13 @@ it('renders global view row', async () => {
     };
     const fileOpenFunction = jest.fn();
     await renderComponent(
-        <GlobalViewCoreRow
+        <RunningTasksViewCoreRow
             index={0}
             handleEventOpen={jest.fn()}
             handleFileOpen={fileOpenFunction}
             page={1}
             rowsPerPage={10}
-            step={step}
+            task={task}
         />,
         root
     );

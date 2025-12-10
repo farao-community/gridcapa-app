@@ -27,4 +27,6 @@ it('renders logo', async () => {
 
     expect(titleElement.innerHTML).toContain('Grid');
     expect(titleElement.innerHTML).toContain('Capa');
+
+    expect(container.innerHTML).not.toContain('Error message');
 });

@@ -47,4 +47,5 @@ it('renders events table', async () => {
 
     expect(container.innerHTML).toContain('<p>Hi</p>');
     expect(container.innerHTML).toContain('<p>Bye</p>');
+    expect(container.innerHTML).not.toContain('Error message');
 });

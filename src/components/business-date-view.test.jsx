@@ -33,4 +33,5 @@ it('renders business date view', async () => {
     );
 
     expect(container.innerHTML).toContain('VALID Supervisor');
+    expect(container.innerHTML).not.toContain('Error message');
 });

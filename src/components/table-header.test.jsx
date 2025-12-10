@@ -11,7 +11,7 @@ import {
     setupTestContainer,
     startOf2020IsoStr,
 } from '../utils/test-utils.js';
-import TableHeaderBusinessView from './table-header-business-view.jsx';
+import TableHeader from './table-header.jsx';
 
 let container = null;
 let root = null;
@@ -19,11 +19,28 @@ beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
 
+jest.mock('./task-status-chip');
+jest.mock('./run-button');
+jest.mock('./manual-export-button');
+jest.mock('./stop-button');
+
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders business date view', async () => {
+it('renders table header', async () => {
+    const taskData = {
+        inputs: [],
+        outputs: [],
+        status: 'RUNNING',
+        runHistory: [
+            { id: 'a', executionDate: 12 },
+            { id: 'b', executionDate: 112 },
+            { id: 'c', executionDate: 5 },
+        ],
+    };
+
     await renderComponent(
-        <TableHeaderBusinessView
+        <TableHeader
+            taskData={taskData}
             processName="VALID"
             timestamp={new Date(startOf2020IsoStr())}
             onTimestampChange={jest.fn()}

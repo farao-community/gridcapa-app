@@ -37,4 +37,5 @@ it('renders upload button with its options', async () => {
         'upload-cgm-' + START_2020_AS_NUMERAL_STRING
     );
     expect(container.getElementsByTagName('button').length).toEqual(1);
+    expect(container.innerHTML).not.toContain('Error message');
 });
