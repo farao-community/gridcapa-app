@@ -5,15 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import {
-    cleanUpOnExit,
-    renderComponent,
-    setupTestContainer,
-} from '../../utils/test-utils.js';
-import ParametersDialog, { useParameterState } from './parameters-dialog.jsx';
-import { useIntlRef } from '../../utils/messages.js';
+import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../../utils/test-utils.js';
+import ParametersDialog from './parameters-dialog.jsx';
 import * as notistack from 'notistack';
-import { PARAM_THEME } from '../../utils/config-params.js';
 
 let container = null;
 let root = null;
