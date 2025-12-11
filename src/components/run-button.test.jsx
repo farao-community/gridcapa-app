@@ -8,11 +8,17 @@
 import { RunButton } from './run-button.jsx';
 import {
     cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
     START_2020_AS_NUMERAL_STRING,
     startOf2020IsoStr,
 } from '../utils/test-utils.js';
+import { fireEvent } from '@testing-library/react';
+import {
+    fetchJobLauncherPost,
+    fetchProcessParameters,
+} from '../utils/rest-api.js';
 
 let container = null;
 let root = null;
@@ -20,9 +26,16 @@ beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
 
+jest.mock('../utils/rest-api', () => ({
+    fetchJobLauncherPost: jest.fn(),
+    fetchProcessParameters: jest.fn(),
+}));
+
+jest.mock('./dialogs/timestamp-parameters-dialog');
+
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders run button when success', async () => {
+it('renders clickable run button', async () => {
     await renderComponent(
         <RunButton status="SUCCESS" timestamp={startOf2020IsoStr()} />,
         root
@@ -34,6 +47,38 @@ it('renders run button when success', async () => {
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.getElementsByTagName('circle').length).toEqual(0);
     expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(firstButtonOf(container));
+
+    expect(fetchProcessParameters).not.toHaveBeenCalled();
+    expect(fetchJobLauncherPost).toHaveBeenCalled();
+});
+
+it('renders clickable run button with parameters', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+        Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ parametersEnabled: true }),
+            text: () => Promise.resolve('hello'),
+        })
+    );
+
+    await renderComponent(
+        <RunButton status="SUCCESS" timestamp={startOf2020IsoStr()} />,
+        root
+    );
+
+    expect(container.innerHTML).toContain(
+        'run-button-' + START_2020_AS_NUMERAL_STRING
+    );
+    expect(container.getElementsByTagName('button').length).toEqual(1);
+    expect(container.getElementsByTagName('circle').length).toEqual(0);
+    expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(firstButtonOf(container));
+
+    expect(fetchProcessParameters).toHaveBeenCalled();
+    expect(fetchJobLauncherPost).toHaveBeenCalled();
 });
 
 it('renders loader when running', async () => {

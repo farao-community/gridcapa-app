@@ -11,7 +11,6 @@ import {
     setupTestContainer,
 } from '../../utils/test-utils.js';
 import ParametersDialog from './parameters-dialog.jsx';
-import * as notistack from 'notistack';
 
 let container = null;
 let root = null;

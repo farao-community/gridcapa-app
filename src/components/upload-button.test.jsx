@@ -8,11 +8,13 @@
 import UploadButton from './upload-button.jsx';
 import {
     cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
     START_2020_AS_NUMERAL_STRING,
     startOf2020IsoStr,
 } from '../utils/test-utils.js';
+import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -33,9 +35,14 @@ it('renders upload button with its options', async () => {
         root
     );
 
+    const logSpy = jest.spyOn(console, 'log');
+
     expect(container.innerHTML).toContain(
         'upload-cgm-' + START_2020_AS_NUMERAL_STRING
     );
     expect(container.getElementsByTagName('button').length).toEqual(1);
     expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(firstButtonOf(container));
+    expect(logSpy).toHaveBeenCalled();
 });
