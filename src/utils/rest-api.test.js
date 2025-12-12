@@ -35,6 +35,10 @@ const enqueueSnackbar = jest.fn();
 const type = 'cgm';
 const appName = 'GRIDCAPA';
 
+beforeEach(() => {
+    enqueueSnackbar.mockClear();
+});
+
 it('should get base url', async () => {
     expect(getBaseUrl()).not.toBeNull();
 });
@@ -83,7 +87,7 @@ it('should call node fetch with args', async () => {
     expect(fetch).toHaveBeenCalledTimes(13);
 });
 
-it('should handle node fetch errors', async () => {
+it('should handle node fetch errors with enqueueSnackbar', async () => {
     global.fetch = jest.fn(() =>
         Promise.resolve({
             ok: false,
@@ -114,5 +118,25 @@ it('should handle node fetch errors', async () => {
         }
     );
 
-    expect(enqueueSnackbar).toHaveBeenCalledTimes(6);
+    expect(enqueueSnackbar).toHaveBeenCalledTimes(5);
+});
+
+it('should handle node fetch errors without enqueueSnackbar', async () => {
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            ok: false,
+            json: () => Promise.resolve({ data: 100 }),
+            text: () => Promise.resolve('hello'),
+        })
+    );
+
+    await fetchConfigParameters().catch((e) => {
+        expect(e).toEqual('hello');
+    });
+    await fetchConfigParameter(appName).catch((e) => {
+        expect(e).toEqual('hello');
+    });
+    await updateConfigParameter(appName, type).catch((e) => {
+        expect(e).toEqual('hello');
+    });
 });

@@ -79,6 +79,7 @@ it('renders running tasks view core with new tasks and ws', async () => {
         inputs: [],
         outputs: [],
         status: 'RUNNING',
+        timestamp: new Date(),
         runHistory: [
             { id: 'a', executionDate: 12 },
             { id: 'b', executionDate: 112 },
@@ -94,4 +95,7 @@ it('renders running tasks view core with new tasks and ws', async () => {
     );
 
     await renderComponent(<RunningTasksViewCore />, root);
+
+    expect(container.innerHTML).toContain('ArrowDropDownIcon');
+    expect(container.innerHTML).not.toContain('Error message');
 });
