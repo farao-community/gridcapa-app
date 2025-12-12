@@ -11,6 +11,7 @@ import {
     setupTestContainer,
 } from '../utils/test-utils.js';
 import TableCore from './table-core.jsx';
+import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -43,6 +44,10 @@ it('renders table core', async () => {
     ['overview', 'tab', 'tablist', 'simple-tab'].forEach((text) =>
         expect(container.innerHTML).toContain(text)
     );
+
+    expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(document.getElementById('simple-tab-1'));
 
     expect(container.innerHTML).not.toContain('Error message');
 });

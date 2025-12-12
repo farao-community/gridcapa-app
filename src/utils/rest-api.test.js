@@ -82,3 +82,37 @@ it('should call node fetch with args', async () => {
 
     expect(fetch).toHaveBeenCalledTimes(13);
 });
+
+it('should handle node fetch errors', async () => {
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            ok: false,
+            json: () => Promise.resolve({ data: 100 }),
+            text: () => Promise.resolve('hello'),
+        })
+    );
+
+    await fetchTimestampData(timestamp, intlRef, enqueueSnackbar).catch((e) => {
+        expect(e).toEqual('hello');
+    });
+    await fetchFileFromProcess(timestamp, type, intlRef, enqueueSnackbar).catch(
+        (e) => {
+            expect(e).toEqual('hello');
+        }
+    );
+    await fetchBusinessDateData(timestamp, intlRef, enqueueSnackbar).catch(
+        (e) => {
+            expect(e).toEqual('hello');
+        }
+    );
+    await fetchRunningTasksData(intlRef, enqueueSnackbar).catch((e) => {
+        expect(e).toEqual('hello');
+    });
+    await updateProcessParameters(formData, intlRef, enqueueSnackbar).catch(
+        (e) => {
+            expect(e).toEqual('hello');
+        }
+    );
+
+    expect(enqueueSnackbar).toHaveBeenCalledTimes(6);
+});

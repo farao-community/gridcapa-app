@@ -31,6 +31,7 @@
     "react-router-dom": "^6.23.1",
     "react-virtualized": "^9.22.5",
     "reconnecting-websocket": "^4.4.0",
+    "rxjs": "^7.8.2",
     "typeface-roboto": "^1.1.13"
   },
   "devDependencies": {

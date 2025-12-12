@@ -29,3 +29,10 @@ it('renders running tasks view', async () => {
     expect(container.innerHTML).toContain('VALID Supervisor');
     expect(container.innerHTML).not.toContain('Error message');
 });
+
+it('renders running tasks view with empty name', async () => {
+    await renderComponent(<TableHeaderRunningTasksView />, root);
+
+    expect(container.innerHTML).toContain('Supervisor');
+    expect(container.innerHTML).not.toContain('Error message');
+});

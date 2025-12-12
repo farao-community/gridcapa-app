@@ -31,6 +31,11 @@ it('should get latest run if data is valid', () => {
             { id: 'a', executionDate: 12 },
             { id: 'b', executionDate: 112 },
             { id: 'c', executionDate: 5 },
+            { id: 'd', executionDate: 5 },
         ])
     ).toBe('b');
+
+    expect(latestRunFromTaskRunHistory([{ id: 'a', executionDate: 12 }])).toBe(
+        'a'
+    );
 });
