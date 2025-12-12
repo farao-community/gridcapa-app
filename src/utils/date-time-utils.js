@@ -24,7 +24,12 @@ function getTimeFromTimeParam(timeParam) {
     return timeMatch ? timeMatch[0] : null;
 }
 
-export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
+export function getInitialTimestampToSet(
+    dateParam,
+    timeParam,
+    dayIncrement,
+    isOnTheHour
+) {
     if (dateParam) {
         const dateMatch = dateParam.match(DATE_REGEX);
         if (dateMatch) {
@@ -37,7 +42,11 @@ export function getInitialTimestampToSet(dateParam, timeParam, dayIncrement) {
                     convertMonthFromIsoToJs(dateMatch[2]),
                     dateMatch[3]
                 );
-                dateToSet.setMinutes(30);
+                if (isOnTheHour === true) {
+                    dateToSet.setMinutes(0);
+                } else {
+                    dateToSet.setMinutes(30);
+                }
                 return dateToSet;
             }
         }

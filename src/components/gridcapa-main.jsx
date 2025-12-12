@@ -40,7 +40,8 @@ function GridCapaMain({
                     const timestampToSet = getInitialTimestampToSet(
                         dateParam,
                         timeParam,
-                        res.dayIncrementInDate
+                        res.dayIncrementInDate,
+                        res.isOnTheHourProcess
                     );
                     setTimestamp(timestampToSet);
 

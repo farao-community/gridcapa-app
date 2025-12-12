@@ -42,14 +42,11 @@ function isDisabledTask(taskStatus) {
 export function RunAllButton({ timestamp }) {
     const { enqueueSnackbar } = useSnackbar();
     const intlRef = useIntlRef();
-    const refTimestamp = new Date(Date.parse(timestamp));
-    refTimestamp.setHours(0, 30, 0, 0);
-    const timestampMin = refTimestamp.getTime();
-    const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
     const [tasks, setTasks] = useState([]);
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);
     const [parametersEnabled, setParametersEnabled] = useState(false);
+    const [isOnTheHourProcess, setOnTheHourProcess] = useState(false);
     const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
     const websockets = useRef([]);
@@ -70,6 +67,7 @@ export function RunAllButton({ timestamp }) {
             .then((res) => res.json())
             .then((res) => {
                 setParametersEnabled(res.parametersEnabled || false);
+                setOnTheHourProcess(res.isOnTheHourProcess || false);
             });
     }, []);
 
@@ -91,13 +89,21 @@ export function RunAllButton({ timestamp }) {
     }, [enqueueSnackbar, intlRef, timestamp, currentTimestamp]);
 
     const getListOfTopics = useCallback(() => {
+        const refTimestamp = new Date(Date.parse(currentTimestamp));
+        if (isOnTheHourProcess === true) {
+            refTimestamp.setHours(0, 0, 0, 0);
+        } else {
+            refTimestamp.setHours(0, 30, 0, 0);
+        }
+        const timestampMin = refTimestamp.getTime();
+        const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
         return [
             '/task/update/' +
                 new Date(timestampMin).toISOString().substr(0, 10),
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-    }, [timestampMin, timestampMax]);
+    }, [currentTimestamp, isOnTheHourProcess]);
 
     async function handleParametersDialogOpening() {
         const parameters = await fetchProcessParameters();
