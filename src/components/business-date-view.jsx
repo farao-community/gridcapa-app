@@ -5,13 +5,29 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeaderBusinessView from './table-header-business-view';
 import GlobalViewCore from './global-view-core';
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));
-    refTimestamp.setHours(0, 30, 0, 0);
+    const [isOnTheHourProcess, setOnTheHourProcess] = useState(false);
+
+    useEffect(() => {
+        console.log('Fetching process metadata...');
+        fetch('process-metadata.json')
+            .then((res) => res.json())
+            .then((res) => {
+                setOnTheHourProcess(res.isOnTheHourProcess || false);
+            });
+    }, []);
+
+    if (isOnTheHourProcess) {
+        refTimestamp.setHours(0, 0, 0, 0);
+    } else {
+        refTimestamp.setHours(0, 30, 0, 0);
+    }
     return (
         <Grid container direction="column">
             <Grid item>
