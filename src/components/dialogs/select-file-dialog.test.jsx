@@ -32,8 +32,6 @@ it('renders select file dialog', async () => {
     );
 
     expect(document.getElementsByTagName('button')).toHaveLength(2);
-    expect(document.documentElement.innerHTML).toContain(
-        'changeProcessFileAlertMessage'
-    );
+    expect(document.body.innerHTML).toContain('changeProcessFileAlertMessage');
     expect(container.innerHTML).not.toContain('Error message');
 });

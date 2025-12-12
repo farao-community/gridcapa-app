@@ -21,7 +21,7 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 jest.mock('./filter-menu');
 
-it('renders events table', async () => {
+it('renders events table without filtering data', async () => {
     const evtData = [
         { level: 'INFO', message: 'Hi' },
         { level: 'ERROR', message: 'Bye' },
@@ -46,6 +46,35 @@ it('renders events table', async () => {
     await renderComponent(<EventsTable eventsData={evtData} />, root);
 
     expect(container.innerHTML).toContain('<p>Hi</p>');
+    expect(container.innerHTML).toContain('<p>Bye</p>');
+    expect(container.innerHTML).not.toContain('Error message');
+});
+
+it('renders events table, filtered', async () => {
+    const evtData = [
+        { level: 'INFO', message: 'Hi' },
+        { level: 'ERROR', message: 'Bye' },
+    ];
+
+    global.fetch = jest.fn(() =>
+        Promise.resolve({
+            ok: true,
+            json: () =>
+                Promise.resolve({
+                    eventLevelPredefinedFilter: [
+                        { defaultChecked: false, filterValue: 'INFO' },
+                    ],
+                    eventLogPredefinedFilter: [
+                        { defaultChecked: true, filterValue: 'b' },
+                    ],
+                }),
+            text: () => Promise.resolve('hello'),
+        })
+    );
+
+    await renderComponent(<EventsTable eventsData={evtData} />, root);
+
+    expect(container.innerHTML).not.toContain('<p>Hi</p>');
     expect(container.innerHTML).toContain('<p>Bye</p>');
     expect(container.innerHTML).not.toContain('Error message');
 });

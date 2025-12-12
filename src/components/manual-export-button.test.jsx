@@ -14,12 +14,17 @@ import {
 } from '../utils/test-utils.js';
 import { ManualExportButton } from './manual-export-button.jsx';
 import { fireEvent } from '@testing-library/react';
+import { fetchTaskManagerManualExport } from '../utils/rest-api.js';
 
 let container = null;
 let root = null;
 beforeEach(() => {
     ({ container, root } = setupTestContainer());
 });
+
+jest.mock('../utils/rest-api', () => ({
+    fetchTaskManagerManualExport: jest.fn(),
+}));
 
 afterEach(() => cleanUpOnExit(container, root));
 
@@ -58,7 +63,11 @@ it('renders dialog on click', async () => {
     expect(firstButtonOf(container).disabled).toBe(false);
     fireEvent.click(firstButtonOf(container));
 
-    expect(document.documentElement.innerHTML).toContain('yes-button');
-    expect(document.documentElement.innerHTML).toContain('cancel-button');
+    expect(document.body.innerHTML).toContain('yes-button');
+    expect(document.body.innerHTML).toContain('cancel-button');
     expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(document.getElementsByTagName('button').item(1));
+
+    expect(fetchTaskManagerManualExport).toHaveBeenCalled();
 });

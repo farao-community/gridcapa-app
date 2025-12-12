@@ -29,8 +29,6 @@ it('renders parameters dialog', async () => {
         root
     );
 
-    expect(document.documentElement.innerHTML).toContain(
-        'parameters-dialog-title'
-    );
+    expect(document.body.innerHTML).toContain('parameters-dialog-title');
     expect(container.innerHTML).not.toContain('Error message');
 });

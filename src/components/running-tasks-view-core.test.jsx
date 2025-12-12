@@ -40,7 +40,20 @@ jest.mock('./running-tasks-view-core-row');
 jest.mock('./dialogs/event-dialog');
 jest.mock('./dialogs/file-dialog');
 
-it('renders running tasks view core', async () => {
+global.fetch = jest.fn(() =>
+    Promise.resolve({
+        ok: true,
+        json: () =>
+            Promise.resolve({
+                globalViewTimestampFilter: [
+                    { defaultChecked: false, filterValue: 'a' },
+                ],
+            }),
+        text: () => Promise.resolve('hello'),
+    })
+);
+
+it('renders running tasks view core without new tasks and ws', async () => {
     const refTimestamp = new Date();
     refTimestamp.setHours(0, 30, 0, 0);
     fetchTimestampData.mockImplementation((a, b, c) =>
@@ -48,26 +61,37 @@ it('renders running tasks view core', async () => {
     );
 
     fetchRunningTasksData.mockImplementation((a, b) => Promise.resolve([]));
-
-    connectTaskNotificationWebSocket.mockImplementation((a, b) =>
-        mockWebSocketClient()
-    );
-
-    global.fetch = jest.fn(() =>
-        Promise.resolve({
-            ok: true,
-            json: () =>
-                Promise.resolve({
-                    globalViewTimestampFilter: [
-                        { defaultChecked: false, filterValue: 'a' },
-                    ],
-                }),
-            text: () => Promise.resolve('hello'),
-        })
-    );
+    connectTaskNotificationWebSocket.mockImplementation((a, b) => null);
 
     await renderComponent(<RunningTasksViewCore />, root);
 
     expect(container.innerHTML).toContain('ArrowDropDownIcon');
     expect(container.innerHTML).not.toContain('Error message');
+});
+
+it('renders running tasks view core with new tasks and ws', async () => {
+    const refTimestamp = new Date();
+    refTimestamp.setHours(0, 30, 0, 0);
+    fetchTimestampData.mockImplementation((a, b, c) =>
+        Promise.resolve([[{ timestamp: refTimestamp, processEvents: ['abc'] }]])
+    );
+    const taskData = {
+        inputs: [],
+        outputs: [],
+        status: 'RUNNING',
+        runHistory: [
+            { id: 'a', executionDate: 12 },
+            { id: 'b', executionDate: 112 },
+            { id: 'c', executionDate: 5 },
+        ],
+    };
+    fetchRunningTasksData.mockImplementation((a, b) =>
+        Promise.resolve([taskData])
+    );
+
+    connectTaskNotificationWebSocket.mockImplementation((a, b) =>
+        mockWebSocketClient()
+    );
+
+    await renderComponent(<RunningTasksViewCore />, root);
 });

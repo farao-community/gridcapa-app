@@ -7,10 +7,12 @@
 
 import {
     cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
 import FilterMenu from './filter-menu.jsx';
+import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -20,17 +22,25 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('displays filter', async () => {
+it('displays filter menu button opening filter menu with checkboxes', async () => {
     const action = jest.fn();
     await renderComponent(
         <FilterMenu
             filterHint={'a'}
             handleChange={action}
             currentFilter={'a'}
+            predefinedValues={['a', 'b', 'c']}
         />,
         root
     );
 
     expect(container.innerHTML).toContain('FilterListIcon');
     expect(container.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(firstButtonOf(container));
+    expect(document.body.innerHTML).toContain('CheckBoxIcon');
+    expect(document.body.innerHTML).not.toContain('Error message');
+
+    fireEvent.click(document.getElementsByName('checkBox_1').item(0));
+    expect(document.body.innerHTML).not.toContain('Error message');
 });

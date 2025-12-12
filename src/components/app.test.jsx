@@ -12,7 +12,12 @@ import {
     renderComponent,
     setupTestContainer,
 } from '../utils/test-utils.js';
-import { connectTaskNotificationWebSocket } from '../utils/websocket-api.js';
+import {
+    connectTaskNotificationWebSocket,
+    connectUiConfigNotificationWebsocket,
+} from '../utils/websocket-api.js';
+import { fetchConfigParameters } from '../utils/rest-api.js';
+import { store } from '../redux/store.js';
 
 let container = null;
 let root = null;
@@ -23,6 +28,7 @@ beforeEach(() => {
 afterEach(() => cleanUpOnExit(container, root));
 jest.mock('../utils/websocket-api', () => ({
     connectTaskNotificationWebSocket: jest.fn(),
+    connectUiConfigNotificationWebsocket: jest.fn(),
 }));
 jest.mock('../utils/rest-api', () => ({
     fetchConfigParameter: jest.fn(),
@@ -37,7 +43,24 @@ it('renders GridCapa App', async () => {
         mockWebSocketClient()
     );
 
+    connectUiConfigNotificationWebsocket.mockImplementation(() =>
+        mockWebSocketClient()
+    );
+
+    fetchConfigParameters.mockImplementation((a) =>
+        Promise.resolve([
+            { name: 'theme', value: 'light' },
+            { name: 'language', value: 'Greek' },
+        ])
+    );
+
+    store.dispatch({
+        type: 'USER',
+        user: 'CORESO',
+    });
+
     await renderComponent(<App />, root);
-    expect(container.innerHTML).toContain('connection');
+    expect(connectUiConfigNotificationWebsocket).toHaveBeenCalled();
+    expect(container.innerHTML).not.toContain('connection');
     expect(container.innerHTML).not.toContain('Error message');
 });

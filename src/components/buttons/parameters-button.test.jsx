@@ -17,10 +17,9 @@ import ParametersButton from './parameters-button.jsx';
 
 jest.mock('../../utils/rest-api', () => ({
     updateProcessParameters: jest.fn(),
-    fetchProcessParameters: jest.fn(),
+    fetchProcessParameters: jest.fn(() => Promise.resolve({})),
 }));
 jest.mock('../dialogs/process-parameters-dialog');
-global.URL.createObjectURL = jest.fn();
 
 let container = null;
 let root = null;

@@ -13,8 +13,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from '../redux/store';
 import {
     createTheme,
-    ThemeProvider,
     StyledEngineProvider,
+    ThemeProvider,
 } from '@mui/material/styles';
 import { Client } from '@stomp/stompjs';
 import { CardErrorBoundary, SnackbarProvider } from '@gridsuite/commons-ui';
@@ -87,5 +87,6 @@ export function mockWebSocketClient() {
             console.error(
                 'Error occurred in task-notification Websocket with URL: '
             ),
+        close: () => console.log('close'),
     });
 }

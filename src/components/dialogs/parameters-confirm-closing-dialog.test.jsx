@@ -7,10 +7,12 @@
 
 import {
     cleanUpOnExit,
+    firstButtonOf,
     renderComponent,
     setupTestContainer,
 } from '../../utils/test-utils.js';
 import ParametersConfirmClosingDialog from './parameters-confirm-closing-dialog.jsx';
+import { fireEvent } from '@testing-library/react';
 
 let container = null;
 let root = null;
@@ -20,18 +22,62 @@ beforeEach(() => {
 
 afterEach(() => cleanUpOnExit(container, root));
 
-it('renders parameters confirm closing dialog', async () => {
+it('renders parameters confirm closing dialog, and click yes', async () => {
+    const yes = jest.fn();
+    const close = jest.fn();
     await renderComponent(
         <ParametersConfirmClosingDialog
             open={true}
-            onClickYes={jest.fn()}
-            closeDialog={jest.fn()}
+            onClickYes={yes}
+            closeDialog={close}
         />,
         root
     );
 
     ['parametersNotSavedDialog', 'yes', 'no', 'quit', 'cancel'].forEach(
-        (text) => expect(document.documentElement.innerHTML).toContain(text)
+        (text) => expect(document.body.innerHTML).toContain(text)
     );
-    expect(container.innerHTML).not.toContain('Error message');
+    expect(document.body.innerHTML).not.toContain('Error message');
+    fireEvent.click(firstButtonOf(document.documentElement));
+
+    expect(yes).toHaveBeenCalled();
+    expect(close).toHaveBeenCalled();
+});
+
+it('renders parameters confirm closing dialog, and click close', async () => {
+    const yes = jest.fn();
+    const close = jest.fn();
+    await renderComponent(
+        <ParametersConfirmClosingDialog
+            open={true}
+            onClickYes={yes}
+            closeDialog={close}
+        />,
+        root
+    );
+
+    fireEvent.click(
+        document.documentElement.getElementsByTagName('button').item(1)
+    );
+
+    expect(yes).not.toHaveBeenCalled();
+    expect(close).toHaveBeenCalled();
+});
+
+it('does not render everything if open is false', async () => {
+    const yes = jest.fn();
+    const close = jest.fn();
+    await renderComponent(
+        <ParametersConfirmClosingDialog
+            open={false}
+            onClickYes={yes}
+            closeDialog={close}
+        />,
+        root
+    );
+
+    ['parametersNotSavedDialog', 'yes', 'quit', 'cancel'].forEach((text) =>
+        expect(document.body.innerHTML).not.toContain(text)
+    );
+    expect(document.body.innerHTML).not.toContain('Error message');
 });

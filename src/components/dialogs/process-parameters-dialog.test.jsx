@@ -40,7 +40,7 @@ it('renders process parameters and closes dialog', async () => {
         root
     );
 
-    expect(document.documentElement.innerHTML).not.toContain('Error message');
+    expect(document.body.innerHTML).not.toContain('Error message');
     expect(document.getElementsByTagName('button').item(1).disabled).toBe(true);
     fireEvent.click(firstButtonOf(document));
     expect(closeAction).toHaveBeenCalled();

@@ -53,6 +53,6 @@ it('renders dialog on click', async () => {
 
     fireEvent.click(firstButtonOf(container));
 
-    expect(document.documentElement.innerHTML).toContain('yes-button');
-    expect(document.documentElement.innerHTML).toContain('cancel-button');
+    expect(document.body.innerHTML).toContain('yes-button');
+    expect(document.body.innerHTML).toContain('cancel-button');
 });

@@ -37,7 +37,7 @@ it('renders timestamp parameters and closes dialog', async () => {
         root
     );
 
-    expect(document.documentElement.innerHTML).not.toContain('Error message');
+    expect(document.body.innerHTML).not.toContain('Error message');
     fireEvent.click(firstButtonOf(document));
     expect(closeAction).toHaveBeenCalled();
 });
@@ -56,7 +56,7 @@ it('renders timestamp parameters and run process', async () => {
         root
     );
 
-    expect(document.documentElement.innerHTML).not.toContain('Error message');
+    expect(document.body.innerHTML).not.toContain('Error message');
     fireEvent.click(document.getElementsByTagName('button').item(1));
     expect(btnAction).toHaveBeenCalled();
 });
