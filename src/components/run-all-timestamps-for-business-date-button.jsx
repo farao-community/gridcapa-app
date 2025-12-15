@@ -46,7 +46,7 @@ export function RunAllButton({ timestamp }) {
     const [runButtonDisabled, setRunButtonDisabled] = useState(false);
     const [currentTimestamp, setCurrentTimestamp] = useState(timestamp);
     const [parametersEnabled, setParametersEnabled] = useState(false);
-    const [isOnTheHourProcess, setOnTheHourProcess] = useState(false);
+    const [onTheHourProcess, setOnTheHourProcess] = useState(false);
     const [parametersDialogOpen, setParametersDialogOpen] = useState(false);
     const [parameters, setParameters] = useState([]);
     const websockets = useRef([]);
@@ -90,7 +90,7 @@ export function RunAllButton({ timestamp }) {
 
     const getListOfTopics = useCallback(() => {
         const refTimestamp = new Date(Date.parse(currentTimestamp));
-        if (isOnTheHourProcess === true) {
+        if (onTheHourProcess === true) {
             refTimestamp.setHours(0, 0, 0, 0);
         } else {
             refTimestamp.setHours(0, 30, 0, 0);
@@ -103,7 +103,7 @@ export function RunAllButton({ timestamp }) {
             '/task/update/' +
                 new Date(timestampMax).toISOString().substr(0, 10),
         ];
-    }, [currentTimestamp, isOnTheHourProcess]);
+    }, [currentTimestamp, onTheHourProcess]);
 
     async function handleParametersDialogOpening() {
         const parameters = await fetchProcessParameters();
