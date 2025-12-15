@@ -18,7 +18,20 @@ import { fetchBusinessDateData } from '../utils/rest-api.js';
 
 jest.mock('../utils/rest-api', () => ({
     fetchJobLauncherPost: jest.fn(),
-    fetchBusinessDateData: jest.fn(),
+    fetchBusinessDateData: jest.fn(() =>
+        Promise.resolve([
+            {
+                inputs: [],
+                outputs: [],
+                status: 'RUNNING',
+                runHistory: [
+                    { id: 'a', executionDate: 12 },
+                    { id: 'b', executionDate: 112 },
+                    { id: 'c', executionDate: 5 },
+                ],
+            },
+        ])
+    ),
     fetchProcessParameters: jest.fn(),
 }));
 jest.mock('../utils/websocket-api', () => ({

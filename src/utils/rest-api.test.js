@@ -82,7 +82,7 @@ it('should call node fetch with args', async () => {
     await fetchBusinessDateData(timestamp, intlRef, enqueueSnackbar);
     await fetchRunningTasksData(intlRef, enqueueSnackbar);
     await fetchConfigParameters(appName);
-    await fetchConfigParameter(appName);
+    await fetchConfigParameter(PARAM_THEME);
     await updateConfigParameter(appName, type);
     await fetchJobLauncherPost(timestamp, formData);
     await fetchJobLauncherToInterruptTask(timestamp, '1');
