@@ -83,7 +83,7 @@ it('should call node fetch with args', async () => {
     await fetchRunningTasksData(intlRef, enqueueSnackbar);
     await fetchConfigParameters(appName);
     await fetchConfigParameter(PARAM_THEME);
-    await updateConfigParameter(appName, type);
+    await updateConfigParameter(PARAM_THEME, type);
     await fetchJobLauncherPost(timestamp, formData);
     await fetchJobLauncherToInterruptTask(timestamp, '1');
     await fetchTaskManagerSelectFile(timestamp, type, type);
@@ -142,7 +142,7 @@ it('should handle node fetch errors without enqueueSnackbar', async () => {
     await fetchConfigParameter(PARAM_THEME).catch((e) => {
         expect(e).toEqual('hello');
     });
-    await updateConfigParameter(appName, type).catch((e) => {
+    await updateConfigParameter(PARAM_THEME, type).catch((e) => {
         expect(e).toEqual('hello');
     });
 });

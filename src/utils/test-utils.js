@@ -76,17 +76,9 @@ export function mockWebSocketClient() {
     return new Client({
         brokerURL: 'aaaa',
         connectionTimeout: 3000,
-        onConnect: () => {
-            console.info('Connected task-notification Websocket with URL: ');
-        },
-        onStompError: (error) =>
-            console.error(
-                'Error occurred in task-notification Stomp with URL: '
-            ),
-        onWebSocketError: (error) =>
-            console.error(
-                'Error occurred in task-notification Websocket with URL: '
-            ),
-        close: () => console.log('close'),
+        onConnect: () => {},
+        onStompError: (error) => {},
+        onWebSocketError: (error) => {},
+        close: () => {},
     });
 }
