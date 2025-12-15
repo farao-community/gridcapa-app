@@ -5,7 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { cleanUpOnExit, renderComponent, setupTestContainer, } from '../../utils/test-utils.js';
+import {
+    cleanUpOnExit,
+    renderComponent,
+    setupTestContainer,
+} from '../../utils/test-utils.js';
 import ViewTabs from './view-tabs.jsx';
 import { fireEvent } from '@testing-library/react';
 
