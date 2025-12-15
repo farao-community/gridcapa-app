@@ -34,5 +34,5 @@ it('displays tabs', async () => {
     });
 
     fireEvent.click(document.getElementById('simple-tab-2'));
-    expect(viewChange).toHaveBeenCalled();
+    expect(viewChange).toHaveBeenCalledWith(2);
 });

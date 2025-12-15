@@ -27,6 +27,7 @@ import {
     updateProcessParameters,
 } from './rest-api.js';
 import { startOf2020IsoStr } from './test-utils.js';
+import { PARAM_THEME } from './config-params.js';
 
 const timestamp = startOf2020IsoStr();
 const formData = { a: 'b', c: 'd' };
@@ -34,9 +35,14 @@ const intlRef = { current: { formatMessage: (a) => a.toString() } };
 const enqueueSnackbar = jest.fn();
 const type = 'cgm';
 const appName = 'GRIDCAPA';
+const originalFetch = global.fetch;
 
 beforeEach(() => {
     enqueueSnackbar.mockClear();
+});
+
+afterEach(() => {
+    global.fetch = originalFetch;
 });
 
 it('should get base url', async () => {
@@ -130,10 +136,10 @@ it('should handle node fetch errors without enqueueSnackbar', async () => {
         })
     );
 
-    await fetchConfigParameters().catch((e) => {
+    await fetchConfigParameters(appName).catch((e) => {
         expect(e).toEqual('hello');
     });
-    await fetchConfigParameter(appName).catch((e) => {
+    await fetchConfigParameter(PARAM_THEME).catch((e) => {
         expect(e).toEqual('hello');
     });
     await updateConfigParameter(appName, type).catch((e) => {
