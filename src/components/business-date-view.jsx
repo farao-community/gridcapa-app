@@ -12,7 +12,7 @@ import GlobalViewCore from './global-view-core';
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));
-    const [isOnTheHourProcess, setOnTheHourProcess] = useState(false);
+    const [onTheHourProcess, setOnTheHourProcess] = useState(false);
 
     useEffect(() => {
         console.log('Fetching process metadata...');
@@ -23,7 +23,7 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
             });
     }, []);
 
-    if (isOnTheHourProcess) {
+    if (onTheHourProcess) {
         refTimestamp.setHours(0, 0, 0, 0);
     } else {
         refTimestamp.setHours(0, 30, 0, 0);
