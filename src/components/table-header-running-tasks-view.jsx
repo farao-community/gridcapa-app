@@ -14,11 +14,6 @@ const styles = {
         display: 'flex',
         flexWrap: 'wrap',
     }),
-    textField: (theme) => ({
-        marginLeft: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        width: 200,
-    }),
 };
 
 const TableHeaderRunningTasksView = ({ processName }) => {

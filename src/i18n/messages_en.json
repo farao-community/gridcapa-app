@@ -1,11 +1,11 @@
 {
-  "paramsChangingError": "An error occurred when changing the parameters",
-  "paramsRetrievingError": "An error occurred while retrieving the parameters",
-  "taskRetrievingError": "An error occurred while retrieving task data",
-  "parametersUpdateError": "An error occurred while updating parameters",
-  "computationLaunchError": "An error occurred while launching the computation",
-  "parametersNotSavedDialog": "Some parameter values have changed and have not been saved. Do you really want to quit without saving?",
-  "interruptionProcessAlertMessage": "Do you want to stop the computation?",
-  "manualExportAlertMessage": "Do you want to trigger an export of result files?",
-  "changeProcessFileAlertMessage": "Are you sure you want to change {input_type} file?"
+    "paramsChangingError": "An error occurred when changing the parameters",
+    "paramsRetrievingError": "An error occurred while retrieving the parameters",
+    "taskRetrievingError": "An error occurred while retrieving task data",
+    "parametersUpdateError": "An error occurred while updating parameters",
+    "computationLaunchError": "An error occurred while launching the computation",
+    "parametersNotSavedDialog": "Some parameter values have changed and have not been saved. Do you really want to quit without saving?",
+    "interruptionProcessAlertMessage": "Do you want to stop the computation?",
+    "manualExportAlertMessage": "Do you want to trigger an export of result files?",
+    "changeProcessFileAlertMessage": "Are you sure you want to change {input_type} file?"
 }

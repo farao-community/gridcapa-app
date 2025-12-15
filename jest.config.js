@@ -19,6 +19,13 @@ const config = {
         IS_REACT_ACT_ENVIRONMENT: true,
     },
     setupFiles: ['<rootDir>/jest.setup.js'],
+    collectCoverage: true,
+    collectCoverageFrom: [
+        'src/**/*.{js,jsx}',
+        '!src/**/*.test.{js,jsx}',
+        '!src/**/test-utils.js',
+    ],
+    coverageReporters: ['json', 'lcov', 'text', 'clover'],
 };
 
 export default config;
