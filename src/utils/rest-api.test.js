@@ -137,12 +137,12 @@ it('should handle node fetch errors without enqueueSnackbar', async () => {
     );
 
     await fetchConfigParameters(appName).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await fetchConfigParameter(PARAM_THEME).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await updateConfigParameter(PARAM_THEME, type).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
 });

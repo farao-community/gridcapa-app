@@ -96,11 +96,15 @@ export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response.text().then((text) => {
+                      const error = new Error(text);
+                      console.debug(error);
+                      throw error;
+                  })
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -124,11 +128,15 @@ export function fetchFileFromProcess(
         .then((response) =>
             response.ok
                 ? response.blob()
-                : response.text().then((text) => Promise.reject(text))
+                : response.text().then((text) => {
+                      const error = new Error(text);
+                      console.debug(error);
+                      throw error;
+                  })
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -150,11 +158,15 @@ export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response.text().then((text) => {
+                      const error = new Error(text);
+                      console.debug(error);
+                      throw error;
+                  })
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -172,14 +184,18 @@ export function fetchRunningTasksData(intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response.text().then((text) => {
+                      const error = new Error(text);
+                      console.debug(error);
+                      throw error;
+                  })
         )
         .then((result) => {
             return result;
         })
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -198,7 +214,11 @@ export function fetchConfigParameters(appName) {
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => {
+                  const error = new Error(text);
+                  console.debug(error);
+                  throw error;
+              })
     );
 }
 
@@ -216,7 +236,11 @@ export function fetchConfigParameter(name) {
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => {
+                  const error = new Error(text);
+                  console.debug(error);
+                  throw error;
+              })
     );
 }
 
@@ -236,7 +260,11 @@ export function updateConfigParameter(name, value) {
     return backendFetch(updateParams, { method: 'put' }).then((response) =>
         response.ok
             ? response
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => {
+                  const error = new Error(text);
+                  console.debug(error);
+                  throw error;
+              })
     );
 }
 
@@ -330,18 +358,22 @@ export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response.text().then((text) => {
+                      const error = new Error(text);
+                      console.debug(error);
+                      throw error;
+                  })
         )
-        .catch((errorMessage) => {
+        .catch((error) => {
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'parametersUpdateError',
                     intlRef: intlRef,
                 },
             });
-            return Promise.reject(errorMessage);
+            return Promise.reject(error.message);
         });
 
     return updatedParameters;
