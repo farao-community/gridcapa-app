@@ -206,5 +206,5 @@ export function RunAllButton({ timestamp }) {
 }
 
 RunAllButton.propTypes = {
-    timestamp: PropTypes.object.isRequired,
+    timestamp: PropTypes.string.isRequired,
 };

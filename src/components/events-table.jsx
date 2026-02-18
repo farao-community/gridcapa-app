@@ -198,7 +198,7 @@ const EventsTable = ({ eventsData }) => {
 };
 
 EventsTable.propTypes = {
-    eventsData: PropTypes.object,
+    eventsData: PropTypes.array,
 };
 
 export default EventsTable;

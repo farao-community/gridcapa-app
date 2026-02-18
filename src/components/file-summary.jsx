@@ -20,7 +20,7 @@ const FileSummary = ({ type, listOfFile }) => {
 
 FileSummary.propTypes = {
     type: PropTypes.string,
-    listOfFile: PropTypes.object,
+    listOfFile: PropTypes.array,
 };
 
 export default FileSummary;

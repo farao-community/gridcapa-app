@@ -94,5 +94,5 @@ export function StopButton({ status, timestamp, runId }) {
 StopButton.propTypes = {
     status: PropTypes.string.isRequired,
     timestamp: PropTypes.object.isRequired,
-    runId: PropTypes.number.isRequired,
+    runId: PropTypes.string,
 };

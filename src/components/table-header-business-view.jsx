@@ -79,7 +79,7 @@ const TableHeaderBusinessView = ({
 
 TableHeaderBusinessView.propTypes = {
     processName: PropTypes.string.isRequired,
-    timestamp: PropTypes.object,
+    timestamp: PropTypes.object.isRequired,
     onTimestampChange: PropTypes.func.isRequired,
 };
 

@@ -9,7 +9,6 @@ import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
 import { fetchFileToBackend } from '../utils/rest-api';
 import PropTypes from 'prop-types';
-import TableHeader from './table-header.jsx';
 
 function sendFileToback(event, processEvent, timestamp) {
     const file = event.target.files[0];
@@ -43,7 +42,7 @@ const UploadButton = ({ processFile, timestamp }) => {
     );
 };
 
-TableHeader.propTypes = {
+UploadButton.propTypes = {
     processFile: PropTypes.object.isRequired,
     timestamp: PropTypes.object.isRequired,
 };

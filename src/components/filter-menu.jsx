@@ -192,8 +192,8 @@ FilterMenu.propTypes = {
     filterHint: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
     currentFilter: PropTypes.object,
-    predefinedValues: PropTypes.object.isRequired,
-    manual: PropTypes.bool.isRequired,
+    predefinedValues: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    manual: PropTypes.bool,
 };
 
 export default FilterMenu;

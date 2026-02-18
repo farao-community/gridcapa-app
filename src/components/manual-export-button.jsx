@@ -93,5 +93,5 @@ export function ManualExportButton({ status, timestamp }) {
 
 ManualExportButton.propTypes = {
     status: PropTypes.string.isRequired,
-    timestamp: PropTypes.object.isRequired,
+    timestamp: PropTypes.string,
 };

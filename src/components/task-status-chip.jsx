@@ -22,7 +22,3 @@ export function TaskStatusChip(props) {
         />
     );
 }
-
-TaskStatusChip.propTypes = {
-    props: PropTypes.object,
-};
