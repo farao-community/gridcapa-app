@@ -38,7 +38,9 @@ import {
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
     let array = timestampStep.split(':');
-    let seconds = parseInt(array[0], 10) * 3600 + parseInt(array[1], 10) * 60;
+    let seconds =
+        Number.parseInt(array[0], 10) * 3600 +
+        Number.parseInt(array[1], 10) * 60;
     let result = [];
 
     while (currentTimeStamp <= timestampMax) {

@@ -72,7 +72,7 @@ const FilterMenu = ({
             }
         } else {
             let index = event.currentTarget.name.split('_')[1];
-            boxFilter[index] = !boxFilter[parseInt(index)];
+            boxFilter[index] = !boxFilter[Number.parseInt(index)];
             setSelectedFilter(boxFilter);
 
             if (Array.isArray(predefinedValues)) {

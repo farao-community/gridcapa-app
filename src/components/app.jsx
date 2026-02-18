@@ -172,7 +172,7 @@ const App = () => {
             if (eventData.headers && eventData.headers['parameterName']) {
                 fetchConfigParameter(eventData.headers['parameterName'])
                     .then((param) => updateParams([param]))
-                    .catch((errorMessage) => displayError(errorMessage));
+                    .catch((error) => displayError(error.message));
             }
         };
 
@@ -187,11 +187,11 @@ const App = () => {
         if (user !== null) {
             fetchConfigParameters(COMMON_APP_NAME)
                 .then((params) => updateParams(params))
-                .catch((errorMessage) => displayError(errorMessage));
+                .catch((error) => displayError(error.message));
 
             fetchConfigParameters(APP_NAME)
                 .then((params) => updateParams(params))
-                .catch((errorMessage) => displayError(errorMessage));
+                .catch((error) => displayError(error.message));
 
             const ws = connectNotificationsUpdateConfig();
 

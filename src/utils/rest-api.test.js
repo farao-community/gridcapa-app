@@ -103,24 +103,24 @@ it('should handle node fetch errors with enqueueSnackbar', async () => {
     );
 
     await fetchTimestampData(timestamp, intlRef, enqueueSnackbar).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await fetchFileFromProcess(timestamp, type, intlRef, enqueueSnackbar).catch(
         (e) => {
-            expect(e).toEqual('hello');
+            expect(e.message).toEqual('hello');
         }
     );
     await fetchBusinessDateData(timestamp, intlRef, enqueueSnackbar).catch(
         (e) => {
-            expect(e).toEqual('hello');
+            expect(e.message).toEqual('hello');
         }
     );
     await fetchRunningTasksData(intlRef, enqueueSnackbar).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await updateProcessParameters(formData, intlRef, enqueueSnackbar).catch(
         (e) => {
-            expect(e).toEqual('hello');
+            expect(e.message).toEqual('hello');
         }
     );
 
@@ -137,12 +137,12 @@ it('should handle node fetch errors without enqueueSnackbar', async () => {
     );
 
     await fetchConfigParameters(appName).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await fetchConfigParameter(PARAM_THEME).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
     await updateConfigParameter(PARAM_THEME, type).catch((e) => {
-        expect(e).toEqual('hello');
+        expect(e.message).toEqual('hello');
     });
 });
