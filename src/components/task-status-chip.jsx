@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux';
 import { PARAM_THEME } from '../utils/config-params';
 import { getTaskStatusStyle } from './task-status-style';
 import PropTypes from 'prop-types';
-import TableHeader from './table-header.jsx';
 
 export function TaskStatusChip(props) {
     const theme = useSelector((state) => state[PARAM_THEME]);

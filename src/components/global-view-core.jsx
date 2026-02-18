@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 import { useSnackbar } from 'notistack';
@@ -18,22 +18,19 @@ import EventDialog from './dialogs/event-dialog';
 import FileDialog from './dialogs/file-dialog';
 
 import {
+    LinearProgress,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
     TablePagination,
-    LinearProgress,
+    TableRow,
 } from '@mui/material';
 
 import { fetchBusinessDateData, fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
 import PropTypes from 'prop-types';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {

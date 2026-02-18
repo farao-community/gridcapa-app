@@ -13,7 +13,6 @@ import TextField from '@mui/material/TextField';
 import { FormattedMessage } from 'react-intl';
 import { RunAllButton } from './run-all-timestamps-for-business-date-button';
 import PropTypes from 'prop-types';
-import TableHeader from './table-header.jsx';
 
 const styles = {
     container: (theme) => ({

@@ -12,13 +12,9 @@ import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData } from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
 import { gridcapaFormatDate } from '../utils/commons';
 import PropTypes from 'prop-types';
-import OverviewTable from './overview-table.jsx';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);

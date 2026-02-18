@@ -6,19 +6,10 @@
  */
 
 import { useEffect, useState } from 'react';
-import {
-    Button,
-    TextField,
-    Menu,
-    MenuItem,
-    FormControlLabel,
-    Checkbox,
-    FormGroup,
-} from '@mui/material';
+import { Button, Checkbox, FormControlLabel, FormGroup, Menu, MenuItem, TextField, } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import BusinessDateView from './business-date-view.jsx';
 
 const createselectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {

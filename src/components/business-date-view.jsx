@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid';
 import TableHeaderBusinessView from './table-header-business-view';
 import GlobalViewCore from './global-view-core';
 import PropTypes from 'prop-types';
-import ViewTabs from './tabs/view-tabs.jsx';
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));

@@ -7,11 +7,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Grid, TableCell, TableRow } from '@mui/material';
-import {
-    gridcapaFormatDate,
-    latestRunFromTaskRunHistory,
-    sha256,
-} from '../utils/commons';
+import { gridcapaFormatDate, latestRunFromTaskRunHistory, sha256, } from '../utils/commons';
 import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import { RunButton } from './run-button';
@@ -19,7 +15,6 @@ import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
 import PropTypes from 'prop-types';
-import FilterMenu from './filter-menu.jsx';
 
 function displayManualExportButton(taskData, manualExportEnabled) {
     return taskData !== null && manualExportEnabled ? (

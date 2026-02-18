@@ -14,7 +14,6 @@ import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import { StopButton } from './stop-button.jsx';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

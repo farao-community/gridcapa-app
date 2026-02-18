@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import PropTypes from 'prop-types';
-import BusinessDateView from './business-date-view.jsx';
 
 const FileSummary = ({ type, listOfFile }) => {
     return (

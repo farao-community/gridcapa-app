@@ -5,24 +5,16 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import dateFormat from 'dateformat';
-import {
-    fetchJobLauncherPost,
-    fetchBusinessDateData,
-    fetchProcessParameters,
-} from '../utils/rest-api';
-import {
-    connectTaskNotificationWebSocket,
-    disconnectTaskNotificationWebSocket,
-} from '../utils/websocket-api';
+import { fetchBusinessDateData, fetchJobLauncherPost, fetchProcessParameters, } from '../utils/rest-api';
+import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
 import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 import PropTypes from 'prop-types';
-import { RunButton } from './run-button.jsx';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {

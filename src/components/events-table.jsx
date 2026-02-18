@@ -6,21 +6,12 @@
  */
 
 import { useEffect, useState } from 'react';
-import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import FilterMenu from './filter-menu';
 import PropTypes from 'prop-types';
-import BusinessDateView from './business-date-view.jsx';
 
 const processEventLevelStyles = {
     INFO: {
