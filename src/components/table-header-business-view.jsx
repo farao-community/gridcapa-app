@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { FormattedMessage } from 'react-intl';
 import { RunAllButton } from './run-all-timestamps-for-business-date-button';
+import PropTypes from 'prop-types';
+import TableHeader from './table-header.jsx';
 
 const styles = {
     container: (theme) => ({
@@ -75,4 +77,11 @@ const TableHeaderBusinessView = ({
         </Grid>
     );
 };
+
+TableHeaderBusinessView.propTypes = {
+    processName: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+    onTimestampChange: PropTypes.func.isRequired,
+};
+
 export default TableHeaderBusinessView;

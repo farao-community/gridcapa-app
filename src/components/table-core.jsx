@@ -13,6 +13,8 @@ import Box from '@mui/material/Box';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import { StopButton } from './stop-button.jsx';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,6 +74,11 @@ const TableCore = ({ taskData, eventsData }) => {
             </TabPanel>
         </div>
     );
+};
+
+TableCore.propTypes = {
+    taskData: PropTypes.object,
+    eventsData: PropTypes.object,
 };
 
 export default TableCore;

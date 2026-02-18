@@ -21,6 +21,8 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
+import PropTypes from 'prop-types';
+import { RunButton } from './run-button.jsx';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -203,3 +205,7 @@ export function RunAllButton({ timestamp }) {
         </>
     );
 }
+
+RunAllButton.propTypes = {
+    timestamp: PropTypes.object.isRequired,
+};

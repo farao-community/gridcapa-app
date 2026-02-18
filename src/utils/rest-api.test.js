@@ -85,7 +85,7 @@ it('should call node fetch with args', async () => {
     await fetchConfigParameter(PARAM_THEME);
     await updateConfigParameter(PARAM_THEME, type);
     await fetchJobLauncherPost(timestamp, formData);
-    await fetchJobLauncherToInterruptTask(timestamp, '1');
+    await fetchJobLauncherToInterruptTask(timestamp, 1);
     await fetchTaskManagerSelectFile(timestamp, type, type);
     await fetchTaskManagerManualExport(timestamp);
     await updateProcessParameters(formData, intlRef, enqueueSnackbar);

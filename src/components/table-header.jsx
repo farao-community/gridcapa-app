@@ -16,6 +16,7 @@ import { RunButton } from './run-button';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
 import { latestRunFromTaskRunHistory } from '../utils/commons';
+import PropTypes from 'prop-types';
 
 const styles = {
     container: (theme) => ({
@@ -161,6 +162,13 @@ const TableHeader = ({
             </Grid>
         </Grid>
     );
+};
+
+TableHeader.propTypes = {
+    taskData: PropTypes.object,
+    processName: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+    onTimestampChange: PropTypes.func.isRequired,
 };
 
 export default TableHeader;

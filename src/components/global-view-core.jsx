@@ -34,6 +34,7 @@ import {
     connectTaskNotificationWebSocket,
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
+import PropTypes from 'prop-types';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -397,6 +398,12 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             />
         </div>
     );
+};
+
+GlobalViewCore.propTypes = {
+    timestampMin: PropTypes.object,
+    timestampMax: PropTypes.object,
+    timestampStep: PropTypes.string.isRequired,
 };
 
 export default GlobalViewCore;

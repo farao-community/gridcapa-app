@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@mui/icons-material';
+import PropTypes from 'prop-types';
+import BusinessDateView from './business-date-view.jsx';
 
 const createselectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
@@ -185,6 +187,14 @@ const FilterMenu = ({
             </Menu>
         </span>
     );
+};
+
+FilterMenu.propTypes = {
+    filterHint: PropTypes.string.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    currentFilter: PropTypes.object,
+    predefinedValues: PropTypes.object.isRequired,
+    manual: PropTypes.bool.isRequired,
 };
 
 export default FilterMenu;

@@ -17,6 +17,8 @@ import {
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
 import { gridcapaFormatDate } from '../utils/commons';
+import PropTypes from 'prop-types';
+import OverviewTable from './overview-table.jsx';
 
 function timestampEquals(t1, t2) {
     return gridcapaFormatDate(t1) === gridcapaFormatDate(t2);
@@ -139,6 +141,12 @@ const ProcessTimestampView = ({
             </Grid>
         </div>
     );
+};
+
+ProcessTimestampView.propTypes = {
+    processName: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+    onTimestampChange: PropTypes.func.isRequired,
 };
 
 export default ProcessTimestampView;

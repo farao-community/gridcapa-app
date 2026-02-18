@@ -16,6 +16,8 @@ import {
 import { Stop } from '@mui/icons-material';
 import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import { RunAllButton } from './run-all-timestamps-for-business-date-button.jsx';
 
 function isDisabled(taskStatus) {
     return taskStatus !== 'RUNNING' && taskStatus !== 'PENDING';
@@ -89,3 +91,9 @@ export function StopButton({ status, timestamp, runId }) {
         </>
     );
 }
+
+StopButton.propTypes = {
+    status: PropTypes.string.isRequired,
+    timestamp: PropTypes.object.isRequired,
+    runId: PropTypes.number.isRequired,
+};
