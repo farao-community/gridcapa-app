@@ -138,7 +138,16 @@ const GlobalViewCoreRow = ({
 };
 
 GlobalViewCoreRow.propTypes = {
-    step: PropTypes.object.isRequired,
+    step: PropTypes.shape({
+        timestamp: PropTypes.string.isRequired,
+        taskData: PropTypes.shape({
+            runHistory: PropTypes.array,
+            inputs: PropTypes.array,
+            outputs: PropTypes.array,
+            status: PropTypes.string,
+            timestamp: PropTypes.string,
+        }),
+    }).isRequired,
     index: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
     rowsPerPage: PropTypes.number.isRequired,
