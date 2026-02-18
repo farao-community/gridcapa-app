@@ -10,7 +10,10 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, CircularProgress } from '@mui/material';
-import { fetchJobLauncherPost, fetchProcessParameters, } from '../utils/rest-api';
+import {
+    fetchJobLauncherPost,
+    fetchProcessParameters,
+} from '../utils/rest-api';
 import { PlayArrow } from '@mui/icons-material';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 

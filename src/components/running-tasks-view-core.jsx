@@ -30,7 +30,10 @@ import {
 } from '@mui/material';
 
 import { fetchRunningTasksData, fetchTimestampData } from '../utils/rest-api';
-import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
+import {
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 
 const RunningTasksViewCore = () => {
     const { enqueueSnackbar } = useSnackbar();

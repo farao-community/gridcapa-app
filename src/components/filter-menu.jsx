@@ -6,7 +6,15 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Button, Checkbox, FormControlLabel, FormGroup, Menu, MenuItem, TextField, } from '@mui/material';
+import {
+    Button,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Menu,
+    MenuItem,
+    TextField,
+} from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@mui/icons-material';
 import PropTypes from 'prop-types';

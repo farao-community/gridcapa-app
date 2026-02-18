@@ -6,7 +6,13 @@
  */
 
 import { useCallback, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+} from '@mui/material';
 import { Stop } from '@mui/icons-material';
 import { fetchJobLauncherToInterruptTask } from '../utils/rest-api';
 import { FormattedMessage } from 'react-intl';

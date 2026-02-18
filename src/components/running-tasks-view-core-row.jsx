@@ -6,7 +6,11 @@
  */
 
 import { Button, Grid, TableCell, TableRow } from '@mui/material';
-import { gridcapaFormatDate, latestRunFromTaskRunHistory, sha256, } from '../utils/commons';
+import {
+    gridcapaFormatDate,
+    latestRunFromTaskRunHistory,
+    sha256,
+} from '../utils/commons';
 import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import FileSummary from './file-summary';

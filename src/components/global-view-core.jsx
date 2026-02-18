@@ -30,7 +30,10 @@ import {
 } from '@mui/material';
 
 import { fetchBusinessDateData, fetchTimestampData } from '../utils/rest-api';
-import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
+import {
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 import PropTypes from 'prop-types';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {

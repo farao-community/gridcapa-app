@@ -12,7 +12,10 @@ import TableCore from './table-core';
 import { useIntlRef } from '../utils/messages';
 import { useSnackbar } from 'notistack';
 import { fetchTimestampData } from '../utils/rest-api';
-import { connectTaskNotificationWebSocket, disconnectTaskNotificationWebSocket, } from '../utils/websocket-api';
+import {
+    connectTaskNotificationWebSocket,
+    disconnectTaskNotificationWebSocket,
+} from '../utils/websocket-api';
 import { gridcapaFormatDate } from '../utils/commons';
 import PropTypes from 'prop-types';
 
