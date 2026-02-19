@@ -234,9 +234,9 @@ const OverviewTable = ({ inputs, availableInputs, outputs, timestamp }) => {
 };
 
 OverviewTable.propTypes = {
-    inputs: PropTypes.object,
-    availableInputs: PropTypes.object,
-    outputs: PropTypes.object,
+    inputs: PropTypes.array,
+    availableInputs: PropTypes.array,
+    outputs: PropTypes.array,
     timestamp: PropTypes.object,
 };
 

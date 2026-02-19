@@ -401,8 +401,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 };
 
 GlobalViewCore.propTypes = {
-    timestampMin: PropTypes.object,
-    timestampMax: PropTypes.object,
+    timestampMin: PropTypes.number,
+    timestampMax: PropTypes.number,
     timestampStep: PropTypes.string.isRequired,
 };
 
