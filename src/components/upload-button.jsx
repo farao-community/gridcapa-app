@@ -8,6 +8,7 @@
 import { Button } from '@mui/material';
 import { Publish } from '@mui/icons-material';
 import { fetchFileToBackend } from '../utils/rest-api';
+import PropTypes from 'prop-types';
 
 function sendFileToback(event, processEvent, timestamp) {
     const file = event.target.files[0];
@@ -39,6 +40,11 @@ const UploadButton = ({ processFile, timestamp }) => {
             <Publish />
         </Button>
     );
+};
+
+UploadButton.propTypes = {
+    processFile: PropTypes.object.isRequired,
+    timestamp: PropTypes.object.isRequired,
 };
 
 export default UploadButton;

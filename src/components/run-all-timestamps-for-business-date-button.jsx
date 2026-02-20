@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import dateFormat from 'dateformat';
 import {
-    fetchJobLauncherPost,
     fetchBusinessDateData,
+    fetchJobLauncherPost,
     fetchProcessParameters,
 } from '../utils/rest-api';
 import {
@@ -21,6 +21,7 @@ import { useSnackbar } from 'notistack';
 import { useIntlRef } from '../utils/messages';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
+import PropTypes from 'prop-types';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -203,3 +204,7 @@ export function RunAllButton({ timestamp }) {
         </>
     );
 }
+
+RunAllButton.propTypes = {
+    timestamp: PropTypes.string.isRequired,
+};

@@ -19,6 +19,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { gridcapaFormatDate, sha256 } from '../utils/commons';
 import FilterMenu from './filter-menu';
+import PropTypes from 'prop-types';
 
 const processEventLevelStyles = {
     INFO: {
@@ -194,6 +195,10 @@ const EventsTable = ({ eventsData }) => {
             </Table>
         </TableContainer>
     );
+};
+
+EventsTable.propTypes = {
+    eventsData: PropTypes.array,
 };
 
 export default EventsTable;

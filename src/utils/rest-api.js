@@ -96,11 +96,13 @@ export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response
+                      .text()
+                      .then((text) => Promise.reject(new Error(text)))
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -124,11 +126,13 @@ export function fetchFileFromProcess(
         .then((response) =>
             response.ok
                 ? response.blob()
-                : response.text().then((text) => Promise.reject(text))
+                : response
+                      .text()
+                      .then((text) => Promise.reject(new Error(text)))
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -150,11 +154,13 @@ export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response
+                      .text()
+                      .then((text) => Promise.reject(new Error(text)))
         )
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -172,14 +178,16 @@ export function fetchRunningTasksData(intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response
+                      .text()
+                      .then((text) => Promise.reject(new Error(text)))
         )
         .then((result) => {
             return result;
         })
-        .catch((errorMessage) =>
+        .catch((error) =>
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'taskRetrievingError',
@@ -198,7 +206,7 @@ export function fetchConfigParameters(appName) {
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => Promise.reject(new Error(text)))
     );
 }
 
@@ -216,7 +224,7 @@ export function fetchConfigParameter(name) {
     return backendFetch(fetchParams).then((response) =>
         response.ok
             ? response.json()
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => Promise.reject(new Error(text)))
     );
 }
 
@@ -236,7 +244,7 @@ export function updateConfigParameter(name, value) {
     return backendFetch(updateParams, { method: 'put' }).then((response) =>
         response.ok
             ? response
-            : response.text().then((text) => Promise.reject(text))
+            : response.text().then((text) => Promise.reject(new Error(text)))
     );
 }
 
@@ -330,18 +338,20 @@ export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
         .then((response) =>
             response.ok
                 ? response.json()
-                : response.text().then((text) => Promise.reject(text))
+                : response
+                      .text()
+                      .then((text) => Promise.reject(new Error(text)))
         )
-        .catch((errorMessage) => {
+        .catch((error) => {
             displayErrorMessageWithSnackbar({
-                errorMessage: errorMessage,
+                errorMessage: error.message,
                 enqueueSnackbar: enqueueSnackbar,
                 headerMessage: {
                     headerMessageId: 'parametersUpdateError',
                     intlRef: intlRef,
                 },
             });
-            return Promise.reject(errorMessage);
+            return Promise.reject(error);
         });
 
     return updatedParameters;

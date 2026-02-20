@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TableHeaderBusinessView from './table-header-business-view';
 import GlobalViewCore from './global-view-core';
+import PropTypes from 'prop-types';
 
 const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
     const refTimestamp = new Date(Date.parse(timestamp));
@@ -46,6 +47,12 @@ const BusinessDateView = ({ processName, timestamp, onTimestampChange }) => {
             </Grid>
         </Grid>
     );
+};
+
+BusinessDateView.propTypes = {
+    processName: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+    onTimestampChange: PropTypes.func.isRequired,
 };
 
 export default BusinessDateView;

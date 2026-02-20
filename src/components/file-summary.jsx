@@ -4,6 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import PropTypes from 'prop-types';
 
 const FileSummary = ({ type, listOfFile }) => {
     return (
@@ -15,6 +16,11 @@ const FileSummary = ({ type, listOfFile }) => {
                 listOfFile.length}
         </div>
     );
+};
+
+FileSummary.propTypes = {
+    type: PropTypes.string,
+    listOfFile: PropTypes.array,
 };
 
 export default FileSummary;

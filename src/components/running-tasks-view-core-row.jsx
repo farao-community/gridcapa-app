@@ -15,6 +15,7 @@ import { ListAlt, Visibility } from '@mui/icons-material';
 import { TaskStatusChip } from './task-status-chip';
 import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
+import PropTypes from 'prop-types';
 
 const RunningTasksViewCoreRow = ({
     task,
@@ -98,6 +99,15 @@ const RunningTasksViewCoreRow = ({
             </TableRow>
         )
     );
+};
+
+RunningTasksViewCoreRow.propTypes = {
+    task: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
+    handleFileOpen: PropTypes.func.isRequired,
+    handleEventOpen: PropTypes.func.isRequired,
 };
 
 export default RunningTasksViewCoreRow;

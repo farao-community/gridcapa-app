@@ -8,17 +8,18 @@
 import { useEffect, useState } from 'react';
 import {
     Button,
-    TextField,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
     Menu,
     MenuItem,
-    FormControlLabel,
-    Checkbox,
-    FormGroup,
+    TextField,
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { FilterList } from '@mui/icons-material';
+import PropTypes from 'prop-types';
 
-const createselectedFilterArray = (predefinedValues, isSelected = true) => {
+const createSelectedFilterArray = (predefinedValues, isSelected = true) => {
     if (Array.isArray(predefinedValues)) {
         return predefinedValues.map((filter) => {
             if (filter.filterName) {
@@ -35,7 +36,6 @@ const createselectedFilterArray = (predefinedValues, isSelected = true) => {
 const FilterMenu = ({
     filterHint,
     handleChange,
-    currentFilter,
     predefinedValues = [],
     manual = true,
 }) => {
@@ -49,7 +49,7 @@ const FilterMenu = ({
     const [selectedFilter, setSelectedFilter] = useState([]);
 
     useEffect(() => {
-        setSelectedFilter(createselectedFilterArray(predefinedValues));
+        setSelectedFilter(createSelectedFilterArray(predefinedValues));
         // eslint-disable-next-line
     }, [predefinedValues.length]); //tell to eslint to ignore this line.
     // We only trigger this effect when the size of the filter change. Typically when we receive it from the fetch.
@@ -72,7 +72,7 @@ const FilterMenu = ({
             }
         } else {
             let index = event.currentTarget.name.split('_')[1];
-            boxFilter[index] = !boxFilter[parseInt(index)];
+            boxFilter[index] = !boxFilter[Number.parseInt(index)];
             setSelectedFilter(boxFilter);
 
             if (Array.isArray(predefinedValues)) {
@@ -185,6 +185,13 @@ const FilterMenu = ({
             </Menu>
         </span>
     );
+};
+
+FilterMenu.propTypes = {
+    filterHint: PropTypes.string.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    predefinedValues: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    manual: PropTypes.bool,
 };
 
 export default FilterMenu;

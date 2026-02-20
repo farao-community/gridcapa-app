@@ -7,16 +7,16 @@
 
 import { useState } from 'react';
 import {
+    FormControl,
+    MenuItem,
     Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    FormControl,
-    Select,
-    MenuItem,
 } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { gridcapaFormatDate } from '../utils/commons';
@@ -24,6 +24,7 @@ import DownloadButton from './buttons/download-button';
 import UploadButton from './upload-button';
 import { fetchTaskManagerSelectFile } from '../utils/rest-api';
 import SelectFileDialog from './dialogs/select-file-dialog';
+import PropTypes from 'prop-types';
 
 const INPUT_FILE_GROUP = 'input';
 const OUTPUT_FILE_GROUP = 'output';
@@ -230,6 +231,13 @@ const OverviewTable = ({ inputs, availableInputs, outputs, timestamp }) => {
             </Table>
         </TableContainer>
     );
+};
+
+OverviewTable.propTypes = {
+    inputs: PropTypes.array,
+    availableInputs: PropTypes.array,
+    outputs: PropTypes.array,
+    timestamp: PropTypes.object,
 };
 
 export default OverviewTable;

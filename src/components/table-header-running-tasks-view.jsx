@@ -6,6 +6,7 @@
  */
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
 
 const styles = {
     container: (theme) => ({
@@ -27,4 +28,9 @@ const TableHeaderRunningTasksView = ({ processName }) => {
         </Grid>
     );
 };
+
+TableHeaderRunningTasksView.propTypes = {
+    processName: PropTypes.string.isRequired,
+};
+
 export default TableHeaderRunningTasksView;

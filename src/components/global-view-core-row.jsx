@@ -18,6 +18,7 @@ import { RunButton } from './run-button';
 import FileSummary from './file-summary';
 import { StopButton } from './stop-button';
 import { ManualExportButton } from './manual-export-button';
+import PropTypes from 'prop-types';
 
 function displayManualExportButton(taskData, manualExportEnabled) {
     return taskData !== null && manualExportEnabled ? (
@@ -134,6 +135,24 @@ const GlobalViewCoreRow = ({
             </TableRow>
         )
     );
+};
+
+GlobalViewCoreRow.propTypes = {
+    step: PropTypes.shape({
+        timestamp: PropTypes.string.isRequired,
+        taskData: PropTypes.shape({
+            runHistory: PropTypes.array,
+            inputs: PropTypes.array,
+            outputs: PropTypes.array,
+            status: PropTypes.string,
+            timestamp: PropTypes.string,
+        }),
+    }).isRequired,
+    index: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
+    rowsPerPage: PropTypes.number.isRequired,
+    handleFileOpen: PropTypes.func.isRequired,
+    handleEventOpen: PropTypes.func.isRequired,
 };
 
 export default GlobalViewCoreRow;
