@@ -168,7 +168,7 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                 {processFileStatus}
             </TableCell>
             <TableCell data-test={fileType + '-' + fileGroup + '-filename'}>
-                {availableInputs === undefined ? (
+                {availableInputs == null ? (
                     processFilename
                 ) : (
                     <FormControl>

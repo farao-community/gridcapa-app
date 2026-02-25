@@ -40,7 +40,7 @@ const DownloadButton = ({ processFile, timestamp }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [isLoading, setIsLoading] = useState(false);
 
-    if (processFile.fileUrl === null) {
+    if (processFile.fileUrl == null) {
         return null;
     }
 
