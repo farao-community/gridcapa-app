@@ -107,9 +107,9 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
     const getListOfTopics = useCallback(() => {
         return [
             '/task/update/' +
-                new Date(timestampMin).toISOString().substring(0, 9),
+                new Date(timestampMin).toISOString().substring(0, 10),
             '/task/update/' +
-                new Date(timestampMax).toISOString().substring(0, 9),
+                new Date(timestampMax).toISOString().substring(0, 10),
         ];
     }, [timestampMin, timestampMax]);
 

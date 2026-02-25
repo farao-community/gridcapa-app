@@ -18,6 +18,9 @@ const styles = {
 };
 
 function usedSpacePercentage(used, free) {
+    if (used + free === 0) {
+        return 0;
+    }
     return Math.round((used / (used + free)) * 100);
 }
 

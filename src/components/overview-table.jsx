@@ -99,7 +99,7 @@ function FileGroupTableRows({
 }
 
 FileGroupTableRows.propTypes = {
-    processFile: PropTypes.string.isRequired,
+    processFiles: PropTypes.arrayOf(PropTypes.object).isRequired,
     availableInputs: PropTypes.array,
     fileGroup: PropTypes.string.isRequired,
     timestamp: PropTypes.object,
@@ -125,7 +125,7 @@ function FileGroupTable({
 }
 
 FileGroupTable.propTypes = {
-    processFile: PropTypes.string.isRequired,
+    processFiles: PropTypes.arrayOf(PropTypes.object).isRequired,
     availableInputs: PropTypes.array,
     fileGroup: PropTypes.string.isRequired,
     timestamp: PropTypes.object,
@@ -236,7 +236,16 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
 }
 
 FileDataRow.propTypes = {
-    processFile: PropTypes.string.isRequired,
+    processFile: PropTypes.shape({
+        fileType: PropTypes.string,
+        fileName: PropTypes.string,
+        processFileStatus: PropTypes.string,
+        lastModificationDate: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.instanceOf(Date),
+        ]),
+    }).isRequired,
     availableInputs: PropTypes.array,
     fileGroup: PropTypes.string.isRequired,
     timestamp: PropTypes.object,

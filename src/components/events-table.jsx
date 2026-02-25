@@ -55,8 +55,8 @@ function inputDataRow(processEvent) {
                 {formattedTimestamp}
             </TableCell>
             <TableCell data-test={encryptedMessage + '-process-event-message'}>
-                {message.split('\n').map((line) => (
-                    <p key={line}>{line}</p>
+                {message.split('\n').map((line, index) => (
+                    <p key={`${encryptedMessage}-${index}`}>{line}</p>
                 ))}
             </TableCell>
         </TableRow>

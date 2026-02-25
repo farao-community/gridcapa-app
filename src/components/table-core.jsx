@@ -9,7 +9,6 @@ import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { AppBar } from '@mui/material';
-import Box from '@mui/material/Box';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 import { FormattedMessage } from 'react-intl';

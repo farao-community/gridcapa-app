@@ -100,9 +100,9 @@ export function RunAllButton({ timestamp }) {
         const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
         return [
             '/task/update/' +
-                new Date(timestampMin).toISOString().substring(0, 9),
+                new Date(timestampMin).toISOString().substring(0, 10),
             '/task/update/' +
-                new Date(timestampMax).toISOString().substring(0, 9),
+                new Date(timestampMax).toISOString().substring(0, 10),
         ];
     }, [currentTimestamp, onTheHourProcess]);
 

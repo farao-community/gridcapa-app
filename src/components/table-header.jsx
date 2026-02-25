@@ -39,7 +39,7 @@ function displayRunButton(taskData) {
 }
 
 function displayStopButton(taskData) {
-    return taskData === null ? null : (
+    return taskData == null ? null : (
         <StopButton
             status={taskData.status}
             timestamp={taskData.timestamp}

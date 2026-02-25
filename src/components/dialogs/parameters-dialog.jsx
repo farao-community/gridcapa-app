@@ -18,7 +18,6 @@ import {
 } from '../../utils/messages';
 
 import {
-    Box,
     Button,
     Container,
     Dialog,

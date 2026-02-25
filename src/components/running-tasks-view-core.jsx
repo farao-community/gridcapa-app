@@ -106,7 +106,7 @@ const RunningTasksViewCore = () => {
         return tasks.map(
             (task) =>
                 '/task/update/' +
-                new Date(task.timestamp).toISOString().substring(0, 9)
+                new Date(task.timestamp).toISOString().substring(0, 10)
         );
     }, [tasks]);
 
