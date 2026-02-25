@@ -33,7 +33,7 @@ const styles = {
 };
 
 function displayRunButton(taskData) {
-    return taskData === null ? null : (
+    return taskData == null ? null : (
         <RunButton status={taskData.status} timestamp={taskData.timestamp} />
     );
 }
