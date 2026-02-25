@@ -31,6 +31,7 @@ import {
 } from '@mui/material';
 
 import { updateConfigParameter } from '../../utils/rest-api';
+import CustomTabPanel from '../tabs/custom-tab-panel.jsx';
 
 const styles = {
     title: (theme) => ({
@@ -90,23 +91,6 @@ export function useParameterState(paramName) {
 const ParametersDialog = ({ open, onClose }) => {
     const [tabIndex, setTabIndex] = useState(0);
 
-    function TabPanel(props) {
-        const { children, value, index, ...other } = props;
-
-        return (
-            <Typography
-                component="div"
-                role="tabpanel"
-                hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}
-                {...other}
-            >
-                {value === index && <Box p={3}>{children}</Box>}
-            </Typography>
-        );
-    }
-
     function GUITab() {
         return <Grid container spacing={2} sx={styles.grid} />;
     }
@@ -132,9 +116,9 @@ const ParametersDialog = ({ open, onClose }) => {
                         <Tab label={<FormattedMessage id="gui" />} />
                     </Tabs>
 
-                    <TabPanel value={tabIndex} index={0}>
+                    <CustomTabPanel value={tabIndex} index={0}>
                         <GUITab />
-                    </TabPanel>
+                    </CustomTabPanel>
 
                     <Grid item xs={12}>
                         <Button

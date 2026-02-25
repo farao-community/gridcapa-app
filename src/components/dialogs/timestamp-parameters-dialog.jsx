@@ -62,9 +62,9 @@ function TimestampParametersDialog({
                 setParametersChanged(false);
                 setRunButtonDisabled(false);
             })
-            .catch((errorMessage) => {
+            .catch((error) => {
                 displayErrorMessageWithSnackbar({
-                    errorMessage: errorMessage,
+                    errorMessage: error,
                     enqueueSnackbar: enqueueSnackbar,
                     headerMessage: {
                         headerMessageId: 'computationLaunchError',

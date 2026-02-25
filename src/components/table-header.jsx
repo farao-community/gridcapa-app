@@ -33,19 +33,19 @@ const styles = {
 };
 
 function displayRunButton(taskData) {
-    return taskData !== null ? (
+    return taskData === null ? null : (
         <RunButton status={taskData.status} timestamp={taskData.timestamp} />
-    ) : null;
+    );
 }
 
 function displayStopButton(taskData) {
-    return taskData !== null ? (
+    return taskData === null ? null : (
         <StopButton
             status={taskData.status}
             timestamp={taskData.timestamp}
             runId={latestRunFromTaskRunHistory(taskData.runHistory)}
         />
-    ) : null;
+    );
 }
 
 function displayManualExportButton(taskData, manualExportEnabled) {

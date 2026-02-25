@@ -51,6 +51,7 @@ function ParametersDialogContent({
 
     return getParametersBySection(parameters).map((p) => (
         <ParametersSection
+            key={p[0]}
             sectionTitle={p[0]}
             sectionParameters={p[1]}
             handleChange={handleChange}
@@ -95,6 +96,7 @@ function ParametersSection({
                 <div>
                     <ParameterElement
                         id={p.id}
+                        key={p.id}
                         name={p.name}
                         parameterType={p.parameterType}
                         value={p.value}
@@ -205,6 +207,7 @@ ParameterElement.propTypes = {
     parameterType: PropTypes.string.isRequired,
     value: PropTypes.string,
     defaultValue: PropTypes.string.isRequired,
+    processValue: PropTypes.string,
     reference: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
 };

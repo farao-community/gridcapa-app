@@ -17,6 +17,10 @@ const styles = {
     },
 };
 
+function usedSpacePercentage(used, free) {
+    return Math.round((used / (used + free)) * 100);
+}
+
 function MinioDiskUsage() {
     const [usedDiskSpacePercentage, setUsedDiskSpacePercentage] = useState(0);
 
@@ -24,16 +28,18 @@ function MinioDiskUsage() {
         fetchMinioStorageData().then((res) => {
             let usedDiskSpace = 0;
             let freeDiskSpace = 0;
+
+            function addDriveInfo(drive) {
+                usedDiskSpace = usedDiskSpace + drive.usedspace;
+                freeDiskSpace = freeDiskSpace + drive.availspace;
+            }
+
             res.info?.servers?.forEach((server) => {
-                server.drives.forEach((drive) => {
-                    usedDiskSpace = usedDiskSpace + drive.usedspace;
-                    freeDiskSpace = freeDiskSpace + drive.availspace;
-                });
+                server.drives.forEach(addDriveInfo);
             });
+
             setUsedDiskSpacePercentage(
-                Math.round(
-                    (usedDiskSpace / (usedDiskSpace + freeDiskSpace)) * 100
-                )
+                usedSpacePercentage(usedDiskSpace, freeDiskSpace)
             );
         });
     }, []);

@@ -56,7 +56,7 @@ function inputDataRow(processEvent) {
             </TableCell>
             <TableCell data-test={encryptedMessage + '-process-event-message'}>
                 {message.split('\n').map((line) => (
-                    <p>{line}</p>
+                    <p key={line}>{line}</p>
                 ))}
             </TableCell>
         </TableRow>
@@ -137,21 +137,16 @@ const EventsTable = ({ eventsData }) => {
             filtered = eventsData.filter(
                 (event) =>
                     (currentEventFilter.length === 0 ||
-                        (currentEventFilter.length > 0 &&
-                            currentEventFilter.some((f) =>
-                                event.level
-                                    .toUpperCase()
-                                    .includes(f.toUpperCase())
-                            ))) &&
+                        currentEventFilter.some((f) =>
+                            event.level.toUpperCase().includes(f.toUpperCase())
+                        )) &&
                     (currentLogFilter.length === 0 ||
-                        (currentLogFilter.length > 0 &&
-                            (currentLogFilter.some((f) =>
-                                event.message
-                                    .toUpperCase()
-                                    .includes(f.toUpperCase())
-                            ) ||
-                                (isAddErrors &&
-                                    event.level.toUpperCase() === 'ERROR'))))
+                        currentLogFilter.some((f) =>
+                            event.message
+                                .toUpperCase()
+                                .includes(f.toUpperCase())
+                        ) ||
+                        (isAddErrors && event.level.toUpperCase() === 'ERROR'))
             );
         }
 

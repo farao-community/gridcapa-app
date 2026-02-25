@@ -9,6 +9,7 @@ import Chip from '@mui/material/Chip';
 import { useSelector } from 'react-redux';
 import { PARAM_THEME } from '../utils/config-params';
 import { getTaskStatusStyle } from './task-status-style';
+import PropTypes from 'prop-types';
 
 export function TaskStatusChip(props) {
     const theme = useSelector((state) => state[PARAM_THEME]);
@@ -21,3 +22,7 @@ export function TaskStatusChip(props) {
         />
     );
 }
+
+TaskStatusChip.propTypes = {
+    'task-status': PropTypes.string.isRequired,
+};

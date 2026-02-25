@@ -73,6 +73,10 @@ function FileGroupTableHead({ fileGroup }) {
     );
 }
 
+FileGroupTableHead.propTypes = {
+    fileGroup: PropTypes.string.isRequired,
+};
+
 function FileGroupTableRows({
     fileGroup,
     availableInputs,
@@ -94,6 +98,13 @@ function FileGroupTableRows({
     );
 }
 
+FileGroupTableRows.propTypes = {
+    processFile: PropTypes.string.isRequired,
+    availableInputs: PropTypes.array,
+    fileGroup: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+};
+
 function FileGroupTable({
     fileGroup,
     processFiles,
@@ -112,6 +123,14 @@ function FileGroupTable({
         </>
     );
 }
+
+FileGroupTable.propTypes = {
+    processFile: PropTypes.string.isRequired,
+    availableInputs: PropTypes.array,
+    fileGroup: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+};
+
 function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
     const [open, setOpen] = useState(false);
     let fileType = processFile.fileType;
@@ -149,7 +168,9 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                 {processFileStatus}
             </TableCell>
             <TableCell data-test={fileType + '-' + fileGroup + '-filename'}>
-                {availableInputs !== undefined ? (
+                {availableInputs === undefined ? (
+                    processFilename
+                ) : (
                     <FormControl>
                         <Select
                             sx={SELECT_STYLES}
@@ -168,7 +189,10 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                                         input.fileName !== processFilename
                                 )
                                 .map((input) => (
-                                    <MenuItem value={input.fileName}>
+                                    <MenuItem
+                                        key={input.fileName}
+                                        value={input.fileName}
+                                    >
                                         {input.fileName}
                                     </MenuItem>
                                 ))}
@@ -180,8 +204,6 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
                             selectFile={selectFile}
                         />
                     </FormControl>
-                ) : (
-                    processFilename
                 )}
             </TableCell>
             <TableCell
@@ -212,6 +234,13 @@ function FileDataRow({ processFile, availableInputs, fileGroup, timestamp }) {
         </TableRow>
     );
 }
+
+FileDataRow.propTypes = {
+    processFile: PropTypes.string.isRequired,
+    availableInputs: PropTypes.array,
+    fileGroup: PropTypes.string.isRequired,
+    timestamp: PropTypes.object,
+};
 
 const OverviewTable = ({ inputs, availableInputs, outputs, timestamp }) => {
     return (
