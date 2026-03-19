@@ -34,6 +34,7 @@ import {
     connectTaskNotificationWebSocket,
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
+import { toStringNoTime } from '../utils/date-time-utils.js';
 
 const RunningTasksViewCore = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -104,9 +105,7 @@ const RunningTasksViewCore = () => {
 
     const getListOfTopics = useCallback(() => {
         return tasks.map(
-            (task) =>
-                '/task/update/' +
-                new Date(task.timestamp).toISOString().substring(0, 10)
+            (task) => '/task/update/' + toStringNoTime(task.timestamp)
         );
     }, [tasks]);
 

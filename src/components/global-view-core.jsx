@@ -35,6 +35,7 @@ import {
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
 import PropTypes from 'prop-types';
+import { toStringNoTime } from '../utils/date-time-utils.js';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -106,10 +107,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getListOfTopics = useCallback(() => {
         return [
-            '/task/update/' +
-                new Date(timestampMin).toISOString().substring(0, 10),
-            '/task/update/' +
-                new Date(timestampMax).toISOString().substring(0, 10),
+            '/task/update/' + toStringNoTime(timestampMin),
+            '/task/update/' + toStringNoTime(timestampMax),
         ];
     }, [timestampMin, timestampMax]);
 

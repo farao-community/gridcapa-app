@@ -22,6 +22,7 @@ import { useIntlRef } from '../utils/messages';
 import { FormattedMessage } from 'react-intl';
 import TimestampParametersDialog from './dialogs/timestamp-parameters-dialog';
 import PropTypes from 'prop-types';
+import { toStringNoTime } from '../utils/date-time-utils.js';
 
 function isDisabled(taskArray) {
     if (taskArray && taskArray.length > 0) {
@@ -99,10 +100,8 @@ export function RunAllButton({ timestamp }) {
         const timestampMin = refTimestamp.getTime();
         const timestampMax = refTimestamp.getTime() + 24 * 60 * 60 * 1000;
         return [
-            '/task/update/' +
-                new Date(timestampMin).toISOString().substring(0, 10),
-            '/task/update/' +
-                new Date(timestampMax).toISOString().substring(0, 10),
+            '/task/update/' + toStringNoTime(timestampMin),
+            '/task/update/' + toStringNoTime(timestampMax),
         ];
     }, [currentTimestamp, onTheHourProcess]);
 
