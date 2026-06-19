@@ -26,6 +26,7 @@ function CustomTabPanel(props) {
 }
 
 CustomTabPanel.propTypes = {
+    children: PropTypes.element,
     value: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired,
 };

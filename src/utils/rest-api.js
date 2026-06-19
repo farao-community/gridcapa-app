@@ -25,12 +25,12 @@ function removeTrailingSlash(aString) {
 }
 
 function backendFetch(url, init) {
-    if (!(typeof init == 'undefined' || typeof init == 'object')) {
+    if (!(init === undefined || typeof init == 'object')) {
         throw new TypeError(
             'Argument 2 of backendFetch is not an object' + typeof init
         );
     }
-    const initCopy = Object.assign({}, init);
+    const initCopy = { ...init };
     initCopy.headers = new Headers(initCopy.headers || {});
     initCopy.headers.append('Authorization', 'Bearer ' + getToken());
 
@@ -48,12 +48,10 @@ export function fetchFileToBackend(timestamp, formData) {
 }
 
 export function fetchIdpSettings() {
-    console.info('Fetching IdP settings...');
     return fetch('idpSettings.json').then((res) => res.json());
 }
 
 export function fetchAppsAndUrls() {
-    console.info(`Fetching apps and urls...`);
     return fetch('env.json')
         .then((res) => res.json())
         .then((res) => {
@@ -67,7 +65,6 @@ export function fetchAppsAndUrls() {
 }
 
 export function fetchVersionAndEnvironnement() {
-    console.info(`Fetching env vars...`);
     return fetch('env.json')
         .then((res) => res.json())
         .then((res) => {
@@ -76,7 +73,6 @@ export function fetchVersionAndEnvironnement() {
 }
 
 export function fetchMinioStorageData() {
-    console.info(`Fetching minio storage data...`);
     return fetch('env.json')
         .then((res) => res.json())
         .then((res) => {
@@ -89,16 +85,10 @@ export function fetchMinioStorageData() {
 }
 
 export function fetchTimestampData(timestamp, intlRef, enqueueSnackbar) {
-    console.info('Fetching task data for timestamp : ' + timestamp);
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}`;
-    console.log(fetchParams);
     return backendFetch(fetchParams)
         .then((response) =>
-            response.ok
-                ? response.json()
-                : response
-                      .text()
-                      .then((text) => Promise.reject(new Error(text)))
+            response.ok ? response.json() : response.text().then(throwError)
         )
         .catch((error) =>
             displayErrorMessageWithSnackbar({
@@ -118,17 +108,11 @@ export function fetchFileFromProcess(
     intlRef,
     enqueueSnackbar
 ) {
-    console.info('Fetching file ' + type + ' for timestamp : ' + timestamp);
     const fetchParams =
         getBaseUrl() + PREFIX_TASK_QUERIES + `/${timestamp}/file/${type}`;
-    console.log(fetchParams);
     return backendFetch(fetchParams)
         .then((response) =>
-            response.ok
-                ? response.blob()
-                : response
-                      .text()
-                      .then((text) => Promise.reject(new Error(text)))
+            response.ok ? response.blob() : response.text().then(throwError)
         )
         .catch((error) =>
             displayErrorMessageWithSnackbar({
@@ -143,20 +127,14 @@ export function fetchFileFromProcess(
 }
 
 export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
-    console.info('Fetching tasks for date : ' + businessDate);
     const fetchParams =
         getBaseUrl() +
         PREFIX_TASK_QUERIES +
         '/businessdate' +
         `/${businessDate}`;
-    console.log(fetchParams);
     return backendFetch(fetchParams)
         .then((response) =>
-            response.ok
-                ? response.json()
-                : response
-                      .text()
-                      .then((text) => Promise.reject(new Error(text)))
+            response.ok ? response.json() : response.text().then(throwError)
         )
         .catch((error) =>
             displayErrorMessageWithSnackbar({
@@ -170,17 +148,15 @@ export function fetchBusinessDateData(businessDate, intlRef, enqueueSnackbar) {
         );
 }
 
+function throwError(message) {
+    throw new Error(message);
+}
+
 export function fetchRunningTasksData(intlRef, enqueueSnackbar) {
-    console.info('Fetching all running tasks');
     const fetchParams = getBaseUrl() + PREFIX_TASK_QUERIES + '/runningtasks';
-    console.log(fetchParams);
     return backendFetch(fetchParams)
         .then((response) =>
-            response.ok
-                ? response.json()
-                : response
-                      .text()
-                      .then((text) => Promise.reject(new Error(text)))
+            response.ok ? response.json() : response.text().then(throwError)
         )
         .then((result) => {
             return result;
@@ -198,58 +174,39 @@ export function fetchRunningTasksData(intlRef, enqueueSnackbar) {
 }
 
 export function fetchConfigParameters(appName) {
-    console.info('Fetching UI configuration params for app : ' + appName);
     const fetchParams =
         getBaseUrl() +
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters`;
     return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(new Error(text)))
+        response.ok ? response.json() : response.text().then(throwError)
     );
 }
 
 export function fetchConfigParameter(name) {
     const appName = getAppName(name);
-    console.info(
-        "Fetching UI config parameter '%s' for app '%s' ",
-        name,
-        appName
-    );
     const fetchParams =
         getBaseUrl() +
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters/${name}`;
     return backendFetch(fetchParams).then((response) =>
-        response.ok
-            ? response.json()
-            : response.text().then((text) => Promise.reject(new Error(text)))
+        response.ok ? response.json() : response.text().then(throwError)
     );
 }
 
 export function updateConfigParameter(name, value) {
     const appName = getAppName(name);
-    console.info(
-        "Updating config parameter '%s=%s' for app '%s' ",
-        name,
-        value,
-        appName
-    );
     const updateParams =
         getBaseUrl() +
         PREFIX_CONFIG_QUERIES +
         `/v1/applications/${appName}/parameters/${name}?value=` +
         encodeURIComponent(value);
     return backendFetch(updateParams, { method: 'put' }).then((response) =>
-        response.ok
-            ? response
-            : response.text().then((text) => Promise.reject(new Error(text)))
+        response.ok ? response : response.text().then(throwError)
     );
 }
 
 export function fetchJobLauncherPost(taskTimestamp, parameters) {
-    console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -262,24 +219,22 @@ export function fetchJobLauncherPost(taskTimestamp, parameters) {
 }
 
 export function fetchJobLauncherToInterruptTask(taskTimestamp, runId) {
-    console.log('Fetching job launcher for task:' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
     };
 
-    backendFetch(
+    return backendFetch(
         getBaseUrl() +
             PREFIX_INTERRUPT_PROCESS_QUERIES +
             taskTimestamp +
             '/' +
             runId,
         requestOptions
-    ).then();
+    );
 }
 
 export function fetchTaskManagerSelectFile(timestamp, type, filename) {
-    console.log('Requesting task manager to select file for : ' + timestamp);
     const requestOptions = {
         method: 'put',
     };
@@ -298,19 +253,17 @@ export function fetchTaskManagerSelectFile(timestamp, type, filename) {
 }
 
 export function fetchTaskManagerManualExport(taskTimestamp) {
-    console.log('Requesting export for task: ' + taskTimestamp);
     const requestOptions = {
         method: 'POST',
     };
 
-    backendFetch(
+    return backendFetch(
         getBaseUrl() + PREFIX_TASK_QUERIES + '/' + taskTimestamp + '/export',
         requestOptions
     );
 }
 
 export function fetchProcessParameters() {
-    console.log('Requesting process parameters');
     const requestOptions = {
         method: 'GET',
     };
@@ -324,7 +277,6 @@ export function fetchProcessParameters() {
 }
 
 export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
-    console.log('Updating process parameters');
     const requestOptions = {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -336,11 +288,7 @@ export function updateProcessParameters(parameters, intlRef, enqueueSnackbar) {
         requestOptions
     )
         .then((response) =>
-            response.ok
-                ? response.json()
-                : response
-                      .text()
-                      .then((text) => Promise.reject(new Error(text)))
+            response.ok ? response.json() : response.text().then(throwError)
         )
         .catch((error) => {
             displayErrorMessageWithSnackbar({

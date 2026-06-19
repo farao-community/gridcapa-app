@@ -7,11 +7,11 @@
 
 import { LANG_ENGLISH, LANG_FRENCH, LANG_SYSTEM } from '@gridsuite/commons-ui';
 
-const supportedLanguages = [LANG_FRENCH, LANG_ENGLISH];
+const supportedLanguages = new Set([LANG_FRENCH, LANG_ENGLISH]);
 
 export const getSystemLanguage = () => {
     const systemLanguage = navigator.language.split(/[-_]/)[0];
-    return supportedLanguages.includes(systemLanguage)
+    return supportedLanguages.has(systemLanguage)
         ? systemLanguage
         : LANG_ENGLISH;
 };

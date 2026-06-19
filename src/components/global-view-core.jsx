@@ -35,6 +35,7 @@ import {
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
 import PropTypes from 'prop-types';
+import { toStringNoTime } from '../utils/date-time-utils.js';
 
 const createAllSteps = (timestampMin, timestampMax, timestampStep) => {
     let currentTimeStamp = timestampMin;
@@ -106,10 +107,8 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
 
     const getListOfTopics = useCallback(() => {
         return [
-            '/task/update/' +
-                new Date(timestampMin).toISOString().substr(0, 10),
-            '/task/update/' +
-                new Date(timestampMax).toISOString().substr(0, 10),
+            '/task/update/' + toStringNoTime(timestampMin),
+            '/task/update/' + toStringNoTime(timestampMax),
         ];
     }, [timestampMin, timestampMax]);
 
@@ -196,15 +195,13 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
             return (
                 step.taskData &&
                 (currentStatusFilter.length === 0 ||
-                    (currentStatusFilter.length > 0 &&
-                        currentStatusFilter.some((f) =>
-                            step.taskData.status.includes(f)
-                        ))) &&
+                    currentStatusFilter.some((f) =>
+                        step.taskData.status.includes(f)
+                    )) &&
                 (currentTimestampFilter.length === 0 ||
-                    (currentTimestampFilter.length > 0 &&
-                        currentTimestampFilter.some((f) =>
-                            formatDate(step.taskData.timestamp).includes(f)
-                        )))
+                    currentTimestampFilter.some((f) =>
+                        formatDate(step.taskData.timestamp).includes(f)
+                    ))
             );
         });
     };
@@ -239,18 +236,26 @@ const GlobalViewCore = ({ timestampMin, timestampMax, timestampStep }) => {
                     }
                 }
             }
+
+            function isSameTimestamp(taskData, step) {
+                return (
+                    Date.parse(taskData.timestamp) === step.timestamp ||
+                    taskData.timestamp === step.timestamp
+                );
+            }
+
+            function setStepsForTask(taskData) {
+                let globalIndex = allSteps.findIndex((step) =>
+                    isSameTimestamp(taskData, step)
+                );
+                if (globalIndex >= 0) {
+                    allSteps[globalIndex].taskData = taskData;
+                }
+            }
+
             Promise.all(allPromise).then((values) => {
-                values.forEach((tasksdata) => {
-                    tasksdata.forEach((td) => {
-                        let globalIndex = allSteps.findIndex(
-                            (step) =>
-                                Date.parse(td.timestamp) === step.timestamp ||
-                                td.timestamp === step.timestamp
-                        );
-                        if (globalIndex >= 0) {
-                            allSteps[globalIndex].taskData = td;
-                        }
-                    });
+                values.forEach((taskDataList) => {
+                    taskDataList.forEach(setStepsForTask);
                 });
                 setIsLoading(false);
                 setSteps(allSteps);

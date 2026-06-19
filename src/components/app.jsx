@@ -169,7 +169,7 @@ const App = () => {
 
         ws.onmessage = (event) => {
             let eventData = JSON.parse(event.data);
-            if (eventData.headers && eventData.headers['parameterName']) {
+            if (eventData?.headers?.['parameterName']) {
                 fetchConfigParameter(eventData.headers['parameterName'])
                     .then((param) => updateParams([param]))
                     .catch((error) => displayError(error.message));
@@ -227,7 +227,19 @@ const App = () => {
                 parametersEnabled={parametersEnabled}
             />
             <CardErrorBoundary>
-                {user !== null ? (
+                {user === null ? (
+                    <AuthenticationRouter
+                        userManager={userManager}
+                        signInCallbackError={signInCallbackError}
+                        authenticationRouterError={authenticationRouterError}
+                        showAuthenticationRouterLogin={
+                            showAuthenticationRouterLogin
+                        }
+                        dispatch={dispatch}
+                        navigate={navigate}
+                        location={location}
+                    />
+                ) : (
                     <Routes>
                         {[
                             '/',
@@ -283,18 +295,6 @@ const App = () => {
                             }
                         />
                     </Routes>
-                ) : (
-                    <AuthenticationRouter
-                        userManager={userManager}
-                        signInCallbackError={signInCallbackError}
-                        authenticationRouterError={authenticationRouterError}
-                        showAuthenticationRouterLogin={
-                            showAuthenticationRouterLogin
-                        }
-                        dispatch={dispatch}
-                        navigate={navigate}
-                        location={location}
-                    />
                 )}
             </CardErrorBoundary>
         </>

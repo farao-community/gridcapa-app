@@ -43,7 +43,7 @@ function ProcessParametersDialog({ open, onClose, parameters, buttonAction }) {
     function handleButtonAction() {
         buttonAction()
             .then(() => setParametersChanged(false))
-            .catch((errorMessage) => console.error(errorMessage));
+            .catch(console.error);
     }
 
     function handleConfirmClosing() {

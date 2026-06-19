@@ -30,7 +30,7 @@ export function getInitialViewToSet(dateParam, timeParam, defaultView) {
 
 export function getUrlWithTimestampAndView(timestamp, view) {
     switch (view) {
-        case Views.BUSINESS_DATE_VIEW:
+        case Views.BUSINESS_DATE_VIEW: {
             // Because the `timestamp` parameter is in UTC timezone and the HMI is in local timezone,
             // we need to set time to noon instead of midnight in order to be sure that the date displayed
             // in the Business Date View is the same as the one given in parameter.
@@ -38,10 +38,12 @@ export function getUrlWithTimestampAndView(timestamp, view) {
             noonTimestamp.setHours(12);
             const date = getDateString(noonTimestamp);
             return `/date/${date}`;
-        case Views.PROCESS_TIMESTAMP_VIEW:
+        }
+        case Views.PROCESS_TIMESTAMP_VIEW: {
             const utcDate = getDateString(timestamp);
             const utcTime = getTimeString(timestamp);
             return `/utcDate/${utcDate}/utcTime/${utcTime}`;
+        }
         case Views.RUNNING_TASKS_VIEW:
             return `/global`;
         default:

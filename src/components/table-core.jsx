@@ -9,27 +9,11 @@ import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { AppBar } from '@mui/material';
-import Box from '@mui/material/Box';
 import OverviewTable from './overview-table';
 import EventsTable from './events-table';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box p={3}>{children}</Box>}
-        </div>
-    );
-}
+import CustomTabPanel from './tabs/custom-tab-panel.jsx';
 
 function a11yProps(index) {
     return {
@@ -60,17 +44,17 @@ const TableCore = ({ taskData, eventsData }) => {
                     />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
+            <CustomTabPanel value={value} index={0}>
                 <OverviewTable
                     inputs={taskData.inputs || []}
                     availableInputs={taskData.availableInputs || []}
                     outputs={taskData.outputs || []}
                     timestamp={taskData.timestamp}
                 />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
                 <EventsTable eventsData={eventsData} />
-            </TabPanel>
+            </CustomTabPanel>
         </div>
     );
 };

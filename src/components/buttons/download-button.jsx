@@ -38,8 +38,11 @@ async function downloadFile(processFile, timestamp, intlRef, enqueueSnackbar) {
 const DownloadButton = ({ processFile, timestamp }) => {
     const intlRef = useIntlRef();
     const { enqueueSnackbar } = useSnackbar();
-
     const [isLoading, setIsLoading] = useState(false);
+
+    if (processFile.fileUrl == null) {
+        return null;
+    }
 
     const handleClick = async () => {
         setIsLoading(true);
@@ -47,7 +50,7 @@ const DownloadButton = ({ processFile, timestamp }) => {
         setIsLoading(false);
     };
 
-    return processFile.fileUrl === null ? null : isLoading ? (
+    return isLoading ? (
         <CircularProgress size={30} />
     ) : (
         <Button

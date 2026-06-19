@@ -34,6 +34,7 @@ import {
     connectTaskNotificationWebSocket,
     disconnectTaskNotificationWebSocket,
 } from '../utils/websocket-api';
+import { toStringNoTime } from '../utils/date-time-utils.js';
 
 const RunningTasksViewCore = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -73,7 +74,7 @@ const RunningTasksViewCore = () => {
         setIsLoading(true);
         const newTasks = await fetchRunningTasksData();
         let newProcessEvents;
-        if (newTasks && newTasks.length) {
+        if (newTasks?.length) {
             setTasks(newTasks);
             newProcessEvents = new Array(newTasks.length);
         } else {
@@ -104,9 +105,7 @@ const RunningTasksViewCore = () => {
 
     const getListOfTopics = useCallback(() => {
         return tasks.map(
-            (task) =>
-                '/task/update/' +
-                new Date(task.timestamp).toISOString().substr(0, 10)
+            (task) => '/task/update/' + toStringNoTime(task.timestamp)
         );
     }, [tasks]);
 
@@ -191,15 +190,11 @@ const RunningTasksViewCore = () => {
             return (
                 task &&
                 (currentStatusFilter.length === 0 ||
-                    (currentStatusFilter.length > 0 &&
-                        currentStatusFilter.some((f) =>
-                            task.status.includes(f)
-                        ))) &&
+                    currentStatusFilter.some((f) => task.status.includes(f))) &&
                 (currentTimestampFilter.length === 0 ||
-                    (currentTimestampFilter.length > 0 &&
-                        currentTimestampFilter.some((f) =>
-                            formatDate(task.timestamp).includes(f)
-                        )))
+                    currentTimestampFilter.some((f) =>
+                        formatDate(task.timestamp).includes(f)
+                    ))
             );
         });
     };
