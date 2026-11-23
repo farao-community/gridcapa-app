@@ -1,5 +1,8 @@
 FROM httpd:2.4.59@sha256:10182d88d7fbc5161ae0f6f758cba7adc56d4aae2dc950e51d72c0cf68967cea
 
+RUN sed -i 's/^Listen 80$/Listen 8080/' /usr/local/apache2/conf/httpd.conf \
+    && chown -R 1001 /usr/local/apache2/logs \
+
 RUN echo "Include conf/app-httpd.conf" >> /usr/local/apache2/conf/httpd.conf
 COPY app-httpd.conf /usr/local/apache2/conf/
 COPY build /usr/local/apache2/htdocs/gridcapa
